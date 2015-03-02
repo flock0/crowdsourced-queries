@@ -1,0 +1,18 @@
+# Crowdsourced Query Understanding and Optimization
+
+## Team members
+
+* Florian Chlan
+* François Farquet
+* Joachim Hugonot (team leader)
+* Simon Rodriguez
+* Kristof Szabo
+* Florian Vessaz
+* Guo Xinyi
+* Vincent Zellweger
+
+List address: bd15-crowdsourced@groupes.epfl.ch
+
+## TA
+
+* Immanuel Trummer
