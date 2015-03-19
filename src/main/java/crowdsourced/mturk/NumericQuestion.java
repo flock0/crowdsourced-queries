@@ -2,6 +2,9 @@ package crowdsourced.mturk;
 
 import javax.xml.bind.Element;
 
+/**
+ * A question that accepts a numerical value for the answer.
+ */
 public class NumericQuestion extends Question {
 
 	protected boolean hasRangeCheck = false;
