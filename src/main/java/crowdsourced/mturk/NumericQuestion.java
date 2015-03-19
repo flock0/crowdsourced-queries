@@ -1,6 +1,7 @@
 package crowdsourced.mturk;
 
-import javax.xml.bind.Element;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * A question that accepts a numerical value for the answer.
@@ -10,7 +11,7 @@ public class NumericQuestion extends Question {
 	protected boolean hasRangeCheck = false;
 	protected int minValue;
 	protected int maxValue;
-	
+
 	/**
 	 * Creates a question that requires a numeric answer.
 	 * @param questionIdentifier An identifier for the question. This identifier is used to associate the Worker's answers with the question in the answer data.
@@ -21,7 +22,7 @@ public class NumericQuestion extends Question {
 			String questionContent) {
 		super(questionIdentifier, displayName, questionContent);
 	}
-	
+
 	/**
 	 * Creates a question that requires a numeric answer with a range check.
 	 * @param minValue The minimum value of the answer. Must be smaller than maxValue.
@@ -37,11 +38,11 @@ public class NumericQuestion extends Question {
 		this.maxValue = maxValue;
 		hasRangeCheck = true;
 	}
-	
+
 	@Override
-	public Element generateXML() {
+	public Element asXMLElement(Document doc) {
 		//TODO: Create an appropriate XML-Element.
-		throw new UnsupportedOperationException("Not yet implemented");  
+		throw new UnsupportedOperationException("Not yet implemented");
 	}
 
 }
