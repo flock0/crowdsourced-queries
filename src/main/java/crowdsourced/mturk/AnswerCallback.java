@@ -3,9 +3,7 @@ package crowdsourced.mturk;
 import java.util.List;
 
 /**
- * Contains methods to indicate 
- * @author Florian Chlan
- *
+ * Contains methods to notify about status update concerning a HIT.
  */
 public interface AnswerCallback {
 	
