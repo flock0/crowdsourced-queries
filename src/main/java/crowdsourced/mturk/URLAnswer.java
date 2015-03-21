@@ -2,6 +2,9 @@ package crowdsourced.mturk;
 
 import java.net.URL;
 
+/**
+ * An answer containing an URL.
+ */
 public class URLAnswer extends Answer {
 
 	private URL answer;
@@ -15,15 +18,14 @@ public class URLAnswer extends Answer {
 	 * @param question The question that this answer is for.
 	 * @param answer The answer to the question.
 	 */
-	public URLAnswer(Question question, URL answer) {
-		this(AnswerType.URL, question);
-		this.answer = answer;
+	public URLAnswer(Question q, URL url) {
+		this(AnswerType.URL, q);
+		this.answer = url;
 	}
 
 	@Override
 	public void getAnswer(AnswerVisitor ex) {
 		ex.visit(answer);
-
 	}
 
 }

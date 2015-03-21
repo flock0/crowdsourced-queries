@@ -7,12 +7,12 @@ public abstract class Answer {
 	/**
 	 * The type of the answer
 	 */
-	protected AnswerType type;
+	private AnswerType type;
 
 	/**
 	 * The question that this Answer belongs to.
 	 */
-	protected Question question;
+	private Question question;
 
 	/**
 	 * Gets the answer value.
@@ -20,9 +20,9 @@ public abstract class Answer {
 	 */
 	public abstract void getAnswer(AnswerVisitor ex);
 
-	protected Answer(AnswerType type, Question question) {
-		this.type = type;
-		this.question = question;
+	protected Answer(AnswerType t, Question q) {
+		this.type = t;
+		this.question = q;
 	}
 
 	public AnswerType getType() {

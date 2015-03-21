@@ -5,7 +5,7 @@ package crowdsourced.mturk;
  */
 public class NumericAnswer extends Answer {
 
-	protected int answer;
+	private int answer;
 
 	protected NumericAnswer(AnswerType type, Question question) {
 		super(type, question);
@@ -16,11 +16,10 @@ public class NumericAnswer extends Answer {
 	 * @param question The question that this answer is for.
 	 * @param answer The answer to the question.
 	 */
-	public NumericAnswer(Question question, int answer) {
-		this(AnswerType.Numeric, question);
-		this.answer = answer;
+	public NumericAnswer(Question q, int num) {
+		this(AnswerType.Numeric, q);
+		this.answer = num;
 	}
-
 
 	@Override
 	public void getAnswer(AnswerVisitor ex) {

@@ -5,7 +5,7 @@ package crowdsourced.mturk;
  */
 public class StringAnswer extends Answer {
 
-	protected String answer;
+	private String answer;
 
 	protected StringAnswer(AnswerType type, Question question) {
 		super(type, question);
@@ -14,15 +14,16 @@ public class StringAnswer extends Answer {
 	/**
 	 * Creates a new answer object.
 	 * @param question The question that this answer is for.
-	 * @param answer The answer to the question.
+	 * @param text The answer to the question.
 	 */
-	public StringAnswer(Question question, String answer) {
+	public StringAnswer(Question question, String text) {
 		this(AnswerType.String, question);
-		this.answer = answer;
+		this.answer = text;
 	}
 
 	@Override
 	public void getAnswer(AnswerVisitor ex) {
 		ex.visit(answer);
 	}
+
 }

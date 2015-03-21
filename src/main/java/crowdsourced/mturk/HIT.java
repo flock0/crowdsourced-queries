@@ -97,18 +97,18 @@ public class HIT {
 	 *            One or more words or phrases that describe the HIT. This is
 	 *            used in searches to find HITs.
 	 */
-	public HIT(String title,
-			String description, List<Question> questions,
-			int lifetimeInSeconds, int maxAssignments, float rewardInUSD,
-			int assignmentDurationInSeconds, List<String> keywords) {
-		this.questions = questions;
-		this.lifetimeInSeconds = lifetimeInSeconds;
-		this.maxAssignments = maxAssignments;
-		this.title = title;
-		this.description = description;
-		this.rewardInUSD = rewardInUSD;
-		this.assignmentDurationInSeconds = assignmentDurationInSeconds;
-		this.keywords = keywords;
+	public HIT(String titleArg,
+					String descriptionArg, List<Question> questionsArg,
+					int lifetimeInSecondsArg, int maxAssignmentsArg, float rewardInUSDArg,
+					int assignmentDurationInSecondsArg, List<String> keywordsArg) {
+		this.questions = questionsArg;
+		this.lifetimeInSeconds = lifetimeInSecondsArg;
+		this.maxAssignments = maxAssignmentsArg;
+		this.title = titleArg;
+		this.description = descriptionArg;
+		this.rewardInUSD = rewardInUSDArg;
+		this.assignmentDurationInSeconds = assignmentDurationInSecondsArg;
+		this.keywords = keywordsArg;
 	}
 
 }
