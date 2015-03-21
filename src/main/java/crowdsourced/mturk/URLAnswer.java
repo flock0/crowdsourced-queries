@@ -19,7 +19,7 @@ public class URLAnswer extends Answer {
 		this(AnswerType.URL, question);
 		this.answer = answer;
 	}
-	
+
 	@Override
 	public void getAnswer(AnswerVisitor ex) {
 		ex.visit(answer);

@@ -6,7 +6,7 @@ package crowdsourced.mturk;
 public class NumericAnswer extends Answer {
 
 	protected int answer;
-	
+
 	protected NumericAnswer(AnswerType type, Question question) {
 		super(type, question);
 	}
@@ -21,7 +21,7 @@ public class NumericAnswer extends Answer {
 		this.answer = answer;
 	}
 
-	
+
 	@Override
 	public void getAnswer(AnswerVisitor ex) {
 		ex.visit(answer);

@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * A Human-Intelligence-Task for Amazon Mechanical Turk
- * 
+ *
  * @see http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/
  *      ApiReference_CreateHITOperation.html
  */
@@ -67,7 +67,7 @@ public class HIT {
 
 	/**
 	 * Creates a new HIT.
-	 * 
+	 *
 	 * @param operationName
 	 *            The name of the operation.
 	 * @param title

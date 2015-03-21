@@ -4,13 +4,13 @@ package crowdsourced.mturk;
  * An answer containing a string value.
  */
 public class StringAnswer extends Answer {
-	
+
 	protected String answer;
-	
+
 	protected StringAnswer(AnswerType type, Question question) {
 		super(type, question);
 	}
-	
+
 	/**
 	 * Creates a new answer object.
 	 * @param question The question that this answer is for.
