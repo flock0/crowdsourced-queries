@@ -15,16 +15,14 @@ public class StringQuestion extends Question {
 
 	/**
 	 * Creates a question that uses a simple text field for the answer.
-	 * @param questionIdentifier An identifier for the question. This
+	 * @param identifier an identifier for the question. this
 	 *   identifier is used to associate the Worker's answers with the question
 	 *   in the answer data.
-	 * @param displayName A name for the question, displayed as a prominent
-	 *   heading.
-	 * @param questionContent The text of the question.
+	 * @param name A name for the question, displayed as a prominent heading.
+	 * @param content The text of the question.
 	 */
-	public StringQuestion(String questionIdentifier, String displayName,
-					String questionContent) {
-		super(questionIdentifier, displayName, questionContent);
+	public StringQuestion(String identifier, String name, String content) {
+		super(identifier, name, content);
 	}
 
 	/**
@@ -63,7 +61,7 @@ public class StringQuestion extends Question {
 		Element answerSpec = doc.createElement("AnswerSpecification");
 		question.appendChild(answerSpec);
 		Element freeText = doc.createElement("FreeTextAnswer");
-        answerSpec.appendChild(freeText);
+		answerSpec.appendChild(freeText);
 
 		if (answerMinLength > 0 || answerMaxLength > 0) {
 			Element constraints = doc.createElement("Constraints");
@@ -81,7 +79,7 @@ public class StringQuestion extends Question {
 		if (suggestedLineCount > 0) {
 			Element lines = doc.createElement("NumberOfLinesSuggestion");
 			lines.appendChild(doc.createTextNode(
-                        Integer.toString(suggestedLineCount)));
+							Integer.toString(suggestedLineCount)));
 			answerSpec.appendChild(lines);
 		}
 
