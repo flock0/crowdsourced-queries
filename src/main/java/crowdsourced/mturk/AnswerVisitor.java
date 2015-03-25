@@ -10,4 +10,5 @@ public interface AnswerVisitor {
 	void visit(String answer);
 	void visit(int answer);
 	void visit(URL answer);
+    void visit(MultipleChoiceOption answer);
 }

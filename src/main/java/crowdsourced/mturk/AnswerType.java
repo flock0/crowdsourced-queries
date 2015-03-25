@@ -4,5 +4,6 @@ package crowdsourced.mturk;
 public enum AnswerType {
 	String,
 	Numeric,
-	URL
+	URL,
+	MultipleChoice
 }
