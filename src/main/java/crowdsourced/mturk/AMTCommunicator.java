@@ -6,10 +6,18 @@ import org.w3c.dom.Document;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -21,28 +29,131 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AMTCommunicator {
 
-
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+	private static final String USER_AGENT = "Mozilla/5.0";
+
+	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
+	private static final String ACCESS_KEY_ID = "";
+	private static final String ACCESS_KEY_SECRET_ID = "";
+	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
+
+	public static void main(String[] args) {
+	}
+
+
+	/**
+	 * Sends a REST GET request with the passed URL. Prints the result.
+	 * @param url the destination URL
+	 * @throws IOException
+	 */
+	private static void sendGet(String url) throws IOException {
+		URL obj = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+		// optional default is GET
+		con.setRequestMethod("GET");
+
+		//add request header
+		con.setRequestProperty("User-Agent", USER_AGENT);
+		int responseCode = con.getResponseCode();
+		System.out.println("\nSending 'GET' request to URL : " + url);
+		System.out.println("Response Code : " + responseCode);
+
+		BufferedReader in = new BufferedReader(
+		        new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while ((inputLine = in.readLine()) != null) {
+			response.append(inputLine);
+		}
+		in.close();
+
+		//print result
+		System.out.println(response.toString());
+	}
+
 
 	/**
 	 * Checks if the current account has a balance superior or equal to the passed amount
 	 * @param amount the minimum amount to have on the account
 	 * @return true if balance >= amount, false elsewhere.
 	 */
-	protected boolean checkBalance(float amount) {
+	protected static boolean checkBalance(float amount) {
+		//Testing
+		try {
+			String service = "AWSMechanicalTurkRequester";
+			String operation = "GetAccountBalance";
+			String timestamp = getTimestamp();
+			String ur = "https://mechanicalturk.amazonaws.com/?Service=" + service
+							+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
+							+ "&Version=2014-08-15"
+							+ "&Operation=" + operation
+							+ "&Signature=" + calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)
+							+ "&Timestamp=" + timestamp;
+			sendGet(ur);
+		} catch  (IOException | SignatureException e) {
+			//Should be handled separately and correctly
+		}
 		return false;
 	}
 
+
 	/**
-	 * Converts an XML Document to a string
-	 * @param document the XML Document to convert
-	 * @return a string corresponding to the serialization of the XML document
+	 * Sends the passed HIT
+	 * @param xml
 	 */
-	private String convertXMLToString(Document document)    {
-	    DOMImplementationLS domImplementation = (DOMImplementationLS) document.getImplementation();
-	    LSSerializer lsSerializer = domImplementation.createLSSerializer();
-	    return lsSerializer.writeToString(document);
+	protected static void sendHIT(HIT hit) {
+		String serial = convertXMLToString();
+		/*No need to XML escape the string when using REST,
+		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
+
+		try {
+
+			String urlEncodedQuestion = encodeUrl(serial);
+			String service = "AWSMechanicalTurkRequester";
+			String operation = "CreateHIT";
+			String timestamp = getTimestamp();
+			//The following need to be URL encoded (twice? ie with %20 for spaces)
+			String title = "Title";
+			String description = "Description";
+			String rewardAmount = "1";
+			String durationInSeconds = "30";
+			String lifetimeInSeconds = "604800";
+			String keywords = "";
+
+			String url = "https://mechanicalturk.amazonaws.com/?Service=" + service
+							+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
+							+ "&Version=2014-08-15"
+							+ "&Operation=" + operation
+							+ "&Signature=" + calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)
+							+ "&Timestamp=" + timestamp
+							+ "&Title=" + title
+							+ "&Description=" + description
+							+ "&Reward.1.Amount=" + rewardAmount
+							+ "&Reward.1.CurrencyCode=USD"
+							+ "&Question=" + urlEncodedQuestion
+							+ "&AssignmentDurationInSeconds=" + durationInSeconds
+							+ "&LifetimeInSeconds=" + lifetimeInSeconds
+							+ "&Keywords=" + keywords;
+
+			sendGet(url);
+		} catch  (IOException | SignatureException e) {
+			//Should be handled separately and correctly
+		}
 	}
+
+
+	/**
+	 * Generates the timestamp corresponding to the current time "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+	 * @return a string with format "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+	 */
+	private static String getTimestamp() {
+		Date currentTime = new Date();
+		SimpleDateFormat gmtFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+	    gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+	    return gmtFormat.format(currentTime.getTime());
+	}
+
 
     /**
      * Computes RFC 2104-compliant HMAC signature.
@@ -56,7 +167,7 @@ public class AMTCommunicator {
      * @throws
      *     java.security.SignatureException when signature generation fails
      */
-    private String calculateSignature(String data, String key)
+    private static String calculateSignature(String data, String key)
         throws java.security.SignatureException {
         String result;
         try {
@@ -77,6 +188,19 @@ public class AMTCommunicator {
         return result;
     }
 
+
+    /**
+	 * Converts an XML Document to a string
+	 * @param document the XML Document to convert
+	 * @return a string corresponding to the serialization of the XML document
+	 */
+	private static String convertXMLToString(Document document)    {
+	    DOMImplementationLS domImplementation = (DOMImplementationLS) document.getImplementation();
+	    LSSerializer lsSerializer = domImplementation.createLSSerializer();
+	    return lsSerializer.writeToString(document);
+	}
+
+
     /**
      * Performs base64-encoding of input bytes.
      *
@@ -85,17 +209,21 @@ public class AMTCommunicator {
      * @return
      *      The base64-encoded string representation of rawData.
      */
-    private String encodeBase64(byte[] rawData) {
+    private static String encodeBase64(byte[] rawData) {
         return Base64.encodeBytes(rawData);
     }
 
-    /*private String getTimestamp() {
-    	java.util.Date date = new java.util.Date();
 
-    	//We get a string with format yyyy-mm-dd hh:mm:ss.fffffffff format
-   	 	//String time = new Timestamp(date.getTime()).toString();
 
-   	 	//We are expecting
-    }*/
+    /**
+     * Encodes a string to the URL standard format
+     * @param question the string to encode
+     * @return an URL encoded string
+     * @throws UnsupportedEncodingException
+     */
+    private static String encodeUrl(String question) throws UnsupportedEncodingException {
+		return  URLEncoder.encode(question, "UTF-8");
+	}
+
 
 }
