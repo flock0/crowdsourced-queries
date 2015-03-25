@@ -11,4 +11,5 @@ public interface AnswerVisitor {
 	void visit(int answer);
 	void visit(URL answer);
     void visit(MultipleChoiceOption answer);
+    void visit(boolean answer);
 }

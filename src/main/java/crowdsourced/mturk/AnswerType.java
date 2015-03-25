@@ -5,5 +5,6 @@ public enum AnswerType {
 	String,
 	Numeric,
 	URL,
-	MultipleChoice
+	MultipleChoice,
+	Boolean
 }
