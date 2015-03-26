@@ -16,6 +16,7 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -24,7 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 /**
  * The class dedicated to direct communications with AMT
- * @author simon
+ * @author Simon Rodriguez
  *
  */
 public class AMTCommunicator {
@@ -79,7 +80,6 @@ public class AMTCommunicator {
 	 * @return true if balance >= amount, false elsewhere.
 	 */
 	protected static boolean checkBalance(float amount) {
-		//Testing
 		try {
 			String service = "AWSMechanicalTurkRequester";
 			String operation = "GetAccountBalance";
@@ -91,35 +91,40 @@ public class AMTCommunicator {
 							+ "&Signature=" + calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)
 							+ "&Timestamp=" + timestamp;
 			sendGet(ur);
-		} catch  (IOException | SignatureException e) {
-			//Should be handled separately and correctly
+			
+		} catch  (IOException e) {
+			System.out.println("The GET request couldn't be sent.");
+		} catch (SignatureException e) {
+			System.out.println("The signature couldn't be generated properly.");
 		}
 		return false;
 	}
 
 
 	/**
-	 * Sends the passed HIT
-	 * @param xml
+	 * Sends the passed HIT to
+	 * @param hit the HIT to send
 	 */
 	protected static void sendHIT(HIT hit) {
 		String serial = convertXMLToString(hit.asXMLDocument());
 		/*No need to XML escape the string when using REST,
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
-
 		try {
-
 			String urlEncodedQuestion = encodeUrl(serial);
 			String service = "AWSMechanicalTurkRequester";
 			String operation = "CreateHIT";
 			String timestamp = getTimestamp();
 			//The following need to be URL encoded (twice? ie with %20 for spaces)
-			String title = "Title";
-			String description = "Description";
-			String rewardAmount = "1";
-			String durationInSeconds = "30";
-			String lifetimeInSeconds = "604800";
-			String keywords = "";
+			String title = encodeUrl(hit.getTitle());
+			String description = encodeUrl(hit.getDescription());
+			String rewardAmount = encodeUrl(Float.toString(hit.getRewardInUSD()));
+			String durationInSeconds = encodeUrl(Integer.toString(hit.getAssignmentDurationInSeconds()));
+			String lifetimeInSeconds = encodeUrl(Integer.toString(hit.getLifetimeInSeconds()));
+			String tempKeywords = Arrays.toString(hit.getKeywords().toArray());
+			String keywords = "default";
+			if (tempKeywords.length() > 2) {
+				keywords = encodeUrl(tempKeywords.substring(1, tempKeywords.length() - 1));
+			}
 
 			String url = "https://mechanicalturk.amazonaws.com/?Service=" + service
 							+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
@@ -137,8 +142,11 @@ public class AMTCommunicator {
 							+ "&Keywords=" + keywords;
 
 			sendGet(url);
-		} catch  (IOException | SignatureException e) {
-			//Should be handled separately and correctly
+
+		} catch  (IOException e) {
+			System.out.println("The GET request couldn't be sent.");
+		} catch (SignatureException e) {
+			System.out.println("The signature couldn't be generated properly.");
 		}
 	}
 
