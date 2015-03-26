@@ -68,7 +68,7 @@ class Parser extends RegexParsers with java.io.Serializable{
 	val int: Parser[String] = "[0-9]+".r
 	val nl: Parser[String] = "[a-zA-Z0-9 ]+".r
   
-  def parseQuery(query: String) = (
+  def parseQuery(query: String): Option[ParseResult[Q]] = (
       return parse(parseQ, query).getOrElse(ErrorString())
   )
 }
