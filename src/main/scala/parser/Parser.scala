@@ -5,7 +5,8 @@ import scala.util.parsing.combinator.RegexParsers
 //
 //SELECT (full name, NUMERIC age of death) FROM « Presidents of the USA » WHERE « political party is democrat » ORDER BY age of death
 class Parser extends RegexParsers with java.io.Serializable{
-
+  private errorString: ErrorString 
+  
 	def parseQ: Parser[Q] = (
 	  parseQ1 ~ "JOIN" ~ parseQ1 ~ "ON" ~ parseE ^^ {case left ~ _ ~ right ~ _ ~ on => Join(left, right, on)}
 	  | parseQ1 ^^ {case q1 => q1}
@@ -69,6 +70,8 @@ class Parser extends RegexParsers with java.io.Serializable{
 	val nl: Parser[String] = "[a-zA-Z0-9 ]+".r
   
   def parseQuery(query: String): Option[ParseResult[Q]] = (
-      return parse(parseQ, query).getOrElse(ErrorString())
+    val res = parse(parseQ, query) 
+    if (res.isEmpty) errorString = ErrorString()
+    res
   )
 }
