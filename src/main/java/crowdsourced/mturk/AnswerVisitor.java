@@ -3,13 +3,18 @@ package crowdsourced.mturk;
 import java.net.URL;
 
 /**
- * A visitor for the answer objects
+ * A visitor for the answer objects.
+ * @author Florian Chlan
  */
 public interface AnswerVisitor {
 
-	void visit(String answer);
-	void visit(int answer);
-	void visit(URL answer);
-    void visit(MultipleChoiceOption answer);
-    void visit(boolean answer);
+  public void visit(String answer);
+  
+  public void visit(int answer);
+  
+  public void visit(URL answer);
+  
+  public void visit(MultipleChoiceOption answer);
+  
+  public void visit(boolean answer);
 }

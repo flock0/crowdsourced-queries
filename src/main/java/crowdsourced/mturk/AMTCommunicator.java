@@ -105,7 +105,7 @@ public class AMTCommunicator {
 	 * Sends the passed HIT to
 	 * @param hit the HIT to send
 	 */
-	protected static void sendHIT(HIT hit) {
+	protected static void sendHIT(HIT hit, AnswerCallback callback) {
 		String serial = convertXMLToString(hit.asXMLDocument());
 		/*No need to XML escape the string when using REST,
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
