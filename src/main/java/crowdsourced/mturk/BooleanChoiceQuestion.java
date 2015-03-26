@@ -28,34 +28,34 @@ public class BooleanChoiceQuestion extends Question {
 
         Element answerSpec = doc.createElement("AnswerSpecification");
         question.appendChild(answerSpec);
-            
+
         Element selectionAnswer = doc.createElement("SelectionAnswer");
         answerSpec.appendChild(selectionAnswer);
-        
+
         Element styleSugg = doc.createElement("StyleSuggestion");
         styleSugg.appendChild(doc.createTextNode("radiobutton"));
         selectionAnswer.appendChild(styleSugg);
-        
+
         Element selections = doc.createElement("Selections");
         selectionAnswer.appendChild(selections);
         selections.appendChild(getSelectionElement("True", doc));
         selections.appendChild(getSelectionElement("False", doc));
-        
+
         return question;
     }
 
     private Node getSelectionElement(String string, Document doc) {
         Element selection = doc.createElement("Selection");
-        
+
         Element id = doc.createElement("SelectionIdentifier");
         id.appendChild(doc.createTextNode(string));
-        
+
         Element text = doc.createElement("Text");
         text.appendChild(doc.createTextNode(string));
-        
+
         selection.appendChild(id);
         selection.appendChild(text);
-        
+
         return selection;
     }
 

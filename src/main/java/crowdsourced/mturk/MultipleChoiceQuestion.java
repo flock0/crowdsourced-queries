@@ -45,28 +45,28 @@ public class MultipleChoiceQuestion extends Question {
 		this.answerOptions = answerOptions;
 	}
 
-    @Override
-    public Element asXMLElement(Document doc) {
-        Element question = super.asXMLElement(doc);
+	@Override
+	public Element asXMLElement(Document doc) {
+		Element question = super.asXMLElement(doc);
 
-        Element answerSpec = doc.createElement("AnswerSpecification");
-        question.appendChild(answerSpec);
-            
-        Element selectionAnswer = doc.createElement("SelectionAnswer");
-        answerSpec.appendChild(selectionAnswer);
-        
-        Element styleSugg = doc.createElement("StyleSuggestion");
-        styleSugg.appendChild(doc.createTextNode("radiobutton"));
-        selectionAnswer.appendChild(styleSugg);
-        
-        Element selections = doc.createElement("Selections");
-        selectionAnswer.appendChild(selections);
-        for (MultipleChoiceOption opt : answerOptions) {
-            selections.appendChild(opt.asXMLElement(doc));
-        }
-        
-        return question;
-    }
-	
-	
+		Element answerSpec = doc.createElement("AnswerSpecification");
+		question.appendChild(answerSpec);
+
+		Element selectionAnswer = doc.createElement("SelectionAnswer");
+		answerSpec.appendChild(selectionAnswer);
+
+		Element styleSugg = doc.createElement("StyleSuggestion");
+		styleSugg.appendChild(doc.createTextNode("radiobutton"));
+		selectionAnswer.appendChild(styleSugg);
+
+		Element selections = doc.createElement("Selections");
+		selectionAnswer.appendChild(selections);
+		for (MultipleChoiceOption opt : answerOptions) {
+			selections.appendChild(opt.asXMLElement(doc));
+		}
+
+		return question;
+	}
+
+
 }

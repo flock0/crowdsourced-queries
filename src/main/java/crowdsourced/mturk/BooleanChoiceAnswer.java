@@ -6,12 +6,12 @@ package crowdsourced.mturk;
 public class BooleanChoiceAnswer extends Answer {
 
     private boolean answer;
-    
+
     protected BooleanChoiceAnswer(AnswerType type, Question question) {
         super(type, question);
         // TODO Auto-generated constructor stub
     }
-    
+
     /**
      * Creates a new answer object.
      * @param question The question that this answer is for.
