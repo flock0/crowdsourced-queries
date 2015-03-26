@@ -1,8 +1,11 @@
 package queryExecutor
+import parser.Parser
 
-class QueryExecutor {
+class QueryExecutor() {
   
-  def main(args: Array[String]) = {
-    println("QueryExecutor started...")
+  def parse(query: String) = {
+    val parsedQuery = Parser.parseQuery(query)
+    println(parsedQuery)
   }
 }
+
