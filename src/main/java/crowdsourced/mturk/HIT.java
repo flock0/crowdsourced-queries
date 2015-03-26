@@ -1,6 +1,12 @@
 package crowdsourced.mturk;
 
 import java.util.List;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 
 /**
  * A Human-Intelligence-Task for Amazon Mechanical Turk
@@ -111,4 +117,29 @@ public class HIT {
 		this.keywords = keywordsArg;
 	}
 
+	/**
+	 * Return a XML document corresponding to the QuestionForm for this HIT.
+	 * @return The QuestionForm representation of this HIT.
+	 */
+	public Document asXMLDocument() {
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder;
+		try {
+			docBuilder = docFactory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			throw new RuntimeException("Could not initialize document builder: "
+					+ e.toString());
+		}
+		Document doc = docBuilder.newDocument();
+
+		Element questionForm = doc.createElement("QuestionForm");
+		questionForm.setAttribute("xmlns", "http://mechanicalturk.amazonaws.com/AWSMechanicalTurk/2014-08-15/AWSMechanicalTurkRequester.wsdl");
+
+		for (Question q: this.questions) {
+			Element question = q.asXMLElement(doc);
+			doc.appendChild(question);
+		}
+
+		return doc;
+	}
 }

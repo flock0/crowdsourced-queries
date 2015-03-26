@@ -35,7 +35,7 @@ public class MultipleChoiceOption {
 		id.appendChild(doc.createTextNode(this.identifier));
 
 		Element text = doc.createElement("Text");
-		text.appendChild(doc.createTextNode(this.text));
+		text.appendChild(doc.createTextNode(questionText));
 
 		selection.appendChild(id);
 		selection.appendChild(text);

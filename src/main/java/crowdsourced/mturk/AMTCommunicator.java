@@ -103,7 +103,7 @@ public class AMTCommunicator {
 	 * @param xml
 	 */
 	protected static void sendHIT(HIT hit) {
-		String serial = convertXMLToString();
+		String serial = convertXMLToString(hit.asXMLDocument());
 		/*No need to XML escape the string when using REST,
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
 
