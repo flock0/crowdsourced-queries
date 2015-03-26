@@ -32,7 +32,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>crowdsourced.Main</mainClass>
+              <mainClass>queryExecutor.QueryExecutor</mainClass>
               <packageName>crowdsourced</packageName>
             </manifest>
             <manifestEntries>
@@ -57,7 +57,7 @@
               </descriptorRefs>
               <archive>
                 <manifest>
-                  <mainClass>crowdsourced.Main</mainClass>
+                  <mainClass>queryExecutor.QueryExecutor</mainClass>
                 </manifest>
               </archive>
             </configuration>
