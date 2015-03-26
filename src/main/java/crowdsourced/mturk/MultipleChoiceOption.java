@@ -8,17 +8,17 @@ import org.w3c.dom.Element;
  */
 public class MultipleChoiceOption {
 	private String identifier;
-	private String text;
+	private String questionText;
 
 	/**
 	 * Create a new multiple-choice option object
 	 * @param identifier The unique id of the option.
 	 * @param text The text that will be displayed to the worker.
 	 */
-	public MultipleChoiceOption(String identifier, String text) {
+	public MultipleChoiceOption(String _identifier, String _text) {
 		super();
-		this.identifier = identifier;
-		this.text = text;
+		this.identifier = _identifier;
+		this.questionText = _text;
 	}
 
 	/**
@@ -47,16 +47,16 @@ public class MultipleChoiceOption {
 		return identifier;
 	}
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+	public void setIdentifier(String _identifier) {
+		this.identifier = _identifier;
 	}
 
 	public String getText() {
-		return text;
+		return questionText;
 	}
 
 	public void setText(String text) {
-		this.text = text;
+		this.questionText = text;
 	}
 
 

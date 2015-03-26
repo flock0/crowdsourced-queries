@@ -41,8 +41,8 @@ public class MultipleChoiceQuestion extends Question {
 	 * Set the possible answer that are presented to the worker.
 	 * @param answerOptions A list of possible answers that are presented to the worker. Must have at least to elements.
 	 */
-	private void setAnswerOptions(List<MultipleChoiceOption> answerOptions) {
-		this.answerOptions = answerOptions;
+	private void setAnswerOptions(List<MultipleChoiceOption> _answerOptions) {
+		this.answerOptions = _answerOptions;
 	}
 
 	@Override
