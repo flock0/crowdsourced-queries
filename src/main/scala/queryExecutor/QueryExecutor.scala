@@ -37,7 +37,7 @@ class QueryExecutor() {
     
   }
   def taskSelect(from: Q, fields: List[P]) = {
-    val NlTask: AMTTask = from match {case NaturalLanguage(s) => taskNaturalLanguage(s,fields)}   
+    val NLTask: AMTTask = from match {case NaturalLanguage(s) => taskNaturalLanguage(s,fields)}   
     println("Task select")
     
     NLTask.onFinish(() => {
