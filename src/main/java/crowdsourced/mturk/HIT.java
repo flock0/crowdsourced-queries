@@ -142,4 +142,69 @@ public class HIT {
 
 		return doc;
 	}
+
+	/**
+	 * @return the autoApprovalDelayInSeconds
+	 */
+	public static int getAutoApprovalDelayInSeconds() {
+		return AUTO_APPROVAL_DELAY_IN_SECONDS;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @return the description
+	 */
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @return the questions
+	 */
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	/**
+	 * @return the lifetimeInSeconds
+	 */
+	public int getLifetimeInSeconds() {
+		return lifetimeInSeconds;
+	}
+
+	/**
+	 * @return the maxAssignments
+	 */
+	public int getMaxAssignments() {
+		return maxAssignments;
+	}
+
+	/**
+	 * @return the rewardInUSD
+	 */
+	public float getRewardInUSD() {
+		return rewardInUSD;
+	}
+
+	/**
+	 * @return the assignmentDurationInSeconds
+	 */
+	public int getAssignmentDurationInSeconds() {
+		return assignmentDurationInSeconds;
+	}
+
+	/**
+	 * @return the keywords
+	 */
+	public List<String> getKeywords() {
+		return keywords;
+	}
+
+
 }
