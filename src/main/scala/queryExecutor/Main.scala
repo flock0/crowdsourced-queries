@@ -3,6 +3,7 @@ import crowdsourced.mturk._
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import scala.collection.JavaConverters._
+
 object Main extends App {
   
   val query = "SELECT (full name) FROM [Presidents of the USA] WHERE [political party is democrat] ORDER BY age of death"
@@ -20,8 +21,12 @@ object Main extends App {
   val numWorkers = 3
   val rewardUSD = 0.01 toFloat
   val keywords = List("URL retrieval","Fast")
-  val HIT = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
+  val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
   
   //AMTCommunicator.checkBalance(74.74 toFloat)
-  AMTCommunicator.sendHIT(HIT, null)
+  
+  //val answersHandler = new HITAnswersHandler()
+  
+  //AMTCommunicator.sendHIT(hit, answersHandler)
+  
 }

@@ -5,7 +5,9 @@ import crowdsourced.mturk.AnswerCallback
 import crowdsourced.mturk.Assignment
 import scala.collection.JavaConverters._
 
-class HITAnswersHandler extends AnswerCallback {
+class HITAnswersHandler(val task: AMTTask) extends AnswerCallback {
+  
+  private var done: Boolean = false
   
   def newAssignmentsReceived(newAssignments: java.util.List[Assignment]): Unit = {
     val assignments: List[Assignment] = newAssignments.asScala.toList
@@ -20,10 +22,14 @@ class HITAnswersHandler extends AnswerCallback {
   }
   
   def jobFinished(): Unit = {
+    this.done = true
+    task.finish()
      println("HIT finished successfully.")
   }
   
   def errorOccured(): Unit = {
     println("Error occurred while handling answers from HIT.")
   }
+  
+  def isDone(): Boolean = this.done
 }

@@ -1,6 +1,13 @@
 package queryExecutor
 import parser.Parser
 import tree.Tree._
+import crowdsourced.mturk.HIT
+import crowdsourced.mturk.Question
+import crowdsourced.mturk.StringQuestion
+import crowdsourced.mturk.URLQuestion
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import scala.collection.JavaConverters._
 
 class QueryExecutor() {
 
@@ -30,9 +37,25 @@ class QueryExecutor() {
     
   }
   def taskSelect(from: Q, fields: List[P]) = {
-    val a = from match {case NaturalLanguage(s) => taskNaturalLanguage(s,fields)}   
+    val NlTask: AMTTask = from match {case NaturalLanguage(s) => taskNaturalLanguage(s,fields)}   
     println("Task select")
+    
+    NLTask.onFinish(() => {
+      println("NL task has finished.")
+      
+      val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
+      val questionTitle = "What is the most relevant website to find ["+s+"] ?\nWe are interested by : "+fields.mkString(", ")
+      val questionDescription = "Select URL from which other workers can extract required information"
+      val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
+      val questionList = List(question)
+      val numWorkers = 3
+      val rewardUSD = 0.01 toFloat
+      val keywords = List("URL retrieval","Fast")
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
+      
+    })
   }
+  
   def taskJoin(left: Q, right: Q, on: String) = {
     val a = left match  {
       case Select(nl,fields)=> taskSelect(nl, fields)
@@ -57,11 +80,24 @@ class QueryExecutor() {
      println("Task order by")
   }
   
-  def taskNaturalLanguage(s: String, fields: List[P]) = {
+  def taskNaturalLanguage(s: String, fields: List[P]): AMTTask = {
     println("Task natural language")
-    println("    Send HIT with information "+s+","+fields)
-    println("    Wait response")
-    println("    Notify")
     
+    val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
+    val questionTitle = "What is the most relevant website to find ["+s+"] ?\nWe are interested by : "+fields.mkString(", ")
+    val questionDescription = "Select URL from which other workers can extract required information"
+    val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
+    val questionList = List(question)
+    val numWorkers = 3
+    val rewardUSD = 0.01 toFloat
+    val keywords = List("URL retrieval","Fast")
+    val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
+    
+    println("    Asking worker : "+questionTitle)
+    
+    val task = new AMTTask(hit)
+    task.exec()
+    
+    task
   }
 }
