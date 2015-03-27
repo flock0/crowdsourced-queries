@@ -9,8 +9,8 @@ object Main extends App {
   val query = "SELECT (full name) FROM [Presidents of the USA] WHERE [political party is democrat] ORDER BY age of death"
   //val query = "SELECT (movies) FROM [Movies with Angelina Jolie] JOIN SELECT (movies) FROM [Movies with Brad Pitt] ON movies"
   val queryExec = new QueryExecutor
-  val parsedQuery = queryExec.parse(query)
-  val executedQuery = queryExec.execute(parsedQuery)
+  //val parsedQuery = queryExec.parse(query)
+  //val executedQuery = queryExec.execute(parsedQuery)
   
   val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
   println(timeID)
@@ -25,8 +25,7 @@ object Main extends App {
   
   //AMTCommunicator.checkBalance(74.74 toFloat)
   
-  //val answersHandler = new HITAnswersHandler()
-  
-  //AMTCommunicator.sendHIT(hit, answersHandler)
+  val task = new AMTTask(hit)
+  task.exec()
   
 }
