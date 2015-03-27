@@ -16,7 +16,6 @@ class QueryExecutor() {
         case Join(left,right,on) => taskJoin(left,right,on)//recursiveTraversal(left); recursiveTraversal(right);
         case Where(selectTree, where) => taskWhere(selectTree, where)
         case OrderBy(query, ascendingOrDescending, field) => taskOrderBy(query,ascendingOrDescending,field)
-        case NaturalLanguage(s) => taskNaturalLanguage(s)
         case _ => println("Problem");
 
     }
@@ -30,34 +29,39 @@ class QueryExecutor() {
     println("Task where")
     
   }
-  def taskSelect(from: Q, elem: List[P]) = {
-    val a = from match {case NaturalLanguage(s) => taskNaturalLanguage(s)}   
+  def taskSelect(from: Q, fields: List[P]) = {
+    val a = from match {case NaturalLanguage(s) => taskNaturalLanguage(s,fields)}   
     println("Task select")
   }
   def taskJoin(left: Q, right: Q, on: String) = {
     val a = left match  {
       case Select(nl,fields)=> taskSelect(nl, fields)
       case Where(select,where) => taskWhere(select, where)
-      case NaturalLanguage(s) => taskNaturalLanguage(s)
+      //case NaturalLanguage(s) => taskNaturalLanguage(s)
     }
     
     val b = right match  {
       case Select(nl,fields) => taskSelect(nl, fields)
       case Where(select,where) => taskWhere(select, where)
-      case NaturalLanguage(s) => taskNaturalLanguage(s)
+      //case NaturalLanguage(s) => taskNaturalLanguage(s)
     }
     println("Task join")
+    
   }
   def taskOrderBy(q: Q3, order: O, by: String) = {
     val a = q match  {
       case Select(nl,fields) => taskSelect(nl, fields)
       case Where(select,where) => taskWhere(select, where)
-      case NaturalLanguage(s) => taskNaturalLanguage(s)
+      
     }
      println("Task order by")
   }
   
-  def taskNaturalLanguage(s: String) = {
+  def taskNaturalLanguage(s: String, fields: List[P]) = {
     println("Task natural language")
+    println("    Send HIT with information "+s+","+fields)
+    println("    Wait response")
+    println("    Notify")
+    
   }
 }
