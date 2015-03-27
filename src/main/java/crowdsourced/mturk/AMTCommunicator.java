@@ -32,6 +32,8 @@ public class AMTCommunicator {
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String USER_AGENT = "Mozilla/5.0";
+	private static final String AMT_URL = "https://mechanicalturk.amazonaws.com";
+	// can use "https://mechanicalturk.sandbox.amazonaws.com"
 
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
 	private static final String ACCESS_KEY_ID = "";
@@ -39,6 +41,7 @@ public class AMTCommunicator {
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
 
 	public static void main(String[] args) {
+
 	}
 
 
@@ -84,14 +87,16 @@ public class AMTCommunicator {
 			String service = "AWSMechanicalTurkRequester";
 			String operation = "GetAccountBalance";
 			String timestamp = getTimestamp();
-			String ur = "https://mechanicalturk.amazonaws.com/?Service=" + service
+			String ur = AMT_URL + "/?Service=" + service
 							+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
 							+ "&Version=2014-08-15"
-							+ "&Operation=" + operation
-							+ "&Signature=" + calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)
-							+ "&Timestamp=" + timestamp;
+							+ "&Operation=" + encodeUrl(operation)
+							+ "&Signature="
+							+ encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID))
+							+ "&Timestamp=" + encodeUrl(timestamp);
+			System.out.println(service + operation + timestamp);
 			sendGet(ur);
-			
+
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
 		} catch (SignatureException e) {
@@ -126,12 +131,13 @@ public class AMTCommunicator {
 				keywords = encodeUrl(tempKeywords.substring(1, tempKeywords.length() - 1));
 			}
 
-			String url = "https://mechanicalturk.amazonaws.com/?Service=" + service
-							+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
+			String url = AMT_URL + "/?Service=" + service
+							+ "&AWSAccessKeyId=" + encodeUrl(ACCESS_KEY_ID)
 							+ "&Version=2014-08-15"
-							+ "&Operation=" + operation
-							+ "&Signature=" + calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)
-							+ "&Timestamp=" + timestamp
+							+ "&Operation=" + encodeUrl(operation)
+							+ "&Signature="
+							+ encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID))
+							+ "&Timestamp=" + encodeUrl(timestamp)
 							+ "&Title=" + title
 							+ "&Description=" + description
 							+ "&Reward.1.Amount=" + rewardAmount
