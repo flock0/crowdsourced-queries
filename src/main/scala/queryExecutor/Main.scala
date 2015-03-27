@@ -18,8 +18,10 @@ object Main extends App {
   val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
   val questionList = List(question)
   val numWorkers = 3
-  val rewardUSD = 0.005 toFloat
+  val rewardUSD = 0.01 toFloat
   val keywords = List("URL retrieval","Fast")
   val HIT = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
-  println(AMTCommunicator.checkBalance(74.74 toFloat))
+  
+  //AMTCommunicator.checkBalance(74.74 toFloat)
+  AMTCommunicator.sendHIT(HIT, null)
 }
