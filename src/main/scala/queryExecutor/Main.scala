@@ -21,5 +21,5 @@ object Main extends App {
   val rewardUSD = 0.005 toFloat
   val keywords = List("URL retrieval","Fast")
   val HIT = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
-  //val amtCommunicator = new AMTCommunicator
+  println(AMTCommunicator.checkBalance(74.74 toFloat))
 }
