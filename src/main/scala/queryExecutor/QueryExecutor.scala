@@ -43,7 +43,7 @@ class QueryExecutor() {
     NLTask.onFinish(() => {
       println("NL task has finished.")
       
-      val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
+      /*val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
       val questionTitle = "What is the most relevant website to find ["+s+"] ?\nWe are interested by : "+fields.mkString(", ")
       val questionDescription = "Select URL from which other workers can extract required information"
       val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
@@ -52,7 +52,7 @@ class QueryExecutor() {
       val rewardUSD = 0.01 toFloat
       val keywords = List("URL retrieval","Fast")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
-      
+      */
     })
   }
   
