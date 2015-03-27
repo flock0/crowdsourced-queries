@@ -133,7 +133,7 @@ public class HIT {
 		Document doc = docBuilder.newDocument();
 
 		Element questionForm = doc.createElement("QuestionForm");
-		questionForm.setAttribute("xmlns", "http://mechanicalturk.amazonaws.com/AWSMechanicalTurk/2014-08-15/AWSMechanicalTurkRequester.wsdl");
+		questionForm.setAttribute("xmlns", "http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/QuestionForm.xsd");
 
 		for (Question q: this.questions) {
 			Element question = q.asXMLElement(doc);
