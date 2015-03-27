@@ -24,7 +24,7 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
   /**
    * Sends the request to AMT and set itself as the callback object
    */
-  def exec(): Unit = AMTCommunicator.sendHIT(hit, this)
+  def exec(): Unit = AMTCommunicator.sendHIT(hit, this) // TODO modify it to the blocking sendHIT()
   
   /**
    * Returns true if the HIT has finished

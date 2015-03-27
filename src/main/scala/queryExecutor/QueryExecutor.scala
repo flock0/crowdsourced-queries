@@ -5,6 +5,7 @@ import crowdsourced.mturk.HIT
 import crowdsourced.mturk.Question
 import crowdsourced.mturk.StringQuestion
 import crowdsourced.mturk.URLQuestion
+import scala.collection.mutable.LinkedList
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import scala.collection.JavaConverters._
@@ -44,9 +45,10 @@ class QueryExecutor() {
     NLTask.onFinish(() => {
       println("NL task has finished.")
       
+      // TODO the id should have a random part to avoid conflict
       val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
-      val questionTitle = "On this website, retrieve all distinct elements with 
-          the following information (" +fields.mkString(", ")\n URL : " + NLTask.getAnswer().toString() + " "
+      val url = "http://www.google.com/" // TODO should come from the task in a way like this : NLTask.getAnswer().toString()
+      val questionTitle = "On this website, retrieve all distinct elements with the following information ("+fields.mkString(", ")+")\n URL : "+ url + " "
       val questionDescription = "Please provide one elemen per line"
       val question: Question = new StringQuestion(timeID,"Extract information from website", questionTitle)
       val questionList = List(question)
@@ -54,16 +56,14 @@ class QueryExecutor() {
       val rewardUSD = 0.01 toFloat
       val keywords = List("Extract information from URL")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
-      
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
     
       println("    Asking worker : "+questionTitle)
     
       val task = new AMTTask(hit)
       task.exec()
     
-      task
-    }
+      //task
+    })
   }
   
   def taskJoin(left: Q, right: Q, on: String) = {
@@ -107,8 +107,10 @@ class QueryExecutor() {
     println("    Asking worker : "+questionTitle)
     
     val task = new AMTTask(hit)
-    task.exec()
+    val result = task.exec()
     
+    // TODO do the propagation of result (retrieved by blocking)
+    //result
     task
   }
 }
