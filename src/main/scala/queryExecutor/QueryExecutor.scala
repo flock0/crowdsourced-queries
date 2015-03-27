@@ -41,7 +41,7 @@ class QueryExecutor() {
       case NaturalLanguage(s) => taskNaturalLanguage(s)
     }
     
-    val b = left match  {
+    val b = right match  {
       case Select(nl,fields) => taskSelect(nl, fields)
       case Where(select,where) => taskWhere(select, where)
       case NaturalLanguage(s) => taskNaturalLanguage(s)
