@@ -10,18 +10,18 @@ class QueryExecutor() {
 
   def execute(query: Q) = {
 
-    def recursiveTraversal(node: Q): Unit = node match{
+    def startingPoint(node: Q): Unit = node match{
 
-        case Select(nl, fields) => recursiveTraversal(nl)
-        case Join(left,right,on) => ;taskJoin(left,right,on)//recursiveTraversal(left); recursiveTraversal(right);
-        case Where(selectTree, where) => recursiveTraversal(selectTree)
-        case OrderBy(query, ascendingOrDescending, field) => recursiveTraversal(query)
-        case NaturalLanguage(s) => println("Node found");
+        case Select(nl, fields) => taskSelect(nl,fields)
+        case Join(left,right,on) => taskJoin(left,right,on)//recursiveTraversal(left); recursiveTraversal(right);
+        case Where(selectTree, where) => taskWhere(selectTree, where)
+        case OrderBy(query, ascendingOrDescending, field) => taskOrderBy(query,ascendingOrDescending,field)
+        case NaturalLanguage(s) => taskNaturalLanguage(s)
         case _ => println("Problem");
 
     }
       println("Starting execution of the query : \"" + query + "\"")
-      recursiveTraversal(query)
+      startingPoint(query)
       //println(t)
   }
 
