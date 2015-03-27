@@ -32,7 +32,7 @@ public class AMTCommunicator {
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String AMT_URL = "https://mechanicalturk.amazonaws.com";
+	private static final String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
 	// can use "https://mechanicalturk.sandbox.amazonaws.com"
 
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
@@ -112,6 +112,8 @@ public class AMTCommunicator {
 	 */
 	protected static void sendHIT(HIT hit, AnswerCallback callback) {
 		String serial = convertXMLToString(hit.asXMLDocument());
+		//Need securisation
+		serial = serial.substring(serial.indexOf("\n") + 1);
 		/*No need to XML escape the string when using REST,
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
 		try {
@@ -148,6 +150,7 @@ public class AMTCommunicator {
 							+ "&Keywords=" + keywords;
 
 			sendGet(url);
+			System.out.println(url);
 
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");

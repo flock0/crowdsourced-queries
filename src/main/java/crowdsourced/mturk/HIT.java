@@ -137,9 +137,9 @@ public class HIT {
 
 		for (Question q: this.questions) {
 			Element question = q.asXMLElement(doc);
-			doc.appendChild(question);
+			questionForm.appendChild(question);
 		}
-
+		doc.appendChild(questionForm);
 		return doc;
 	}
 
