@@ -11,9 +11,9 @@ import scala.collection.JavaConverters._
 
 class QueryExecutor() {
 
-	def parse(query: String): Q = {
-		return Parser.parseQuery(query).get
-	}
+  def parse(query: String): Q = {
+    return Parser.parseQuery(query).get
+  }
 
   def execute(query: Q) = {
 
@@ -37,23 +37,33 @@ class QueryExecutor() {
     
   }
   def taskSelect(from: Q, fields: List[P]) = {
+    
     val NLTask: AMTTask = from match {case NaturalLanguage(s) => taskNaturalLanguage(s,fields)}   
     println("Task select")
     
     NLTask.onFinish(() => {
       println("NL task has finished.")
       
-      /*val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
-      val questionTitle = "What is the most relevant website to find ["+s+"] ?\nWe are interested by : "+fields.mkString(", ")
-      val questionDescription = "Select URL from which other workers can extract required information"
-      val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
+      val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
+      val questionTitle = "On this website, retrieve all distinct elements with 
+          the following information (" +fields.mkString(", ")\n URL : " + NLTask.getAnswer().toString() + " "
+      val questionDescription = "Please provide one elemen per line"
+      val question: Question = new StringQuestion(timeID,"Extract information from website", questionTitle)
       val questionList = List(question)
-      val numWorkers = 3
+      val numWorkers = 1
       val rewardUSD = 0.01 toFloat
-      val keywords = List("URL retrieval","Fast")
+      val keywords = List("Extract information from URL")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
-      */
-    })
+      
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
+    
+      println("    Asking worker : "+questionTitle)
+    
+      val task = new AMTTask(hit)
+      task.exec()
+    
+      task
+    }
   }
   
   def taskJoin(left: Q, right: Q, on: String) = {
@@ -80,7 +90,8 @@ class QueryExecutor() {
      println("Task order by")
   }
   
-  def taskNaturalLanguage(s: String, fields: List[P]): AMTTask = {
+  def taskNaturalLanguage(s: String, fields: List[P]) = {
+    
     println("Task natural language")
     
     val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
@@ -88,7 +99,7 @@ class QueryExecutor() {
     val questionDescription = "Select URL from which other workers can extract required information"
     val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
     val questionList = List(question)
-    val numWorkers = 3
+    val numWorkers = 1
     val rewardUSD = 0.01 toFloat
     val keywords = List("URL retrieval","Fast")
     val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
