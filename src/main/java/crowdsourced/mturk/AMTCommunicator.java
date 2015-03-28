@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.Timer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -45,9 +46,8 @@ public class AMTCommunicator {
 					+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
 					+ "&Version=2014-08-15";
 
-	public static void main(String[] args) {
-
-	}
+	private static final long POLLING_INITIAL_DELAY_SECONDS = 300;
+	private static final long POLLING_RATE_SECONDS = 30;
 
 	/**
 	 * Sends a REST GET request using the default base URL and with the parameters appended.
@@ -147,7 +147,7 @@ public class AMTCommunicator {
 	 * @param hit the HIT to send
 	 * @param callback The object where new answers will be sent to.
 	 */
-	protected static void sendHIT(HIT hit, AnswerCallback callback) {
+	protected static PendingJob sendHIT(HIT hit, AnswerCallback callback) {
 		String serial = convertXMLToString(hit.asXMLDocument());
 		//Need securisation
 		serial = serial.substring(serial.indexOf("\n") + 1);
@@ -190,10 +190,16 @@ public class AMTCommunicator {
 			System.out.println(sendGet(url));
 			//System.out.println(url);
 
+			PendingJob job = new PendingJob(hit);
+			new Timer().schedule(new PollingTask(job, callback), POLLING_INITIAL_DELAY_SECONDS, POLLING_RATE_SECONDS);
+			return job;
+
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
+			return null;
 		} catch (SignatureException e) {
 			System.out.println("The signature couldn't be generated properly.");
+			return null;
 		}
 	}
 

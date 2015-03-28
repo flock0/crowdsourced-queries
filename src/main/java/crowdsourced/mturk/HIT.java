@@ -1,6 +1,8 @@
 package crowdsourced.mturk;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,6 +42,13 @@ public class HIT {
 	 * The questions that will be posed to the worker.
 	 */
 	private List<Question> questions;
+
+	/**
+	 * A map of the questions. This can be used to find questions faster.
+	 * Key: The unique identifier of the question.
+	 * Value: The question itself.
+	 */
+	private Map<String, Question> questionsMap;
 
 	/**
 	 * An amount of time, in seconds, after which the HIT is no longer available
@@ -122,6 +131,10 @@ public class HIT {
 		this.rewardInUSD = rewardInUSDArg;
 		this.assignmentDurationInSeconds = assignmentDurationInSecondsArg;
 		this.keywords = keywordsArg;
+		this.questionsMap = new HashMap<String, Question>();
+		for (Question q : questionsArg) {
+			questionsMap.put(q.getIdentifier(), q);
+		}
 	}
 
 	/**
@@ -178,6 +191,13 @@ public class HIT {
 		return questions;
 	}
 
+	/**
+	 * @return the questionsMap
+	 */
+	public Map<String, Question> getQuestionsMap() {
+		return questionsMap;
+	}
+	
 	/**
 	 * @return the lifetimeInSeconds
 	 */

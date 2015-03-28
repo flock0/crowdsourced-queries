@@ -1,7 +1,12 @@
 package crowdsourced.mturk;
 
+import java.io.IOException;
+
+import javax.xml.xpath.XPath;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * A question that is asked to the workers in a HIT.
@@ -15,7 +20,7 @@ public abstract class Question {
 	 * This identifier is used to associate the Worker's answers with the
 	 * question in the answer data.
 	 */
-	private String questionIdentifier;
+	private String identifier;
 
 	/**
 	 * A name for the question, displayed as a prominent heading.
@@ -38,7 +43,7 @@ public abstract class Question {
 	 */
 	protected Question(String identifier, String name,
 					String content) {
-		this.questionIdentifier = identifier;
+		this.identifier = identifier;
 		this.displayName = name;
 		this.questionContent = content;
 	}
@@ -55,7 +60,7 @@ public abstract class Question {
 		Element question = doc.createElement("Question");
 
 		Element identifier = doc.createElement("QuestionIdentifier");
-		identifier.appendChild(doc.createTextNode(this.questionIdentifier));
+		identifier.appendChild(doc.createTextNode(this.identifier));
 
 		Element name = doc.createElement("DisplayName");
 		name.appendChild(doc.createTextNode(this.displayName));
@@ -73,5 +78,19 @@ public abstract class Question {
 		question.appendChild(required);
 		question.appendChild(content);
 		return question;
+	}
+
+
+	/**
+	 * Parses an XML-<Answer>-Node and extracts the value from it
+	 * @param item An XML-<Answer>-node from AMT.
+	 * @param xPath An xPath object to use to traverse the XML-node.
+	 * @return An answer object with the value extracted.
+	 * @throws IOException when the parsing of the <Answer>-node fails.
+	 */
+	public abstract Answer parseXMLAnswer(Node item, XPath xPath) throws IOException;
+	
+	public String getIdentifier() {
+		return identifier;
 	}
 }
