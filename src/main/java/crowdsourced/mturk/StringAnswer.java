@@ -2,6 +2,7 @@ package crowdsourced.mturk;
 
 /**
  * An answer containing a string value.
+ * @author Florian Chlan
  */
 public class StringAnswer extends Answer {
 

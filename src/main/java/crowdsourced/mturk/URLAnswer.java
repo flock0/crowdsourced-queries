@@ -4,6 +4,7 @@ import java.net.URL;
 
 /**
  * An answer containing an URL.
+ * @author Florian Chlan
  */
 public class URLAnswer extends Answer {
 

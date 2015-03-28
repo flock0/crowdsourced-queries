@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 /**
  * A question that uses a simple text field for the answer.
+ * @author Florian Chlan, Florian Vessaz
  */
 public class StringQuestion extends Question {
 

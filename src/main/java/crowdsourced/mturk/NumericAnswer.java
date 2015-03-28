@@ -2,6 +2,7 @@ package crowdsourced.mturk;
 
 /**
  * An answer containing a numerical (integer) value.
+ * @author Florian Chlan
  */
 public class NumericAnswer extends Answer {
 

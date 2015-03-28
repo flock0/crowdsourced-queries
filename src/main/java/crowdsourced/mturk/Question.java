@@ -6,6 +6,7 @@ import org.w3c.dom.Element;
 /**
  * A question that is asked to the workers in a HIT.
  * @see http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_QuestionFormDataStructureArticle.html
+ * @author Florian Chlan
  */
 public abstract class Question {
 

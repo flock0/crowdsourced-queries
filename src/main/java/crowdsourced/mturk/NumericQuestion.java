@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 /**
  * A question that accepts a numerical value for the answer.
+ * @author Florian Chlan, Florian Vessaz
  */
 public class NumericQuestion extends Question {
 

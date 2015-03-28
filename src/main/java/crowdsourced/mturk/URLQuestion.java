@@ -6,6 +6,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * A question that accepts a single URL.
+ * @author Florian Chlan, Florian Vessaz
  */
 public class URLQuestion extends StringQuestion {
 
