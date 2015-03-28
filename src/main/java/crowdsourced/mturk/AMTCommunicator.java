@@ -200,11 +200,16 @@ public class AMTCommunicator {
 
 			String response = sendGet(url);
 			System.out.println(response);
-			int start = response.indexOf("<HITId>") + "<HITId>".length();
+			int start = response.indexOf("<HITId>");
 			int stop = response.indexOf("</HITId>");
-			String hitId = response.substring(start, stop);
-			System.out.println("HIT ID: " + hitId);
-			hit.setHITId(hitId);
+			if (start != -1 && stop != -1) {
+				String hitId = response.substring(start + "<HITId>".length(), stop);
+				System.out.println("HIT ID: " + hitId);
+				hit.setHITId(hitId);
+			} else {
+				//unsuccessful
+			}
+			
 
 
 			PendingJob job = new PendingJob(hit);
