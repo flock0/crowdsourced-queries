@@ -3,12 +3,17 @@ package crowdsourced.mturk;
 import net.iharder.Base64;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSParser;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -23,6 +28,8 @@ import java.util.TimeZone;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * The class dedicated to direct communications with AMT
@@ -187,13 +194,27 @@ public class AMTCommunicator {
 							+ "&LifetimeInSeconds=" + lifetimeInSeconds
 							+ "&Keywords=" + keywords;
 
-			System.out.println(sendGet(url));
-			//System.out.println(url);
+			String response = sendGet(url);
+			System.out.println(response);
+			int start = response.indexOf("<HITId>") + "<HITId>".length();
+			int stop = response.indexOf("</HITId>");
+			String hitId = response.substring(start, stop);
+			System.out.println("HIT ID: " + hitId);
+			hit.setHITId(hitId);
+			if (callback != null) {
+				callback.jobFinished();
+			}
 
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
+			if (callback != null) {
+				callback.errorOccured();
+			}
 		} catch (SignatureException e) {
 			System.out.println("The signature couldn't be generated properly.");
+			if (callback != null) {
+				callback.errorOccured();
+			}
 		}
 	}
 
@@ -244,7 +265,7 @@ public class AMTCommunicator {
 
 
     /**
-	 * Converts an XML Document to a string
+	 * Converts a XML Document to a string
 	 * @param document the XML Document to convert
 	 * @return a string corresponding to the serialization of the XML document
 	 */
@@ -254,6 +275,39 @@ public class AMTCommunicator {
 	    return lsSerializer.writeToString(document);
 	}
 
+
+	/**
+	 * Parses a String to generate a XML document
+	 * @param xml the string to parse
+	 * @return a XML document if the string was parsed successfully
+	 * @throws Exception
+	 */
+	public static Document loadXMLFromString(String xml) throws Exception {
+		/*DOMImplementationRegistry registry;
+		try {
+			registry = DOMImplementationRegistry.newInstance();
+			DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+			LSParser parser = impl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, "http://www.w3.org/TR/REC-xml");
+			LSInput input = impl.createLSInput();
+			input.setEncoding("UTF-8");
+			input.setStringData(xml);
+		    return parser.parse(input);
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassCastException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		return null;
+	}
 
     /**
      * Performs base64-encoding of input bytes.
