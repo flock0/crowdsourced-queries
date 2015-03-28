@@ -18,6 +18,9 @@ import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TimeZone;
 
 import javax.crypto.Mac;
@@ -30,27 +33,60 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class AMTCommunicator {
 
-	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
-	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
-	// can use "https://mechanicalturk.sandbox.amazonaws.com"
-
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
 	private static final String ACCESS_KEY_ID = "";
 	private static final String ACCESS_KEY_SECRET_ID = "";
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
+	
+	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+	private static final String USER_AGENT = "Mozilla/5.0";
+	private static final String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
+	// can use "https://mechanicalturk.sandbox.amazonaws.com"
+	private static final String AMT_REQUEST_BASE_URL = AMT_URL 
+				+ "/?Service=AWSMechanicalTurkRequester"
+				+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
+				+ "&Version=2014-08-15";
 
-	public static void main(String[] args) {
-
-	}
-
+	
 
 	/**
-	 * Sends a REST GET request with the passed URL. Prints the result.
+	 * Sends a REST GET request using the default base URL and with the parameters appended.
+	 * @param parameters A map of parameters with the key being the descriptor of the parameter and the value being the value.
+	 * @return The response from the GET request.
+	 * @throws IOException 
+	 * @throws SignatureException 
+	 */
+	public static String sendGet(Map<String, String> parameters) throws IOException, SignatureException {
+		String operation = null;
+		String service = "AWSMechanicalTurkRequester";
+		String timestamp = getTimestamp();
+		StringBuffer url = new StringBuffer();
+		url.append(AMT_REQUEST_BASE_URL);
+		for(String key : parameters.keySet()) {
+			url.append(String.format("&%s=%s", key, encodeUrl(parameters.get(key))));
+			if(key.equals("Operation")) {
+				operation = parameters.get(key);
+			}
+		}
+		if(operation == null) {
+			throw new IOException("Request does not contain a Operation-prameter");
+		}
+
+		url.append("&Timestamp=");
+		url.append(timestamp);
+		url.append("&Signature=");
+		url.append(encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)));
+
+		return sendGet(url.toString());
+	}
+	
+	/**
+	 * Sends a REST GET request with the passed URL.
 	 * @param url the destination URL
+	 * @return The response from the GET request.
 	 * @throws IOException
 	 */
-	private static void sendGet(String url) throws IOException {
+	private static String sendGet(String url) throws IOException {
 		URL obj = new URL(url);
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		// optional default is GET
@@ -72,8 +108,7 @@ public class AMTCommunicator {
 		}
 		in.close();
 
-		//print result
-		System.out.println(response.toString());
+		return response.toString();
 	}
 
 
@@ -95,7 +130,7 @@ public class AMTCommunicator {
 							+ encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID))
 							+ "&Timestamp=" + encodeUrl(timestamp);
 			System.out.println(service + operation + timestamp);
-			sendGet(ur);
+			System.out.println(sendGet(ur));
 
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
@@ -109,6 +144,7 @@ public class AMTCommunicator {
 	/**
 	 * Sends the passed HIT to
 	 * @param hit the HIT to send
+	 * @param callback The object where new answers will be sent to.
 	 */
 	protected static void sendHIT(HIT hit, AnswerCallback callback) {
 		String serial = convertXMLToString(hit.asXMLDocument());
@@ -149,7 +185,7 @@ public class AMTCommunicator {
 							+ "&LifetimeInSeconds=" + lifetimeInSeconds
 							+ "&Keywords=" + keywords;
 
-			sendGet(url);
+			System.out.println(sendGet(url));
 			System.out.println(url);
 
 		} catch  (IOException e) {
@@ -170,7 +206,6 @@ public class AMTCommunicator {
 	    gmtFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
 	    return gmtFormat.format(currentTime.getTime());
 	}
-
 
     /**
      * Computes RFC 2104-compliant HMAC signature.
