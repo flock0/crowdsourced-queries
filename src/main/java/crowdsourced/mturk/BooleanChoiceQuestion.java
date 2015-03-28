@@ -6,6 +6,7 @@ import org.w3c.dom.Node;
 
 /**
  * A True/False question.
+ * @author Florian Chlan
  */
 public class BooleanChoiceQuestion extends Question {
 

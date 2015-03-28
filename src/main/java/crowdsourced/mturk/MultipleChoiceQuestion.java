@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 
 /**
  * A question that is presented as multiple-choice to the worker.
+ * @author Florian Chlan
  */
 public class MultipleChoiceQuestion extends Question {
 

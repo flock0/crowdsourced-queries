@@ -2,6 +2,7 @@ package crowdsourced.mturk;
 
 /**
  * An answer containing a boolean value.
+ * @author Florian Chlan
  */
 public class BooleanChoiceAnswer extends Answer {
 
@@ -9,7 +10,6 @@ public class BooleanChoiceAnswer extends Answer {
 
     protected BooleanChoiceAnswer(AnswerType type, Question question) {
         super(type, question);
-        // TODO Auto-generated constructor stub
     }
 
     /**

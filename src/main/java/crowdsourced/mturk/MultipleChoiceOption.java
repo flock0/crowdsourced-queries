@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 /**
  * A single option for a multiple-choice question.
+ * @author Florian Chlan
  */
 public class MultipleChoiceOption {
 	private String identifier;

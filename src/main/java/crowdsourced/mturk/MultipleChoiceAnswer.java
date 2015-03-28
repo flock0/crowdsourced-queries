@@ -5,6 +5,7 @@ package crowdsourced.mturk;
 
 /**
  * An answer for a multiple-choice question containing the chosen option.
+ * @author Florian Chlan
  */
 public class MultipleChoiceAnswer extends Answer {
 

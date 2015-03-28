@@ -6,6 +6,7 @@ import org.w3c.dom.NodeList;
 
 /**
  * A question that accepts a single URL.
+ * @author Florian Chlan, Florian Vessaz
  */
 public class URLQuestion extends StringQuestion {
 
@@ -34,8 +35,11 @@ public class URLQuestion extends StringQuestion {
 		if (nl.getLength() > 0) {
 			constraints = (Element) nl.item(0);
 		} else {
+			//Not needed anymore. Will be deleted in the future.
+			NodeList nlUp = question.getElementsByTagName("FreeTextAnswer");
+			Element freeText = (Element) nlUp.item(0);
 			constraints = doc.createElement("Constraints");
-			question.appendChild(constraints);
+			freeText.appendChild(constraints);
 		}
 
 		Element format = doc.createElement("AnswerFormatRegex");

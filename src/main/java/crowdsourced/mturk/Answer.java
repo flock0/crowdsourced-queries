@@ -2,10 +2,11 @@ package crowdsourced.mturk;
 
 /**
  * An answer to a HIT.
+ * @author Florian Chlan
  */
 public abstract class Answer {
-	/**
-	 * The type of the answer
+  /**
+	 * The type of the answer.
 	 */
 	private AnswerType type;
 

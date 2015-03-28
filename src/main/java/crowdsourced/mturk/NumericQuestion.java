@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 
 /**
  * A question that accepts a numerical value for the answer.
+ * @author Florian Chlan, Florian Vessaz
  */
 public class NumericQuestion extends Question {
 
@@ -54,6 +55,7 @@ public class NumericQuestion extends Question {
 		freeText.appendChild(constraints);
 		Element numeric = doc.createElement("IsNumeric");
 		constraints.appendChild(numeric);
+
 
 		if (hasRangeCheck) {
 			constraints.setAttribute("minValue", Integer.toString(minValue));
