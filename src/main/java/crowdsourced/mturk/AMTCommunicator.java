@@ -41,22 +41,26 @@ public class AMTCommunicator {
 	private static final String USER_AGENT = "Mozilla/5.0";
 	private static final String AMT_URL = "https://mechanicalturk.amazonaws.com";
 	// can use "https://mechanicalturk.sandbox.amazonaws.com"
-	private static final String AMT_REQUEST_BASE_URL = AMT_URL
-					+ "/?Service=AWSMechanicalTurkRequester"
-					+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
-					+ "&Version=2014-08-15";
+
+    private static final String AMT_REQUEST_BASE_URL = AMT_URL
+            + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
+            + ACCESS_KEY_ID + "&Version=2014-08-15";
 
 	private static final long POLLING_INITIAL_DELAY_SECONDS = 300;
 	private static final long POLLING_RATE_SECONDS = 30;
 
-	/**
-	 * Sends a REST GET request using the default base URL and with the parameters appended.
-	 * @param parameters A map of parameters with the key being the
-	 *  descriptor of the parameter and the value being the value.
-	 * @return The response from the GET request.
-	 * @throws IOException
-	 * @throws SignatureException
-	 */
+
+    /**
+     * Sends a REST GET request using the default base URL and with the
+     * parameters appended.
+     *
+     * @param parameters
+     *            A map of parameters with the key being the descriptor of the
+     *            parameter and the value being the value.
+     * @return The response from the GET request.
+     * @throws IOException
+     * @throws SignatureException
+     */
 	public static String sendGet(Map<String, String> parameters) throws IOException, SignatureException {
 		String operation = null;
 		String service = "AWSMechanicalTurkRequester";

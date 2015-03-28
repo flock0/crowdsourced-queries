@@ -34,18 +34,17 @@ public abstract class Question {
 
 	/**
 	 * Creates a question.
-	 * @param indentifier An identifier for the question. This identifier
+	 * @param _identifier An identifier for the question. This identifier
 	 *   is used to associate the Worker's answers with the question in the
 	 *   answer data.
-	 * @param name A name for the question, displayed as a prominent
+	 * @param _name A name for the question, displayed as a prominent
 	 *   heading.
-	 * @param content The text of the question.
+	 * @param _content The text of the question.
 	 */
-	protected Question(String identifier, String name,
-					String content) {
-		this.identifier = identifier;
-		this.displayName = name;
-		this.questionContent = content;
+	protected Question(String _identifier, String _name, String _content) {
+		this.identifier = _identifier;
+		this.displayName = _name;
+		this.questionContent = _content;
 	}
 
 
@@ -59,8 +58,8 @@ public abstract class Question {
 	public Element asXMLElement(Document doc) {
 		Element question = doc.createElement("Question");
 
-		Element identifier = doc.createElement("QuestionIdentifier");
-		identifier.appendChild(doc.createTextNode(this.identifier));
+		Element questIdentifier = doc.createElement("QuestionIdentifier");
+		questIdentifier.appendChild(doc.createTextNode(this.identifier));
 
 		Element name = doc.createElement("DisplayName");
 		name.appendChild(doc.createTextNode(this.displayName));
@@ -73,7 +72,7 @@ public abstract class Question {
 		subContent.appendChild(doc.createTextNode(this.questionContent));
 		content.appendChild(subContent);
 
-		question.appendChild(identifier);
+		question.appendChild(questIdentifier);
 		question.appendChild(name);
 		question.appendChild(required);
 		question.appendChild(content);
@@ -81,15 +80,19 @@ public abstract class Question {
 	}
 
 
-	/**
-	 * Parses an XML-<Answer>-Node and extracts the value from it
-	 * @param item An XML-<Answer>-node from AMT.
-	 * @param xPath An xPath object to use to traverse the XML-node.
-	 * @return An answer object with the value extracted.
-	 * @throws IOException when the parsing of the <Answer>-node fails.
-	 */
+    /**
+     * Parses an XML-<Answer>-Node and extracts the value from it
+     *
+     * @param item
+     *            An XML-<Answer>-node from AMT.
+     * @param xPath
+     *            An xPath object to use to traverse the XML-node.
+     * @return An answer object with the value extracted.
+     * @throws IOException
+     *             when the parsing of the <Answer>-node fails.
+     */
 	public abstract Answer parseXMLAnswer(Node item, XPath xPath) throws IOException;
-	
+
 	public String getIdentifier() {
 		return identifier;
 	}
