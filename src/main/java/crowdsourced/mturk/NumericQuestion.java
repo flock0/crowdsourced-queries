@@ -56,6 +56,7 @@ public class NumericQuestion extends Question {
 		Element numeric = doc.createElement("IsNumeric");
 		constraints.appendChild(numeric);
 
+
 		if (hasRangeCheck) {
 			constraints.setAttribute("minValue", Integer.toString(minValue));
 			constraints.setAttribute("maxValue", Integer.toString(maxValue));

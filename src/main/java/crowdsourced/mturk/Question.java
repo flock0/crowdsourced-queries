@@ -64,7 +64,9 @@ public abstract class Question {
 		required.appendChild(doc.createTextNode("true"));
 
 		Element content = doc.createElement("QuestionContent");
-		content.appendChild(doc.createTextNode("Text"));
+		Element subContent = doc.createElement("Text");
+		subContent.appendChild(doc.createTextNode(this.questionContent));
+		content.appendChild(subContent);
 
 		question.appendChild(identifier);
 		question.appendChild(name);

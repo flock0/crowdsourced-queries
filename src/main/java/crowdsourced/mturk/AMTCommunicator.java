@@ -18,9 +18,7 @@ import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TimeZone;
 
 import javax.crypto.Mac;
@@ -37,24 +35,27 @@ public class AMTCommunicator {
 	private static final String ACCESS_KEY_ID = "";
 	private static final String ACCESS_KEY_SECRET_ID = "";
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
-	
+
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
+	private static final String AMT_URL = "https://mechanicalturk.amazonaws.com";
 	// can use "https://mechanicalturk.sandbox.amazonaws.com"
-	private static final String AMT_REQUEST_BASE_URL = AMT_URL 
-				+ "/?Service=AWSMechanicalTurkRequester"
-				+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
-				+ "&Version=2014-08-15";
+	private static final String AMT_REQUEST_BASE_URL = AMT_URL
+					+ "/?Service=AWSMechanicalTurkRequester"
+					+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
+					+ "&Version=2014-08-15";
 
-	
+	public static void main(String[] args) {
+
+	}
 
 	/**
 	 * Sends a REST GET request using the default base URL and with the parameters appended.
-	 * @param parameters A map of parameters with the key being the descriptor of the parameter and the value being the value.
+	 * @param parameters A map of parameters with the key being the
+	 *  descriptor of the parameter and the value being the value.
 	 * @return The response from the GET request.
-	 * @throws IOException 
-	 * @throws SignatureException 
+	 * @throws IOException
+	 * @throws SignatureException
 	 */
 	public static String sendGet(Map<String, String> parameters) throws IOException, SignatureException {
 		String operation = null;
@@ -62,13 +63,13 @@ public class AMTCommunicator {
 		String timestamp = getTimestamp();
 		StringBuffer url = new StringBuffer();
 		url.append(AMT_REQUEST_BASE_URL);
-		for(String key : parameters.keySet()) {
+		for (String key : parameters.keySet()) {
 			url.append(String.format("&%s=%s", key, encodeUrl(parameters.get(key))));
-			if(key.equals("Operation")) {
+			if (key.equals("Operation")) {
 				operation = parameters.get(key);
 			}
 		}
-		if(operation == null) {
+		if (operation == null) {
 			throw new IOException("Request does not contain a Operation-prameter");
 		}
 
@@ -79,7 +80,7 @@ public class AMTCommunicator {
 
 		return sendGet(url.toString());
 	}
-	
+
 	/**
 	 * Sends a REST GET request with the passed URL.
 	 * @param url the destination URL
@@ -150,6 +151,7 @@ public class AMTCommunicator {
 		String serial = convertXMLToString(hit.asXMLDocument());
 		//Need securisation
 		serial = serial.substring(serial.indexOf("\n") + 1);
+		System.out.println(serial);
 		/*No need to XML escape the string when using REST,
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
 		try {
@@ -186,7 +188,7 @@ public class AMTCommunicator {
 							+ "&Keywords=" + keywords;
 
 			System.out.println(sendGet(url));
-			System.out.println(url);
+			//System.out.println(url);
 
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
