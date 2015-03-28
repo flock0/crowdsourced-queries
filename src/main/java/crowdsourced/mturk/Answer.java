@@ -5,12 +5,8 @@ package crowdsourced.mturk;
  * @author Florian Chlan
  */
 public abstract class Answer {
-  /**
-	 * The type of the answer.
-	 */
-	private AnswerType type;
 
-	/**
+    /**
 	 * The question that this Answer belongs to.
 	 */
 	private Question question;
@@ -21,13 +17,8 @@ public abstract class Answer {
 	 */
 	public abstract void getAnswer(AnswerVisitor ex);
 
-	protected Answer(AnswerType t, Question q) {
-		this.type = t;
+	protected Answer(Question q) {
 		this.question = q;
-	}
-
-	public AnswerType getType() {
-		return type;
 	}
 
 	public Question getQuestion() {
