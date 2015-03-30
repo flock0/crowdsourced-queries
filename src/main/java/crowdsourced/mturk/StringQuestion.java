@@ -80,10 +80,9 @@ public class StringQuestion extends Question {
         question.appendChild(answerSpec);
         Element freeText = doc.createElement("FreeTextAnswer");
         answerSpec.appendChild(freeText);
-
+        Element constraints = doc.createElement("Constraints");
+        freeText.appendChild(constraints);
         if (answerMinLength > 0 || answerMaxLength > 0) {
-            Element constraints = doc.createElement("Constraints");
-            freeText.appendChild(constraints);
             Element length = doc.createElement("Length");
             constraints.appendChild(length);
             if (answerMinLength > 0) {
@@ -94,16 +93,16 @@ public class StringQuestion extends Question {
             }
         }
 
-        if (suggestedLineCount > 0) {
-            Element lines = doc.createElement("NumberOfLinesSuggestion");
-            lines.appendChild(doc.createTextNode(Integer.toString(suggestedLineCount)));
-            answerSpec.appendChild(lines);
-        }
-
         if (defaultText != null) {
             Element text = doc.createElement("DefaultText");
             text.appendChild(doc.createTextNode(defaultText));
             answerSpec.appendChild(text);
+        }
+
+        if (suggestedLineCount > 0) {
+            Element lines = doc.createElement("NumberOfLinesSuggestion");
+            lines.appendChild(doc.createTextNode(Integer.toString(suggestedLineCount)));
+            answerSpec.appendChild(lines);
         }
 
         return question;

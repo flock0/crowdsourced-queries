@@ -3,17 +3,12 @@ package crowdsourced.mturk;
 import net.iharder.Base64;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSInput;
-import org.w3c.dom.ls.LSParser;
 import org.w3c.dom.ls.LSSerializer;
-import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -29,8 +24,6 @@ import java.util.Timer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * The class dedicated to direct communications with AMT
@@ -85,7 +78,7 @@ public class AMTCommunicator {
 		}
 
 		url.append("&Timestamp=");
-		url.append(timestamp);
+		url.append(encodeUrl(timestamp));
 		url.append("&Signature=");
 		url.append(encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)));
 
@@ -134,8 +127,8 @@ public class AMTCommunicator {
 			String service = "AWSMechanicalTurkRequester";
 			String operation = "GetAccountBalance";
 			String timestamp = getTimestamp();
-			String ur = AMT_URL + "/?Service=" + service
-							+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
+			String ur = AMT_URL + "/?Service=" + encodeUrl(service)
+							+ "&AWSAccessKeyId=" + encodeUrl(ACCESS_KEY_ID)
 							+ "&Version=2014-08-15"
 							+ "&Operation=" + encodeUrl(operation)
 							+ "&Signature="
@@ -209,7 +202,7 @@ public class AMTCommunicator {
 			} else {
 				//unsuccessful
 			}
-			
+
 
 
 			PendingJob job = new PendingJob(hit);
