@@ -3,6 +3,7 @@ package queryExecutor
 import tree.Tree._
 import crowdsourced.mturk.AMTCommunicator
 import crowdsourced.mturk.HIT
+import crowdsourced.mturk.PendingJob
 import crowdsourced.mturk.Answer
 import crowdsourced.mturk.AnswerCallback
 import crowdsourced.mturk.Assignment
@@ -25,18 +26,18 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
    * Sends the request to AMT and set itself as the callback object
    * This function is non-blocking
    */
-  def exec(): Unit = AMTCommunicator.sendHIT(hit, this) // TODO modify it to the blocking sendHIT()
+  def exec(): PendingJob = AMTCommunicator.sendHIT(hit, this) // TODO modify it to the blocking sendHIT()
   
   /**
    * Sends the request to AMT and set itself as the callback object
    * This function is blocking
    */
-  def execBlocking() = {
-    AMTCommunicator.sendHIT(hit, this)
-    while(!this.isFinished) {
+  def execBlocking(): List[Assignment] = {
+    val pj : PendingJob = AMTCommunicator.sendHIT(hit, this)
+    while(pj.getAssignments.size <= 0) {
       Thread sleep 5000
     }
-    this.assignments
+    pj.getAssignments.asScala.toList
   }
   
   /**

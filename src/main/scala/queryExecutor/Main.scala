@@ -16,18 +16,24 @@ object Main extends App {
   // manual creation of a HIT
   val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
   println(timeID)
-  val questionTitle = "What is the most relevant website to find the complete list of USA presidents"
-  val questionDescription = "Select URL from which other workers can extract required information"
-  val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
+  //val questionTitle = "What is the most relevant website to find the complete list of USA presidents"
+  val questionTitle = "Find URL containing required information"
+  val questionDescription = "What is the most relevant website to find this information : Presidents of the USA ?"
+  val question: Question = new URLQuestion(timeID, questionTitle, questionDescription)
   val questionList = List(question)
-  val numWorkers = 3
+  val numWorkers = 1
   val rewardUSD = 0.02 toFloat
-  val keywords = List("URL retrieval","Fast")
+  val keywords = List("URL retrieval","Fast", "URL", "extraction")
   val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
   
   //AMTCommunicator.checkBalance(74.74 toFloat)
   val task = new AMTTask(hit)
-  task.exec()
+  val assignments : List[Assignment] = task.execBlocking()
   
+  assignments.foreach(ass => {
+      println("Assignment result :")
+      val answersMap: Map[String, Answer] = ass.getAnswers().asScala.toMap
+      answersMap.foreach { case (key, value) => println(key+" => "+value) }
+    })
   
 }
