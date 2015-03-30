@@ -21,13 +21,13 @@ object Main extends App {
   val question: Question = new URLQuestion(timeID,"Find the most relevant website",questionTitle)
   val questionList = List(question)
   val numWorkers = 3
-  val rewardUSD = 0.01 toFloat
+  val rewardUSD = 0.02 toFloat
   val keywords = List("URL retrieval","Fast")
   val hit = new HIT(questionTitle, questionDescription, questionList.asJava, 31536000, numWorkers, rewardUSD, 3600, keywords.asJava) 
   
   //AMTCommunicator.checkBalance(74.74 toFloat)
-  
   val task = new AMTTask(hit)
   task.exec()
+  
   
 }

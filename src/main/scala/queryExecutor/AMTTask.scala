@@ -23,8 +23,21 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
   
   /**
    * Sends the request to AMT and set itself as the callback object
+   * This function is non-blocking
    */
   def exec(): Unit = AMTCommunicator.sendHIT(hit, this) // TODO modify it to the blocking sendHIT()
+  
+  /**
+   * Sends the request to AMT and set itself as the callback object
+   * This function is blocking
+   */
+  def execBlocking() = {
+    AMTCommunicator.sendHIT(hit, this)
+    while(!this.isFinished) {
+      Thread sleep 5000
+    }
+    this.assignments
+  }
   
   /**
    * Returns true if the HIT has finished
