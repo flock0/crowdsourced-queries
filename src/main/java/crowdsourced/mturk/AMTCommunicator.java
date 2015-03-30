@@ -3,12 +3,17 @@ package crowdsourced.mturk;
 import net.iharder.Base64;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
 import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSParser;
 import org.w3c.dom.ls.LSSerializer;
+import org.xml.sax.InputSource;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,9 +25,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.Timer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * The class dedicated to direct communications with AMT
@@ -40,23 +48,26 @@ public class AMTCommunicator {
 	private static final String USER_AGENT = "Mozilla/5.0";
 	private static final String AMT_URL = "https://mechanicalturk.amazonaws.com";
 	// can use "https://mechanicalturk.sandbox.amazonaws.com"
-	private static final String AMT_REQUEST_BASE_URL = AMT_URL
-					+ "/?Service=AWSMechanicalTurkRequester"
-					+ "&AWSAccessKeyId=" + ACCESS_KEY_ID
-					+ "&Version=2014-08-15";
 
-	public static void main(String[] args) {
+    private static final String AMT_REQUEST_BASE_URL = AMT_URL
+            + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
+            + ACCESS_KEY_ID + "&Version=2014-08-15";
 
-	}
+	private static final long POLLING_INITIAL_DELAY_SECONDS = 300;
+	private static final long POLLING_RATE_SECONDS = 30;
 
-	/**
-	 * Sends a REST GET request using the default base URL and with the parameters appended.
-	 * @param parameters A map of parameters with the key being the
-	 *  descriptor of the parameter and the value being the value.
-	 * @return The response from the GET request.
-	 * @throws IOException
-	 * @throws SignatureException
-	 */
+
+    /**
+     * Sends a REST GET request using the default base URL and with the
+     * parameters appended.
+     *
+     * @param parameters
+     *            A map of parameters with the key being the descriptor of the
+     *            parameter and the value being the value.
+     * @return The response from the GET request.
+     * @throws IOException
+     * @throws SignatureException
+     */
 	public static String sendGet(Map<String, String> parameters) throws IOException, SignatureException {
 		String operation = null;
 		String service = "AWSMechanicalTurkRequester";
@@ -147,7 +158,8 @@ public class AMTCommunicator {
 	 * @param hit the HIT to send
 	 * @param callback The object where new answers will be sent to.
 	 */
-	public static void sendHIT(HIT hit, AnswerCallback callback) {
+
+	protected static PendingJob sendHIT(HIT hit, AnswerCallback callback) {
 		String serial = convertXMLToString(hit.asXMLDocument());
 		//Need securisation
 		serial = serial.substring(serial.indexOf("\n") + 1);
@@ -187,13 +199,30 @@ public class AMTCommunicator {
 							+ "&LifetimeInSeconds=" + lifetimeInSeconds
 							+ "&Keywords=" + keywords;
 
-			System.out.println(sendGet(url));
-			//System.out.println(url);
+			String response = sendGet(url);
+			System.out.println(response);
+			int start = response.indexOf("<HITId>");
+			int stop = response.indexOf("</HITId>");
+			if (start != -1 && stop != -1) {
+				String hitId = response.substring(start + "<HITId>".length(), stop);
+				System.out.println("HIT ID: " + hitId);
+				hit.setHITId(hitId);
+			} else {
+				//unsuccessful
+			}
+			
+
+
+			PendingJob job = new PendingJob(hit);
+			new Timer().schedule(new PollingTask(job, callback), POLLING_INITIAL_DELAY_SECONDS, POLLING_RATE_SECONDS);
+			return job;
 
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
+			return null;
 		} catch (SignatureException e) {
 			System.out.println("The signature couldn't be generated properly.");
+			return null;
 		}
 	}
 
@@ -244,7 +273,7 @@ public class AMTCommunicator {
 
 
     /**
-	 * Converts an XML Document to a string
+	 * Converts a XML Document to a string
 	 * @param document the XML Document to convert
 	 * @return a string corresponding to the serialization of the XML document
 	 */
@@ -254,6 +283,39 @@ public class AMTCommunicator {
 	    return lsSerializer.writeToString(document);
 	}
 
+
+	/**
+	 * Parses a String to generate a XML document
+	 * @param xml the string to parse
+	 * @return a XML document if the string was parsed successfully
+	 * @throws Exception
+	 */
+	public static Document loadXMLFromString(String xml) throws Exception {
+		/*DOMImplementationRegistry registry;
+		try {
+			registry = DOMImplementationRegistry.newInstance();
+			DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
+			LSParser parser = impl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, "http://www.w3.org/TR/REC-xml");
+			LSInput input = impl.createLSInput();
+			input.setEncoding("UTF-8");
+			input.setStringData(xml);
+		    return parser.parse(input);
+
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassCastException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		return null;
+	}
 
     /**
      * Performs base64-encoding of input bytes.

@@ -2,29 +2,33 @@ package crowdsourced.mturk;
 
 /**
  * An answer containing a string value.
+ *
  * @author Florian Chlan
  */
 public class StringAnswer extends Answer {
 
-	private String answer;
+    private String answer;
 
-	protected StringAnswer(AnswerType type, Question question) {
-		super(type, question);
-	}
+    protected StringAnswer(Question question) {
+        super(question);
+    }
 
-	/**
-	 * Creates a new answer object.
-	 * @param question The question that this answer is for.
-	 * @param text The answer to the question.
-	 */
-	public StringAnswer(Question question, String text) {
-		this(AnswerType.String, question);
-		this.answer = text;
-	}
+    /**
+     * Creates a new answer object.
+     *
+     * @param question
+     *            The question that this answer is for.
+     * @param text
+     *            The answer to the question.
+     */
+    public StringAnswer(Question question, String text) {
+        this(question);
+        this.answer = text;
+    }
 
-	@Override
-	public void getAnswer(AnswerVisitor ex) {
-		ex.visit(answer);
-	}
+    @Override
+    public void getAnswer(AnswerVisitor ex) {
+        ex.visit(answer);
+    }
 
 }

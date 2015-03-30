@@ -1,25 +1,34 @@
 package crowdsourced.mturk;
 
+import java.io.IOException;
+
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
  * A True/False question.
+ *
  * @author Florian Chlan
  */
 public class BooleanChoiceQuestion extends Question {
 
     /**
      * Creates a True/False question.
-     * @param identifier an identifier for the question. this
-     *   identifier is used to associate the Worker's answers with the question
-     *   in the answer data.
-     * @param name A name for the question, displayed as a prominent heading.
-     * @param content The text of the question.
+     *
+     * @param identifier
+     *            an identifier for the question. this identifier is used to
+     *            associate the Worker's answers with the question in the answer
+     *            data.
+     * @param name
+     *            A name for the question, displayed as a prominent heading.
+     * @param content
+     *            The text of the question.
      */
-    public BooleanChoiceQuestion(String identifier, String name,
-            String content) {
+    public BooleanChoiceQuestion(String identifier, String name, String content) {
         super(identifier, name, content);
     }
 
@@ -58,6 +67,17 @@ public class BooleanChoiceQuestion extends Question {
         selection.appendChild(text);
 
         return selection;
+    }
+
+    @Override
+    public Answer parseXMLAnswer(Node item, XPath xPath) throws IOException {
+        try {
+            String selectionIdentifier = xPath.compile("./SelectionIdentifier").evaluate(item);
+            return new BooleanChoiceAnswer(this, selectionIdentifier.equals("True"));
+        } catch (XPathExpressionException e) {
+            throw new IOException(
+                    "Couldn't parse <Answer> to BooleanChoiceQuestion: ", e);
+        }
     }
 
 }
