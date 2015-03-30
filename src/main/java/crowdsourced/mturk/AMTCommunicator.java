@@ -16,6 +16,7 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class AMTCommunicator {
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String AMT_URL = "https://mechanicalturk.amazonaws.com";
+	private static final String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
 	// can use "https://mechanicalturk.sandbox.amazonaws.com"
 
     private static final String AMT_REQUEST_BASE_URL = AMT_URL
@@ -49,6 +50,7 @@ public class AMTCommunicator {
 	private static final long POLLING_INITIAL_DELAY_SECONDS = 300;
 	private static final long POLLING_RATE_SECONDS = 30;
 
+	
 
     /**
      * Sends a REST GET request using the default base URL and with the

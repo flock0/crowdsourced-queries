@@ -96,13 +96,13 @@ public class StringQuestion extends Question {
         if (defaultText != null) {
             Element text = doc.createElement("DefaultText");
             text.appendChild(doc.createTextNode(defaultText));
-            answerSpec.appendChild(text);
+            freeText.appendChild(text);
         }
 
         if (suggestedLineCount > 0) {
             Element lines = doc.createElement("NumberOfLinesSuggestion");
             lines.appendChild(doc.createTextNode(Integer.toString(suggestedLineCount)));
-            answerSpec.appendChild(lines);
+            freeText.appendChild(lines);
         }
 
         return question;
