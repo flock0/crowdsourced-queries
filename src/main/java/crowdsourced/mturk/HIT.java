@@ -90,32 +90,30 @@ public class HIT {
     /**
      * Creates a new HIT.
      *
-     * @param operationName
-     *            The name of the operation.
-     * @param title
+     * @param titleArg
      *            A short and descriptive title of the HIT. Must not be longer
      *            than 128 characters.
-     * @param description
+     * @param descriptionArg
      *            A detailed description of the kind of task the HIT contains.
      *            Must not be longer than 2000 characters.
-     * @param questions
+     * @param questionsArg
      *            The questions that will be posed to the worker.
-     * @param lifetimeInSeconds
+     * @param lifetimeInSecondsArg
      *            An amount of time, in seconds, after which the HIT is no
      *            longer available for users to accept. Must be >= 30 (30
      *            seconds) and <= 31536000 (365 days).
-     * @param maxAssignments
+     * @param maxAssignmentsArg
      *            The number of times the HIT can be accepted and completed
      *            before the HIT becomes unavailable. Must be positive.
-     * @param reward
+     * @param rewardArg
      *            The amount of time that a Worker has to complete the HIT after
      *            accepting it. Must be >= 30 (30 seconds) and <= 31536000 (365
      *            days).
-     * @param assignmentDurationInSeconds
+     * @param assignmentDurationInSecondsArg
      *            The amount of time that a Worker has to complete the HIT after
      *            accepting it. Must be >= 30 (30 seconds) and <= 31536000 (365
      *            days).
-     * @param keywords
+     * @param keywordsArg
      *            One or more words or phrases that describe the HIT. This is
      *            used in searches to find HITs.
      */

@@ -16,7 +16,6 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
@@ -47,10 +46,8 @@ public class AMTCommunicator {
             + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
             + ACCESS_KEY_ID + "&Version=2014-08-15";
 
-	private static final long POLLING_INITIAL_DELAY_SECONDS = 300;
-	private static final long POLLING_RATE_SECONDS = 30;
-
-	
+	private static final long POLLING_INITIAL_DELAY_MILLISECONDS = 3 * 1000;
+	private static final long POLLING_RATE_MILLISECONDS = 5 * 1000;
 
     /**
      * Sends a REST GET request using the default base URL and with the
@@ -209,7 +206,8 @@ public class AMTCommunicator {
 
 
 			PendingJob job = new PendingJob(hit);
-			new Timer().schedule(new PollingTask(job, callback), POLLING_INITIAL_DELAY_SECONDS, POLLING_RATE_SECONDS);
+			new Timer().schedule(new PollingTask(job, callback),
+			        POLLING_INITIAL_DELAY_MILLISECONDS, POLLING_RATE_MILLISECONDS);
 			return job;
 
 		} catch  (IOException e) {

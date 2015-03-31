@@ -49,7 +49,7 @@ public class MultipleChoiceQuestion extends Question {
      *            The text of the question.
      * @param options
      *            A list of possible answers that are presented to the worker.
-     *            Must have at least to elements.
+     *            Must have at least two elements.
      */
     public MultipleChoiceQuestion(String identifier, String name,
             String content, List<MultipleChoiceOption> options) {

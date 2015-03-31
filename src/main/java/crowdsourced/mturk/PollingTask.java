@@ -1,6 +1,7 @@
 package crowdsourced.mturk;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.security.SignatureException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
@@ -65,18 +67,21 @@ public class PollingTask extends TimerTask {
             boolean lastResponseWasValid;
             do {
                 String response = getAssignmentsForHIT();
-                Document doc = docBuilder.parse(response);
+                Document doc = docBuilder.parse(new InputSource(new StringReader(response)));
                 lastResponseWasValid = responseIsValid(doc);
 
                 if (lastResponseWasValid) {
 
                     List<Assignment> newAssignments = extractAssignments(doc);
-                    List<Assignment> filteredAssignments = filterExisting(newAssignments);
 
-                    addToSet(filteredAssignments);
+                    if (newAssignments.size() > 0) {
+                        List<Assignment> filteredAssignments = filterExisting(newAssignments);
 
-                    callback.newAssignmentsReceived(filteredAssignments);
-                    approveAssignments(newAssignments);
+                        addToSet(filteredAssignments);
+
+                        callback.newAssignmentsReceived(filteredAssignments);
+                        approveAssignments(newAssignments);
+                    }
                 }
             } while (lastResponseWasValid && moreAssignmentsAvailable);
 
@@ -103,56 +108,66 @@ public class PollingTask extends TimerTask {
 
         try {
             String isValid = xPath.compile(
-                    "/GetAssignmentsForHITResult/Request/IsValid")
+                    "/GetAssignmentsForHITResponse/GetAssignmentsForHITResult/Request/IsValid")
                     .evaluate(doc);
-            return isValid.equals("true");
+            return isValid.equals("True");
         } catch (XPathExpressionException e) {
             return false;
         }
     }
 
-    private List<Assignment> extractAssignments(Document doc) throws XPathExpressionException, IOException {
+    private List<Assignment> extractAssignments(Document doc)
+            throws XPathExpressionException, IOException, SAXException {
 
         XPathFactory xPathFac = XPathFactory.newInstance();
         XPath xPath = xPathFac.newXPath();
 
         /* If there are more assignments than can fit on this page, fetch more after this round */
-        String numResultsString = xPath.compile("/GetAssignmentsForHITResult/NumResults").evaluate(doc);
-        String totalNumResultsString = xPath.compile("/GetAssignmentsForHITResult/TotalNumResults").evaluate(doc);
+        String numResultsString = xPath
+                .compile("/GetAssignmentsForHITResponse/GetAssignmentsForHITResult/NumResults")
+                .evaluate(doc);
+        String totalNumResultsString = xPath
+                .compile("/GetAssignmentsForHITResponse/GetAssignmentsForHITResult/TotalNumResults")
+                .evaluate(doc);
         int numResults = Integer.parseInt(numResultsString);
         moreAssignmentsAvailable = numResults < Integer.parseInt(totalNumResultsString);
 
-        NodeList assignments = (NodeList) xPath.compile(
-                "/GetAssignmentsForHITResult/Assignment")
-                .evaluate(doc, XPathConstants.NODESET);
-
         List<Assignment> results = new ArrayList<Assignment>();
-        /* Go through all the assignments received */
-        for (int i = 0; i < numResults; i++) {
-            Assignment a = new Assignment(job.getHIT());
-            Node n = assignments.item(i);
+        if (numResults > 0) {
+            NodeList assignments = (NodeList) xPath.compile(
+                    "/GetAssignmentsForHITResponse/GetAssignmentsForHITResult/Assignment")
+                    .evaluate(doc, XPathConstants.NODESET);
 
-            a.setAssignmentID(xPath.compile("./AssignmentId").evaluate(n));
+            /* Go through all the assignments received */
+            for (int i = 0; i < numResults; i++) {
+                Assignment a = new Assignment(job.getHIT());
+                Node n = assignments.item(i);
 
-            NodeList answers = (NodeList) xPath.compile(
-                    "./Answer/QuestionFormAnswers/Answer").evaluate(n,
-                    XPathConstants.NODESET);
-            /* Go through all answers in this particular assignment */
-            for (int j = 0; j < answers.getLength(); j++) {
-                String questionIdentifier = xPath.compile("./QuestionIdentifier").evaluate(answers.item(j));
+                a.setAssignmentID(xPath.compile("./AssignmentId").evaluate(n));
 
-                if (!job.getHIT().getQuestionsMap().containsKey(questionIdentifier)) {
-                    throw new IOException(
-                            "This assignment contains an answer for which no matching question can be found");
+                //String unescapedAnswerXML = StringEscapeUtils.unescapeXml(xPath.compile("./Answer").evaluate(n));
+                String unescapedAnswerXML = xPath.compile("./Answer").evaluate(n);
+                Document answerXML = docBuilder.parse(new InputSource(new StringReader(unescapedAnswerXML)));
+                NodeList answers = (NodeList) xPath.compile(
+                        "./QuestionFormAnswers/Answer").evaluate(answerXML,
+                                XPathConstants.NODESET);
+                /* Go through all answers in this particular assignment */
+                for (int j = 0; j < answers.getLength(); j++) {
+                    String questionIdentifier = xPath.compile("./QuestionIdentifier").evaluate(answers.item(j));
+
+                    if (!job.getHIT().getQuestionsMap().containsKey(questionIdentifier)) {
+                        throw new IOException(
+                                "This assignment contains an answer for which no matching question can be found");
+                    }
+                    Question q = job.getHIT().getQuestionsMap().get(questionIdentifier);
+
+                    /* Parse the answer and add it to the assignment */
+                    Answer answ = q.parseXMLAnswer(answers.item(j), xPath);
+                    a.getAnswers().put(answ.getQuestion().getIdentifier(), answ);
                 }
-                Question q = job.getHIT().getQuestionsMap().get(questionIdentifier);
 
-                /* Parse the answer and add it to the assignment */
-                Answer answ = q.parseXMLAnswer(answers.item(j), xPath);
-                a.getAnswers().put(answ.getQuestion().getIdentifier(), answ);
+                results.add(a);
             }
-
-            results.add(a);
         }
 
         return results;
