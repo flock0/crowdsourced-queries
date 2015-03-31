@@ -17,8 +17,8 @@ import org.w3c.dom.Node;
 public class NumericQuestion extends Question {
 
     private boolean hasRangeCheck = false;
-    private int minValue;
-    private int maxValue;
+    private int minValue = Integer.MIN_VALUE;
+    private int maxValue = Integer.MAX_VALUE;
 
     /**
      * Creates a question that requires a numeric answer.
