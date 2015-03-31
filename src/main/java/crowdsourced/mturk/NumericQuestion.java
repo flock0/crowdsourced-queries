@@ -75,8 +75,8 @@ public class NumericQuestion extends Question {
         constraints.appendChild(numeric);
 
         if (hasRangeCheck) {
-            constraints.setAttribute("minValue", Integer.toString(minValue));
-            constraints.setAttribute("maxValue", Integer.toString(maxValue));
+            numeric.setAttribute("minValue", Integer.toString(minValue));
+            numeric.setAttribute("maxValue", Integer.toString(maxValue));
         }
 
         return question;
