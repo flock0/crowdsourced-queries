@@ -34,7 +34,7 @@ public class URLQuestion extends StringQuestion {
      */
     public URLQuestion(String identifier, String name, String content) {
         super(identifier, name, content);
-        setDefaultText("https://");
+        setDefaultText("http://");
         setSuggestedLineCount(1);
     }
 
