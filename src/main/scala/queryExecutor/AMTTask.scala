@@ -26,18 +26,27 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
    * Sends the request to AMT and set itself as the callback object
    * This function is non-blocking
    */
-  def exec(): PendingJob = AMTCommunicator.sendHIT(hit, this) // TODO modify it to the blocking sendHIT()
+  def exec(): PendingJob = AMTCommunicator.sendHIT(hit, this)
+  
+  /**
+   * Will block until we have the complete list of result
+   */
+  def waitResults(): List[Assignment] = {
+    // TODO stop loop when 'this.finished' is set to true (when implemented by AMT team)
+    // for now I switched it to true myself when I receive one result in newAssignmentsReceived()
+    while(!isFinished()) {
+      Thread sleep 5000
+    }
+    this.assignments
+  }
   
   /**
    * Sends the request to AMT and set itself as the callback object
    * This function is blocking
    */
   def execBlocking(): List[Assignment] = {
-    val pj : PendingJob = AMTCommunicator.sendHIT(hit, this)
-    while(pj.getAssignments.size <= 0) {
-      Thread sleep 5000
-    }
-    pj.getAssignments.asScala.toList
+    exec()
+    waitResults()
   }
   
   /**
@@ -65,6 +74,9 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
       val answersMap: Map[String, Answer] = ass.getAnswers().asScala.toMap
       answersMap.foreach { case (key, value) => println(key+" => "+value) }
     })
+    
+    // TODO we assume, for now, that one result means end of task (later, AMT team will call jobFinished and we can delete this line)
+    this.finished = true
   }
   
   /**
