@@ -123,7 +123,7 @@ public class AMTCommunicator {
 	 * Checks if the current account has a balance superior or equal to the passed amount
 	 * @return true if balance >= amount, false elsewhere.
 	 */
-	protected static boolean checkBalance() {
+	public static boolean checkBalance() {
 		try {
 			Map<String, String> params = new HashMap<String, String>();
 			params.put("Operation", "GetAccountBalance");
