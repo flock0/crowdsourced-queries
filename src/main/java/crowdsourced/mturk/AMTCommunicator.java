@@ -16,8 +16,10 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 import java.util.Timer;
@@ -72,6 +74,7 @@ public class AMTCommunicator {
 				operation = parameters.get(key);
 			}
 		}
+
 		if (operation == null) {
 			throw new IOException("Request does not contain a Operation-prameter");
 		}
@@ -84,6 +87,7 @@ public class AMTCommunicator {
 		return sendGet(url.toString());
 	}
 
+
 	/**
 	 * Sends a REST GET request with the passed URL.
 	 * @param url the destination URL
@@ -95,7 +99,6 @@ public class AMTCommunicator {
 		HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 		// optional default is GET
 		con.setRequestMethod("GET");
-
 		//add request header
 		con.setRequestProperty("User-Agent", USER_AGENT);
 		int responseCode = con.getResponseCode();
@@ -118,24 +121,13 @@ public class AMTCommunicator {
 
 	/**
 	 * Checks if the current account has a balance superior or equal to the passed amount
-	 * @param amount the minimum amount to have on the account
 	 * @return true if balance >= amount, false elsewhere.
 	 */
-	protected static boolean checkBalance(float amount) {
+	public static boolean checkBalance() {
 		try {
-			String service = "AWSMechanicalTurkRequester";
-			String operation = "GetAccountBalance";
-			String timestamp = getTimestamp();
-			String ur = AMT_URL + "/?Service=" + encodeUrl(service)
-							+ "&AWSAccessKeyId=" + encodeUrl(ACCESS_KEY_ID)
-							+ "&Version=2014-08-15"
-							+ "&Operation=" + encodeUrl(operation)
-							+ "&Signature="
-							+ encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID))
-							+ "&Timestamp=" + encodeUrl(timestamp);
-			System.out.println(service + operation + timestamp);
-			System.out.println(sendGet(ur));
-
+			Map<String, String> params = new HashMap<String, String>();
+			params.put("Operation", "GetAccountBalance");
+			System.out.println(sendGet(params));
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
 		} catch (SignatureException e) {
@@ -151,7 +143,7 @@ public class AMTCommunicator {
 	 * @param callback The object where new answers will be sent to.
 	 */
 
-	protected static PendingJob sendHIT(HIT hit, AnswerCallback callback) {
+	public static PendingJob sendHIT(HIT hit, AnswerCallback callback) {
 		String serial = convertXMLToString(hit.asXMLDocument());
 		//Need securisation
 		serial = serial.substring(serial.indexOf("\n") + 1);
@@ -159,40 +151,26 @@ public class AMTCommunicator {
 		/*No need to XML escape the string when using REST,
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
 		try {
-			String urlEncodedQuestion = encodeUrl(serial);
-			String service = "AWSMechanicalTurkRequester";
-			String operation = "CreateHIT";
-			String timestamp = getTimestamp();
-			//The following need to be URL encoded (twice? ie with %20 for spaces)
-			String title = encodeUrl(hit.getTitle());
-			String description = encodeUrl(hit.getDescription());
-			String rewardAmount = encodeUrl(Float.toString(hit.getRewardInUSD()));
-			String durationInSeconds = encodeUrl(Integer.toString(hit.getAssignmentDurationInSeconds()));
-			String lifetimeInSeconds = encodeUrl(Integer.toString(hit.getLifetimeInSeconds()));
+			Map<String, String> params = new HashMap<String, String>();
+		
+			params.put("Operation", "CreateHIT");
+			params.put("Title", hit.getTitle());
+			params.put("Description", hit.getDescription());
+			params.put("Reward.1.Amount", Float.toString(hit.getRewardInUSD()));
+			params.put("Reward.1.CurrencyCode", "USD");
+			params.put("Question", serial);
+			params.put("AssignmentDurationInSeconds", Integer.toString(hit.getAssignmentDurationInSeconds()));
+			params.put("LifetimeInSeconds", Integer.toString(hit.getLifetimeInSeconds()));
 			String tempKeywords = Arrays.toString(hit.getKeywords().toArray());
 			String keywords = "default";
 			if (tempKeywords.length() > 2) {
-				keywords = encodeUrl(tempKeywords.substring(1, tempKeywords.length() - 1));
+				keywords = tempKeywords.substring(1, tempKeywords.length() - 1);
 			}
-
-			String url = AMT_URL + "/?Service=" + service
-							+ "&AWSAccessKeyId=" + encodeUrl(ACCESS_KEY_ID)
-							+ "&Version=2014-08-15"
-							+ "&Operation=" + encodeUrl(operation)
-							+ "&Signature="
-							+ encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID))
-							+ "&Timestamp=" + encodeUrl(timestamp)
-							+ "&Title=" + title
-							+ "&Description=" + description
-							+ "&Reward.1.Amount=" + rewardAmount
-							+ "&Reward.1.CurrencyCode=USD"
-							+ "&Question=" + urlEncodedQuestion
-							+ "&AssignmentDurationInSeconds=" + durationInSeconds
-							+ "&LifetimeInSeconds=" + lifetimeInSeconds
-							+ "&Keywords=" + keywords;
-
-			String response = sendGet(url);
+			params.put("Keywords", keywords);
+			
+			String response = sendGet(params);
 			System.out.println(response);
+
 			int start = response.indexOf("<HITId>");
 			int stop = response.indexOf("</HITId>");
 			if (start != -1 && stop != -1) {
@@ -200,10 +178,10 @@ public class AMTCommunicator {
 				System.out.println("HIT ID: " + hitId);
 				hit.setHITId(hitId);
 			} else {
-				//unsuccessful
+				//Unsuccessful
+				System.out.println("The GET request wasn't correctly sent.");
+				return null;
 			}
-
-
 
 			PendingJob job = new PendingJob(hit);
 			new Timer().schedule(new PollingTask(job, callback),
