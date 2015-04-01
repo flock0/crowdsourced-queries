@@ -151,7 +151,7 @@ public class AMTCommunicator {
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
 		try {
 			Map<String, String> params = new HashMap<String, String>();
-
+		
 			params.put("Operation", "CreateHIT");
 			params.put("Title", hit.getTitle());
 			params.put("Description", hit.getDescription());
@@ -160,13 +160,13 @@ public class AMTCommunicator {
 			params.put("Question", serial);
 			params.put("AssignmentDurationInSeconds", Integer.toString(hit.getAssignmentDurationInSeconds()));
 			params.put("LifetimeInSeconds", Integer.toString(hit.getLifetimeInSeconds()));
-
 			String tempKeywords = Arrays.toString(hit.getKeywords().toArray());
 			String keywords = "default";
 			if (tempKeywords.length() > 2) {
 				keywords = tempKeywords.substring(1, tempKeywords.length() - 1);
 			}
 			params.put("Keywords", keywords);
+			
 			String response = sendGet(params);
 			System.out.println(response);
 
