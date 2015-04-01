@@ -18,7 +18,7 @@ import org.w3c.dom.NodeList;
  */
 public class URLQuestion extends StringQuestion {
 
-    private static final String JAVASCRIPT_URL_REGEX = "@(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/[^\\s]*)?$@iS";
+    private static final String JAVASCRIPT_URL_REGEX = "((http|ftp|https):\\/\\/)[\\w-]+(\\.[\\w-]+)+([\\w.,@?^=%&amp;:\\/~+#-]*[\\w@?^=%&amp;\\/~+#-])?";
 
     /**
      * Creates a question that expect an URL as answer.
