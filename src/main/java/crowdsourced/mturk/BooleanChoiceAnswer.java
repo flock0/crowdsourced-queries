@@ -29,7 +29,10 @@ public class BooleanChoiceAnswer extends Answer {
     @Override
     public void getAnswer(AnswerVisitor ex) {
         ex.visit(answer);
-
+    }
+    
+    public String toString() {
+    	return ""+answer;
     }
 
 }
