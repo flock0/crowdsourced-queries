@@ -32,7 +32,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>queryExecutor.Main</mainClass>
+              <mainClass>crowdsourced.Main</mainClass>
               <packageName>crowdsourced</packageName>
             </manifest>
             <manifestEntries>
@@ -57,7 +57,7 @@
               </descriptorRefs>
               <archive>
                 <manifest>
-                  <mainClass>queryExecutor.Main</mainClass>
+                  <mainClass>crowdsourced.Main</mainClass>
                 </manifest>
               </archive>
             </configuration>
@@ -161,6 +161,11 @@
       <groupId>net.iharder</groupId>
       <artifactId>base64</artifactId>
       <version>2.3.8</version>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.grizzly</groupId>
+        <artifactId>grizzly-http-server</artifactId>
+        <version>2.3.19</version>
     </dependency>
     <!-- Hadoop dependencies -->
     <!--
