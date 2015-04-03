@@ -16,7 +16,6 @@ import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -168,7 +167,7 @@ public class AMTCommunicator {
 				keywords = tempKeywords.substring(1, tempKeywords.length() - 1);
 			}
 			params.put("Keywords", keywords);
-			
+
 			String response = sendGet(params);
 			System.out.println(response);
 

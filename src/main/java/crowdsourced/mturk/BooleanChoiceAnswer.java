@@ -30,9 +30,9 @@ public class BooleanChoiceAnswer extends Answer {
     public void getAnswer(AnswerVisitor ex) {
         ex.visit(answer);
     }
-    
+
     public String toString() {
-    	return ""+answer;
+        return "" + answer;
     }
 
 }

@@ -30,12 +30,13 @@ public class StringAnswer extends Answer {
     public void getAnswer(AnswerVisitor ex) {
         ex.visit(answer);
     }
-    
+
     public String toString() {
-    	if (answer == null)
-    		return "";
-    	else 
-    		return answer;
+        if (answer == null) {
+            return "";
+        } else {
+            return answer;
+        }
     }
 
 }

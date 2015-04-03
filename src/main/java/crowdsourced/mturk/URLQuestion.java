@@ -18,7 +18,8 @@ import org.w3c.dom.NodeList;
  */
 public class URLQuestion extends StringQuestion {
 
-    private static final String JAVASCRIPT_URL_REGEX = "((http|ftp|https):\\/\\/)[\\w-]+(\\.[\\w-]+)+([\\w.,@?^=%&amp;:\\/~+#-]*[\\w@?^=%&amp;\\/~+#-])?";
+    private static final String JAVASCRIPT_URL_REGEX =
+        "((http|ftp|https):\\/\\/)[\\w-]+(\\.[\\w-]+)+([\\w.,@?^=%&amp;:\\/~+#-]*[\\w@?^=%&amp;\\/~+#-])?";
 
     /**
      * Creates a question that expect an URL as answer.
@@ -47,11 +48,11 @@ public class URLQuestion extends StringQuestion {
         if (nl.getLength() > 0) {
             constraints = (Element) nl.item(0);
         } else {
-        	//Not needed anymore. Will be deleted in the future.
-        	NodeList nlUp = question.getElementsByTagName("FreeTextAnswer");
-        	Element freeText = (Element) nlUp.item(0);
-        	constraints = doc.createElement("Constraints");
-        	freeText.appendChild(constraints);
+            //Not needed anymore. Will be deleted in the future.
+            NodeList nlUp = question.getElementsByTagName("FreeTextAnswer");
+            Element freeText = (Element) nlUp.item(0);
+            constraints = doc.createElement("Constraints");
+            freeText.appendChild(constraints);
         }
 
         Element format = doc.createElement("AnswerFormatRegex");
