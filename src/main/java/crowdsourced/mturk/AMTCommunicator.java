@@ -62,6 +62,7 @@ public class AMTCommunicator {
      * @throws IOException
      * @throws SignatureException
      */
+
 	public static String sendGet(Map<String, String> parameters) throws IOException, SignatureException {
 		String operation = null;
 		String service = "AWSMechanicalTurkRequester";
@@ -152,7 +153,7 @@ public class AMTCommunicator {
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
 		try {
 			Map<String, String> params = new HashMap<String, String>();
-		
+
 			params.put("Operation", "CreateHIT");
 			params.put("Title", hit.getTitle());
 			params.put("Description", hit.getDescription());
