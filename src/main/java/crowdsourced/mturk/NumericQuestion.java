@@ -69,13 +69,13 @@ public class NumericQuestion extends Question {
         question.appendChild(answerSpec);
         Element freeText = doc.createElement("FreeTextAnswer");
         answerSpec.appendChild(freeText);
-        Element lines = doc.createElement("NumberOfLinesSuggestion");
-        lines.appendChild(doc.createTextNode("1"));
-        freeText.appendChild(lines);
         Element constraints = doc.createElement("Constraints");
         freeText.appendChild(constraints);
         Element numeric = doc.createElement("IsNumeric");
         constraints.appendChild(numeric);
+        Element lines = doc.createElement("NumberOfLinesSuggestion");
+        lines.appendChild(doc.createTextNode("1"));
+        freeText.appendChild(lines);
 
         if (hasRangeCheck) {
             numeric.setAttribute("minValue", Integer.toString(minValue));
