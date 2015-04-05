@@ -185,6 +185,7 @@ public class AMTCommunicator {
 
 
 			AMTTask task = new AMTTask(hit, callback);
+			task.startPolling();
 			tasks.add(task);
 			return task.getJob();
 
@@ -311,4 +312,8 @@ public class AMTCommunicator {
     private static String encodeUrl(String question) throws UnsupportedEncodingException {
 		return  URLEncoder.encode(question, "UTF-8");
 	}
+    
+    static void finishJob(AMTTask task) {
+        tasks.finish(task);
+    }
 }

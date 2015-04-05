@@ -1,6 +1,10 @@
 package crowdsourced.mturk;
 
+import java.io.IOException;
+import java.security.SignatureException;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,11 +29,8 @@ public class AMTTask {
 
     public AMTTask(HIT _hit, AnswerCallback _callback) {
         this.hit = _hit;
+        this.callback = _callback;
         assignments = Collections.newSetFromMap(new ConcurrentHashMap<Assignment, Boolean>());
-        pollingTimer = new Timer();
-        pollingTask = new PollAnswersTimerTask(this);
-        pollingTimer.schedule(pollingTask,
-                PollAnswersTimerTask.POLLING_INITIAL_DELAY_MILLISECONDS, PollAnswersTimerTask.POLLING_RATE_MILLISECONDS);
     }
 
     public HIT getHIT() {
@@ -46,9 +47,30 @@ public class AMTTask {
 
     public void finishJob() {
         pollingTask.cancelAfterNextRun();
+        AMTCommunicator.finishJob(this);
+    }
+
+    public void disposeJob() {
+        Map<String, String> param = new HashMap<String, String>();
+        param.put("Operation", "DisposeHIT");
+        param.put("HITId", hit.getHITId());
+
+        try {
+            AMTCommunicator.sendGet(param);
+        } catch (SignatureException | IOException e) {
+            /* Nothing we can do about it here. Just ignore */
+        }
+        System.out.println(String.format("HIT %s disposed", hit.getHITId()));
     }
 
     public PendingJob getJob() {
         return new PendingJob(this); 
+    }
+
+    public void startPolling() {
+        pollingTimer = new Timer();
+        pollingTask = new PollAnswersTimerTask(this);
+        pollingTimer.schedule(pollingTask,
+                PollAnswersTimerTask.POLLING_INITIAL_DELAY_MILLISECONDS, PollAnswersTimerTask.POLLING_RATE_MILLISECONDS);
     }
 }

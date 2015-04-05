@@ -35,7 +35,7 @@ public class PollFinishedTimerTask extends TimerTask {
      * The default number of HITs to fetch from one poll.
      */
     public static final int PAGE_SIZE = 100;
-    public static final long POLLING_FINISHED_RATE_MILLISECONDS = 120 * 1000; // At what rate should we poll whether the HIT is finished? This is only relevant after the lifetime of the HIT is over.
+    public static final long POLLING_FINISHED_RATE_MILLISECONDS = 10 * 1000; // At what rate should we poll whether the HIT is finished? This is only relevant after the lifetime of the HIT is over.
     private AMTTaskSet taskSet;
     private DocumentBuilder docBuilder;
     private int totalNumberOfPages;
@@ -83,7 +83,6 @@ public class PollFinishedTimerTask extends TimerTask {
         Map<String, String> param = new HashMap<String, String>();
         param.put("Operation", "GetReviewableHITs");
         param.put("Status", "Reviewable");
-        param.put("AssignmentStatus", "Submitted");
         param.put("PageSize", Integer.toString(PAGE_SIZE));
         param.put("PageNumber", Integer.toString(pageNumber));
 

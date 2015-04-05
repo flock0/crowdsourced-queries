@@ -46,10 +46,11 @@ public class PollAnswersTimerTask extends TimerTask {
     /**
      * Creates a new TimerTask that takes care of polling for new answers.
      *
-     * @param amtTask
+     * @param _task
      *          The task that we want to poll for.
      */
-    public PollAnswersTimerTask(AMTTask amtTask) {
+    public PollAnswersTimerTask(AMTTask _task) {
+        this.task = _task;
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         try {
             docBuilder = docFactory.newDocumentBuilder();
@@ -87,6 +88,7 @@ public class PollAnswersTimerTask extends TimerTask {
             if (receivedEnoughAssignments() || cancellationRequested) {
                 this.cancel();
                 task.getCallback().jobFinished();
+                task.disposeJob();
             }
         } catch (IOException | SAXException | XPathExpressionException | SignatureException ex) {
             System.out.println(String.format("Polling of HIT %s failed: %s",

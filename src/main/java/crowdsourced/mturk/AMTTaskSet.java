@@ -16,7 +16,7 @@ public class AMTTaskSet {
         activeTasks.add(task);
         if(activeTasks.size() == 1) {
             reviewableTimer = new Timer();
-            reviewableTimer.schedule(new PollFinishedTimerTask(this), PollFinishedTimerTask.POLLING_FINISHED_RATE_MILLISECONDS);
+            reviewableTimer.schedule(new PollFinishedTimerTask(this), 30, PollFinishedTimerTask.POLLING_FINISHED_RATE_MILLISECONDS);
         }
     }
     
