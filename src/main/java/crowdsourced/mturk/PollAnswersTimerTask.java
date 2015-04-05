@@ -29,7 +29,7 @@ import org.xml.sax.SAXException;
  *
  * @author Florian Chlan
  */
-public class PollAnswersTask extends TimerTask {
+public class PollAnswersTimerTask extends TimerTask {
 
     /**
      * The default number of assignments to fetch from one poll.
@@ -39,26 +39,16 @@ public class PollAnswersTask extends TimerTask {
     public static final long POLLING_RATE_MILLISECONDS = 5 * 1000; // At what rate should we poll for new answers?
     
     private DocumentBuilder docBuilder;
-    private final HIT hit;
-    private final AnswerCallback callback;
-    private final Set<Assignment> assignments;
+    private AMTTask task;
     private boolean moreAssignmentsAvailable;
 
     /**
-     * Creates a new PollingTask
+     * Creates a new TimerTask that takes care of polling for new answers.
      *
-     * @param hitArg
-     *            The HIT that we should poll answers for.
-     * @param callbackArg
-     *            The object where new answers will be sent to.
-     * @param assignmentsArg
-     *            The set of assigments received so far.
+     * @param amtTask
+     *          The task that we want to poll for.
      */
-    public PollAnswersTask(HIT hitArg, AnswerCallback callbackArg, Set<Assignment> assignmentsArg) {
-        this.hit = hitArg;
-        this.callback = callbackArg;
-        this.assignments = assignmentsArg;
-
+    public PollAnswersTimerTask(AMTTask amtTask) {
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         try {
             docBuilder = docFactory.newDocumentBuilder();
@@ -86,20 +76,33 @@ public class PollAnswersTask extends TimerTask {
 
                         addToSet(filteredAssignments);
 
-                        callback.newAssignmentsReceived(filteredAssignments);
+                        task.getCallback().newAssignmentsReceived(filteredAssignments);
+                        if(receivedEnoughAssignments()) {
+                            finishJobAndStopTimers();
+                        }
                         approveAssignments(newAssignments);
+                        
                     }
                 }
             } while (lastResponseWasValid && moreAssignmentsAvailable);
 
         } catch (IOException | SAXException | XPathExpressionException | SignatureException ex) {
             System.out.println(String.format("Polling of HIT %s failed: %s",
-                    hit.getHITId(), ex.getMessage()));
+                    task.getHIT().getHITId(), ex.getMessage()));
         }
     }
 
+    private boolean receivedEnoughAssignments() {
+        return task.getAssignments().size() == task.getHIT().getMaxAssignments();
+    }
+
+    private void finishJobAndStopTimers() {
+        task.finishTask();
+        task.getCallback().jobFinished();
+    }
+
     /**
-     * Gets the submitted assignments of this HIT.
+     * Gets the submitted assignments of this task.getHIT().
      * @return The answer from AMT.
      * @throws SignatureException
      * @throws IOException
@@ -108,7 +111,7 @@ public class PollAnswersTask extends TimerTask {
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("Operation", "GetAssignmentsForHIT");
-        param.put("HITId", hit.getHITId());
+        param.put("HITId", task.getHIT().getHITId());
         param.put("AssignmentStatus", "Submitted");
         param.put("PageSize", Integer.toString(PAGE_SIZE));
 
@@ -137,7 +140,7 @@ public class PollAnswersTask extends TimerTask {
     /**
      * Extracts the individual assignments from the response.
      * @param doc The response from AMT.
-     * @return A list of all newly submitted assignments for this HIT.
+     * @return A list of all newly submitted assignments for this task.getHIT().
      * @throws XPathExpressionException
      * @throws IOException
      * @throws SAXException
@@ -166,7 +169,7 @@ public class PollAnswersTask extends TimerTask {
 
             /* Go through all the assignments received */
             for (int i = 0; i < numResults; i++) {
-                Assignment a = new Assignment(hit);
+                Assignment a = new Assignment(task.getHIT());
                 Node n = assignments.item(i);
 
                 a.setAssignmentID(xPath.compile("./AssignmentId").evaluate(n));
@@ -181,11 +184,11 @@ public class PollAnswersTask extends TimerTask {
                 for (int j = 0; j < answers.getLength(); j++) {
                     String questionIdentifier = xPath.compile("./QuestionIdentifier").evaluate(answers.item(j));
 
-                    if (!hit.getQuestionsMap().containsKey(questionIdentifier)) {
+                    if (!task.getHIT().getQuestionsMap().containsKey(questionIdentifier)) {
                         throw new IOException(
                                 "This assignment contains an answer for which no matching question can be found");
                     }
-                    Question q = hit.getQuestionsMap().get(questionIdentifier);
+                    Question q = task.getHIT().getQuestionsMap().get(questionIdentifier);
 
                     /* Parse the answer and add it to the assignment */
                     Answer answ = q.parseXMLAnswer(answers.item(j), xPath);
@@ -207,7 +210,7 @@ public class PollAnswersTask extends TimerTask {
     private List<Assignment> filterExisting(List<Assignment> newAssignments) {
         List<Assignment> result = new ArrayList<Assignment>();
         for (Assignment a : newAssignments) {
-            if (!assignments.contains(a)) {
+            if (!task.getAssignments().contains(a)) {
                 result.add(a);
             }
         }
@@ -216,7 +219,7 @@ public class PollAnswersTask extends TimerTask {
     }
 
     private void addToSet(List<Assignment> newAssignments) {
-        assignments.addAll(newAssignments);
+        task.getAssignments().addAll(newAssignments);
     }
 
     /**
