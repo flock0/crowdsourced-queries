@@ -1,9 +1,6 @@
 package crowdsourced.mturk;
 
-import java.util.Collections;
 import java.util.Set;
-import java.util.Timer;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Holds information over a pending job/HIT, its status and received assignments so far.
@@ -14,8 +11,8 @@ public class PendingJob {
 
     private AMTTask task;
 
-    public PendingJob(AMTTask task) {
-        this.task = task;
+    PendingJob(AMTTask _task) {
+        this.task = _task;
     }
     public void abort() {
         throw new UnsupportedOperationException("Not yet implemented"); // TODO

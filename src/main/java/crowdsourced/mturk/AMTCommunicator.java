@@ -1,11 +1,5 @@
 package crowdsourced.mturk;
 
-import net.iharder.Base64;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,14 +13,17 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimeZone;
-import java.util.Timer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import net.iharder.Base64;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
 /**
  * The class dedicated to direct communications with AMT
@@ -255,8 +252,7 @@ public class AMTCommunicator {
 	    return lsSerializer.writeToString(document);
 	}
 
-
-	/**
+    /**
 	 * Parses a String to generate a XML document
 	 * @param xml the string to parse
 	 * @return a XML document if the string was parsed successfully
@@ -312,8 +308,12 @@ public class AMTCommunicator {
     private static String encodeUrl(String question) throws UnsupportedEncodingException {
 		return  URLEncoder.encode(question, "UTF-8");
 	}
-    
-    static void finishJob(AMTTask task) {
+
+    /**
+     * Removes this task from the collection of active tasks.
+     * @param task The task to remove.
+     */
+    static void finishTask(AMTTask task) {
         tasks.finish(task);
     }
 }

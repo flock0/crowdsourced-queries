@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,13 +34,21 @@ public class PollAnswersTimerTask extends TimerTask {
      * The default number of assignments to fetch from one poll.
      */
     public static final int PAGE_SIZE = 100;
-    public static final long POLLING_INITIAL_DELAY_MILLISECONDS = 3 * 1000; // How long should we wait after creating the HIT before we start polling?
-    public static final long POLLING_RATE_MILLISECONDS = 5 * 1000; // At what rate should we poll for new answers?
-    
+    /**
+     * How long should we wait after creating the HIT before we start polling?
+     */
+    public static final long POLLING_INITIAL_DELAY_MILLISECONDS = 3 * 1000;
+    /**
+     * At what rate should we poll for new answers?
+     */
+    public static final long POLLING_RATE_MILLISECONDS = 5 * 1000;
+    /**
+     * Indicates whether polling should be stopped after retrieving assignments a last time.
+     */
+    private boolean cancellationRequested = false;
+    private boolean moreAssignmentsAvailable;
     private DocumentBuilder docBuilder;
     private AMTTask task;
-    private boolean moreAssignmentsAvailable;
-    private boolean cancellationRequested = false;
 
     /**
      * Creates a new TimerTask that takes care of polling for new answers.
@@ -49,7 +56,7 @@ public class PollAnswersTimerTask extends TimerTask {
      * @param _task
      *          The task that we want to poll for.
      */
-    public PollAnswersTimerTask(AMTTask _task) {
+    PollAnswersTimerTask(AMTTask _task) {
         this.task = _task;
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         try {
@@ -80,7 +87,7 @@ public class PollAnswersTimerTask extends TimerTask {
 
                         task.getCallback().newAssignmentsReceived(filteredAssignments);
                         approveAssignments(newAssignments);
-                        
+
                     }
                 }
             } while (lastResponseWasValid && moreAssignmentsAvailable);
@@ -88,12 +95,19 @@ public class PollAnswersTimerTask extends TimerTask {
             if (receivedEnoughAssignments() || cancellationRequested) {
                 this.cancel();
                 task.getCallback().jobFinished();
-                task.disposeJob();
+                task.disposeTask();
             }
         } catch (IOException | SAXException | XPathExpressionException | SignatureException ex) {
             System.out.println(String.format("Polling of HIT %s failed: %s",
                     task.getHIT().getHITId(), ex.getMessage()));
         }
+    }
+
+    /**
+     * Will stop the polling after the next and last final retrieval of assignments.
+     */
+    void cancelAfterNextRun() {
+        cancellationRequested = true;
     }
 
     private boolean receivedEnoughAssignments() {
@@ -103,8 +117,6 @@ public class PollAnswersTimerTask extends TimerTask {
     /**
      * Gets the submitted assignments of this task.getHIT().
      * @return The answer from AMT.
-     * @throws SignatureException
-     * @throws IOException
      */
     private String getAssignmentsForHIT() throws SignatureException, IOException {
 
@@ -140,9 +152,6 @@ public class PollAnswersTimerTask extends TimerTask {
      * Extracts the individual assignments from the response.
      * @param doc The response from AMT.
      * @return A list of all newly submitted assignments for this task.getHIT().
-     * @throws XPathExpressionException
-     * @throws IOException
-     * @throws SAXException
      */
     private List<Assignment> extractAssignments(Document doc)
             throws XPathExpressionException, IOException, SAXException {
@@ -222,8 +231,8 @@ public class PollAnswersTimerTask extends TimerTask {
     }
 
     /**
-     * Approves the passed assigments.
-     * @param newAssignments The assigments that should be approved.
+     * Approves the passed assignments.
+     * @param newAssignments The assignments that should be approved.
      */
     private void approveAssignments(List<Assignment> newAssignments) {
         Map<String, String> param = new HashMap<String, String>();
@@ -236,10 +245,6 @@ public class PollAnswersTimerTask extends TimerTask {
                 /* Nothing we can do about it. Just skip it this assignment for now */
             }
         }
-    }
-
-    public void cancelAfterNextRun() {
-        cancellationRequested = true;
     }
 
 }
