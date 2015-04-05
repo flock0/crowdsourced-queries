@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -24,33 +25,39 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Handles the polling for new answers.
+ * Handles the polling for and extraction of new answers.
  *
  * @author Florian Chlan
  */
-public class PollingTask extends TimerTask {
+public class PollAnswersTask extends TimerTask {
 
     /**
      * The default number of assignments to fetch from one poll.
      */
-    private static final int PAGE_SIZE = 100;
-
+    public static final int PAGE_SIZE = 100;
+    public static final long POLLING_INITIAL_DELAY_MILLISECONDS = 3 * 1000; // How long should we wait after creating the HIT before we start polling?
+    public static final long POLLING_RATE_MILLISECONDS = 5 * 1000; // At what rate should we poll for new answers?
+    
     private DocumentBuilder docBuilder;
+    private final HIT hit;
     private final AnswerCallback callback;
-    private final PendingJob job;
+    private final Set<Assignment> assignments;
     private boolean moreAssignmentsAvailable;
 
     /**
      * Creates a new PollingTask
      *
-     * @param jobArg
-     *            The job object of the HIT.
+     * @param hitArg
+     *            The HIT that we should poll answers for.
      * @param callbackArg
      *            The object where new answers will be sent to.
+     * @param assignmentsArg
+     *            The set of assigments received so far.
      */
-    public PollingTask(PendingJob jobArg, AnswerCallback callbackArg) {
-        this.job = jobArg;
+    public PollAnswersTask(HIT hitArg, AnswerCallback callbackArg, Set<Assignment> assignmentsArg) {
+        this.hit = hitArg;
         this.callback = callbackArg;
+        this.assignments = assignmentsArg;
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         try {
@@ -87,21 +94,32 @@ public class PollingTask extends TimerTask {
 
         } catch (IOException | SAXException | XPathExpressionException | SignatureException ex) {
             System.out.println(String.format("Polling of HIT %s failed: %s",
-                    job.getHIT().getHITId(), ex.getMessage()));
+                    hit.getHITId(), ex.getMessage()));
         }
     }
 
+    /**
+     * Gets the submitted assignments of this HIT.
+     * @return The answer from AMT.
+     * @throws SignatureException
+     * @throws IOException
+     */
     private String getAssignmentsForHIT() throws SignatureException, IOException {
 
         Map<String, String> param = new HashMap<String, String>();
         param.put("Operation", "GetAssignmentsForHIT");
-        param.put("HITId", job.getHIT().getHITId());
+        param.put("HITId", hit.getHITId());
         param.put("AssignmentStatus", "Submitted");
         param.put("PageSize", Integer.toString(PAGE_SIZE));
 
         return AMTCommunicator.sendGet(param);
     }
 
+    /**
+     * Returns whether the response received from AMT is valid.
+     * @param doc The reponse from AMT that will be evaluated.
+     * @return True if the response is valid, false otherwise.
+     */
     private boolean responseIsValid(Document doc) {
 
         XPath xPath = XPathFactory.newInstance().newXPath();
@@ -116,6 +134,14 @@ public class PollingTask extends TimerTask {
         }
     }
 
+    /**
+     * Extracts the individual assignments from the response.
+     * @param doc The response from AMT.
+     * @return A list of all newly submitted assignments for this HIT.
+     * @throws XPathExpressionException
+     * @throws IOException
+     * @throws SAXException
+     */
     private List<Assignment> extractAssignments(Document doc)
             throws XPathExpressionException, IOException, SAXException {
 
@@ -140,7 +166,7 @@ public class PollingTask extends TimerTask {
 
             /* Go through all the assignments received */
             for (int i = 0; i < numResults; i++) {
-                Assignment a = new Assignment(job.getHIT());
+                Assignment a = new Assignment(hit);
                 Node n = assignments.item(i);
 
                 a.setAssignmentID(xPath.compile("./AssignmentId").evaluate(n));
@@ -155,11 +181,11 @@ public class PollingTask extends TimerTask {
                 for (int j = 0; j < answers.getLength(); j++) {
                     String questionIdentifier = xPath.compile("./QuestionIdentifier").evaluate(answers.item(j));
 
-                    if (!job.getHIT().getQuestionsMap().containsKey(questionIdentifier)) {
+                    if (!hit.getQuestionsMap().containsKey(questionIdentifier)) {
                         throw new IOException(
                                 "This assignment contains an answer for which no matching question can be found");
                     }
-                    Question q = job.getHIT().getQuestionsMap().get(questionIdentifier);
+                    Question q = hit.getQuestionsMap().get(questionIdentifier);
 
                     /* Parse the answer and add it to the assignment */
                     Answer answ = q.parseXMLAnswer(answers.item(j), xPath);
@@ -173,10 +199,15 @@ public class PollingTask extends TimerTask {
         return results;
     }
 
+    /**
+     * Filters out assignments that have been received by AMT but are not new to us.
+     * @param newAssignments All assignments received by AMT during the last poll.
+     * @return A list of only those assigments that are new to us.
+     */
     private List<Assignment> filterExisting(List<Assignment> newAssignments) {
         List<Assignment> result = new ArrayList<Assignment>();
         for (Assignment a : newAssignments) {
-            if (!job.getAssignments().contains(a)) {
+            if (!assignments.contains(a)) {
                 result.add(a);
             }
         }
@@ -185,9 +216,13 @@ public class PollingTask extends TimerTask {
     }
 
     private void addToSet(List<Assignment> newAssignments) {
-        job.getAssignments().addAll(newAssignments);
+        assignments.addAll(newAssignments);
     }
 
+    /**
+     * Approves the passed assigments.
+     * @param newAssignments The assigments that should be approved.
+     */
     private void approveAssignments(List<Assignment> newAssignments) {
         Map<String, String> param = new HashMap<String, String>();
         param.put("Operation", "ApproveAssignment");

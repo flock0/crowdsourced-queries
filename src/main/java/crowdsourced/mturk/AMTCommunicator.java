@@ -19,7 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.Timer;
 
@@ -47,8 +49,7 @@ public class AMTCommunicator {
             + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
             + ACCESS_KEY_ID + "&Version=2014-08-15";
 
-	private static final long POLLING_INITIAL_DELAY_MILLISECONDS = 3 * 1000;
-	private static final long POLLING_RATE_MILLISECONDS = 5 * 1000;
+	private Set<PendingJob> activeHITs = new HashSet<>();
 
     /**
      * Sends a REST GET request using the default base URL and with the
@@ -183,9 +184,7 @@ public class AMTCommunicator {
 				return null;
 			}
 
-			PendingJob job = new PendingJob(hit);
-			new Timer().schedule(new PollingTask(job, callback),
-			        POLLING_INITIAL_DELAY_MILLISECONDS, POLLING_RATE_MILLISECONDS);
+			PendingJob job = new PendingJob(hit, callback);
 			return job;
 
 		} catch  (IOException e) {
