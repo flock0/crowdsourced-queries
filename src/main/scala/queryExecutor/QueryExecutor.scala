@@ -45,9 +45,8 @@ class QueryExecutor() {
         
     assignments.foreach(ass => {
       println("Assignment result :")
-      
-      val answersMap = ass.getAnswers(
-      println(answersMap)
+      val answersMap = ass.getAnswers()
+      println(answersMap)})
       /*
       val questionTitle = "Evaluate if a claim makes sense"
       val questionDescription = "Is " + tuple + " coherent/true for the following predicate : " + where + " ?"
@@ -63,7 +62,7 @@ class QueryExecutor() {
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
       
       val task = new AMTTask(hit).exec*/
-    })
+    
   }
   
   def taskSelect(from: Q, fields: List[P], limit: Int): List[Assignment] = {
