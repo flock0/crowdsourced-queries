@@ -41,6 +41,7 @@ public class PollAnswersTimerTask extends TimerTask {
     private DocumentBuilder docBuilder;
     private AMTTask task;
     private boolean moreAssignmentsAvailable;
+    private boolean cancellationRequested = false;
 
     /**
      * Creates a new TimerTask that takes care of polling for new answers.
@@ -77,15 +78,16 @@ public class PollAnswersTimerTask extends TimerTask {
                         addToSet(filteredAssignments);
 
                         task.getCallback().newAssignmentsReceived(filteredAssignments);
-                        if(receivedEnoughAssignments()) {
-                            finishJobAndStopTimers();
-                        }
                         approveAssignments(newAssignments);
                         
                     }
                 }
             } while (lastResponseWasValid && moreAssignmentsAvailable);
 
+            if (receivedEnoughAssignments() || cancellationRequested) {
+                this.cancel();
+                task.getCallback().jobFinished();
+            }
         } catch (IOException | SAXException | XPathExpressionException | SignatureException ex) {
             System.out.println(String.format("Polling of HIT %s failed: %s",
                     task.getHIT().getHITId(), ex.getMessage()));
@@ -94,11 +96,6 @@ public class PollAnswersTimerTask extends TimerTask {
 
     private boolean receivedEnoughAssignments() {
         return task.getAssignments().size() == task.getHIT().getMaxAssignments();
-    }
-
-    private void finishJobAndStopTimers() {
-        task.finishTask();
-        task.getCallback().jobFinished();
     }
 
     /**
@@ -237,6 +234,10 @@ public class PollAnswersTimerTask extends TimerTask {
                 /* Nothing we can do about it. Just skip it this assignment for now */
             }
         }
+    }
+
+    public void cancelAfterNextRun() {
+        cancellationRequested = true;
     }
 
 }

@@ -14,11 +14,15 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Handles the checking of whether all accepted assignments for the HIT are submitted.
@@ -32,11 +36,12 @@ public class PollFinishedTimerTask extends TimerTask {
      */
     public static final int PAGE_SIZE = 100;
     public static final long POLLING_FINISHED_RATE_MILLISECONDS = 120 * 1000; // At what rate should we poll whether the HIT is finished? This is only relevant after the lifetime of the HIT is over.
-    private AMTActiveTasks amtActiveTasks;
+    private AMTTaskSet taskSet;
     private DocumentBuilder docBuilder;
+    private int totalNumberOfPages;
     
-    public PollFinishedTimerTask(AMTActiveTasks amtActiveTasks) {
-         this.amtActiveTasks = amtActiveTasks;
+    public PollFinishedTimerTask(AMTTaskSet taskSet) {
+         this.taskSet = taskSet;
          DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
          try {
              docBuilder = docFactory.newDocumentBuilder();
@@ -47,29 +52,30 @@ public class PollFinishedTimerTask extends TimerTask {
     }
     @Override
     public void run() {
-        boolean lastResponseWasValid;
-        int currentPageNumber = 1;
-        Set<String> reviewableHITs = new HashSet<>();
-        do {
-            String response = getReviewableHITs(currentPageNumber);
-            Document doc = docBuilder.parse(new InputSource(new StringReader(response)));
-            lastResponseWasValid = responseIsValid(doc);
-
-            if (lastResponseWasValid) {
-
-                Set<String> hits = extractReviewableHITs(doc);
-                reviewableHITs.addAll(hits);
-                // increase counter somehow
+        try {
+            boolean lastResponseWasValid;
+            int currentPageNumber = 1;
+            Set<String> reviewableHITs = new HashSet<>();
+            do {
+                String response = getReviewableHITs(currentPageNumber);
+                Document doc = docBuilder.parse(new InputSource(new StringReader(response)));
+                lastResponseWasValid = responseIsValid(doc);
+    
+                if (lastResponseWasValid) {
+    
+                    Set<String> hits = extractReviewableHITs(doc);
+                    reviewableHITs.addAll(hits);
+                    currentPageNumber++;
+                }
+            } while (lastResponseWasValid && currentPageNumber <= totalNumberOfPages);
+            
+            for (AMTTask t : taskSet.getActiveTasks()) {
+                if (reviewableHITs.contains(t.getHIT().getHITId())) {
+                    t.finishJob();
+                }
             }
-        } while (lastResponseWasValid && moreReviewableHITsAvailable);
-        
-        for (AMTTask t : amtActiveTasks) {
-            if (t.isReviewable(reviewableHITs)) {
-                stopPolling();
-                getLastAssignments(); // Use same code as PollAnswersTimerTask
-                callJobFinished();
-                disposeHIT();
-            }
+        } catch (IOException | SAXException | XPathExpressionException | SignatureException ex) {
+            System.out.println("Polling for reviewable HITs has failed: " + ex.getMessage());
         }
     }
     
@@ -102,18 +108,35 @@ public class PollFinishedTimerTask extends TimerTask {
             return false;
         }
     }
-    private Set<String> extractReviewableHITs(Document doc) {
+    private Set<String> extractReviewableHITs(Document doc) throws XPathExpressionException {
         
         XPathFactory xPathFac = XPathFactory.newInstance();
         XPath xPath = xPathFac.newXPath();
 
         /* If there are more assignments than can fit on this page, fetch more after this round */
         String numResultsString = xPath
-                .compile("/GetAssignmentsForHITResponse/GetAssignmentsForHITResult/NumResults")
+                .compile("/GetReviewableHITsResponse/GetReviewableHITsResult/NumResults")
                 .evaluate(doc);
         String totalNumResultsString = xPath
-                .compile("/GetAssignmentsForHITResponse/GetAssignmentsForHITResult/TotalNumResults")
+                .compile("/GetReviewableHITsResponse/GetReviewableHITsResult/TotalNumResults")
                 .evaluate(doc);
         int numResults = Integer.parseInt(numResultsString);
+        int totalNumResults = Integer.parseInt(totalNumResultsString);
+        totalNumberOfPages = (totalNumResults + PAGE_SIZE/2 + 1) / PAGE_SIZE; 
+        
+        Set<String> result = new HashSet<>();
+        if (numResults > 0) {
+            NodeList hits = (NodeList) xPath.compile(
+                    "/GetReviewableHITsResponse/GetReviewableHITsResult/HIT")
+                    .evaluate(doc, XPathConstants.NODESET);
+            
+            /* Go through all the reviewable HITs received */
+            for (int i = 0; i < numResults; i++) {
+                Node n = hits.item(i);
+                result.add(xPath.compile("./HITId").evaluate(n));
+            }
+        }
+        
+        return result;
     }
 }

@@ -1,15 +1,16 @@
 package crowdsourced.mturk;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class AMTActiveTasks {
+public class AMTTaskSet {
     
-    private Set<AMTTask> activeTasks = new HashSet<>();
-    private Timer reviewableTimer;
+    private Set<AMTTask> activeTasks = Collections.newSetFromMap(new HashMap<AMTTask, Boolean>());
+    private Timer reviewableTimer = null;
     
     public synchronized void add(AMTTask task) {
         activeTasks.add(task);
@@ -23,6 +24,11 @@ public class AMTActiveTasks {
         activeTasks.remove(task);
         if(activeTasks.isEmpty()) {
             reviewableTimer.cancel();
+            reviewableTimer = null;
         }
+    }
+
+    public Set<AMTTask> getActiveTasks() {
+        return activeTasks;
     }
 }

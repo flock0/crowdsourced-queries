@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AMTTask {
 
     private final HIT hit;
+    private PollAnswersTimerTask pollingTask;
     private Timer pollingTimer;
     private Timer finishedTimer;
     private AnswerCallback callback;
@@ -26,9 +27,9 @@ public class AMTTask {
         this.hit = _hit;
         assignments = Collections.newSetFromMap(new ConcurrentHashMap<Assignment, Boolean>());
         pollingTimer = new Timer();
-        pollingTimer.schedule(new PollAnswersTimerTask(this),
+        pollingTask = new PollAnswersTimerTask(this);
+        pollingTimer.schedule(pollingTask,
                 PollAnswersTimerTask.POLLING_INITIAL_DELAY_MILLISECONDS, PollAnswersTimerTask.POLLING_RATE_MILLISECONDS);
-        pollingTimer.schedule(new PollFinishedTimerTask(this), hit.getLifetimeInSeconds() * 1000, PollFinishedTimerTask.POLLING_FINISHED_RATE_MILLISECONDS);
     }
 
     public HIT getHIT() {
@@ -43,9 +44,8 @@ public class AMTTask {
         return assignments;
     }
 
-    public void finishTask() {
-        pollingTimer.cancel();
-        AMTCommunicator.finishTask(this);
+    public void finishJob() {
+        pollingTask.cancelAfterNextRun();
     }
 
     public PendingJob getJob() {

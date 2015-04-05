@@ -48,6 +48,7 @@ public class AMTCommunicator {
     private static final String AMT_REQUEST_BASE_URL = AMT_URL
             + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
             + ACCESS_KEY_ID + "&Version=2014-08-15";
+    private static AMTTaskSet tasks = new AMTTaskSet();
 
     /**
      * Sends a REST GET request using the default base URL and with the
@@ -182,9 +183,9 @@ public class AMTCommunicator {
 				return null;
 			}
 
-			
+
 			AMTTask task = new AMTTask(hit, callback);
-			activeTasks.add(task);
+			tasks.add(task);
 			return task.getJob();
 
 		} catch  (IOException e) {
