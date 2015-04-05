@@ -49,8 +49,6 @@ public class AMTCommunicator {
             + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
             + ACCESS_KEY_ID + "&Version=2014-08-15";
 
-	private Set<PendingJob> activeHITs = new HashSet<>();
-
     /**
      * Sends a REST GET request using the default base URL and with the
      * parameters appended.
@@ -184,8 +182,10 @@ public class AMTCommunicator {
 				return null;
 			}
 
-			PendingJob job = new PendingJob(hit, callback);
-			return job;
+			
+			AMTTask task = new AMTTask(hit, callback);
+			activeTasks.add(task);
+			return task.getJob();
 
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
@@ -310,6 +310,4 @@ public class AMTCommunicator {
     private static String encodeUrl(String question) throws UnsupportedEncodingException {
 		return  URLEncoder.encode(question, "UTF-8");
 	}
-
-
 }
