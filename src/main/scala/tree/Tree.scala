@@ -2,33 +2,47 @@ package tree
 
 object Tree{
   
-  trait Q extends G with java.io.Serializable
+  trait Q extends G with java.io.Serializable{
+    def countNodes: Int
+  }
   
-  case class In(left: Q, right: Q) extends Q
-  case class NotIn(left: Q, right: Q) extends Q
+  case class In(left: Q, right: Q) extends Q{
+    def countNodes = 1 + left.countNodes + right.countNodes
+  }
+  case class NotIn(left: Q, right: Q) extends Q{
+    def countNodes = 1 + left.countNodes + right.countNodes
+  }
   case class Join(left: Q, right: Q, on: String) extends Q {
     override def toString() = left + " JOIN " + right + " ON " + on
+    def countNodes = 1 + left.countNodes + right.countNodes
   }
-  case class GroupBy(q: Q, by: String) extends Q
+  case class GroupBy(q: Q, by: String) extends Q {
+    def countNodes = 1 + q.countNodes
+  }
   
   case class ErrorString() extends Q {
     override def toString() = "Error on parsing"
+    def countNodes = 0
   }
   
   trait Q1 extends Q
   
-  case class Limit(q: Q2, limit: Int) extends Q1
+  case class Limit(q: Q2, limit: Int) extends Q1 {
+    def countNodes = 1 + q.countNodes
+  }
   
   trait Q2 extends Q1
   
   case class OrderBy(q: Q3, order: O, by: String) extends Q2 {
     override def toString() = q +" ORDER BY " + by+ " " + order
+    def countNodes = 1 + q.countNodes
   }
   
   trait Q3 extends Q2
   
   case class Where(select: SelectTree, where: Condition) extends Q3 {
     override def toString() = select + " WHERE " + where
+    def countNodes = 1 + select.countNodes
   }
   
   trait SelectTree extends Q3
@@ -38,7 +52,7 @@ object Tree{
       case e :: Nil => e + ""
       case h :: t => h + ", " + computeList(t)
     }
-    
+    def countNodes = 1 + from.countNodes
     override def toString() = "SELECT (" + computeList(elem) + ") FROM " + from
   }
   

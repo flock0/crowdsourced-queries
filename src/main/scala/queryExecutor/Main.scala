@@ -14,6 +14,7 @@ object Main extends App {
   val queryExec = new QueryExecutor
   val parsedQuery = queryExec.parse(query)
   val executedQuery = queryExec.execute(parsedQuery)
+  val nodeCount = parsedQuery.countNodes
   
   
   /*
