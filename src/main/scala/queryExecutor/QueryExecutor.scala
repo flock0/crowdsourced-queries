@@ -166,7 +166,7 @@ class QueryExecutor() {
   def selectTasksGenerator(url: String, nl: String, fields:List[P], limit: Int):List[AMTTask] = {
     
     // tuples of (start, end) for each worker
-    val tuples = for (i <- List.range(1, limit, MAX_ELEMENTS_PER_WORKER)) yield (i, Math.min(i + MAX_ELEMENTS_PER_WORKER-1, limit))
+    val tuples = for (i <- List.range(1, limit+1, MAX_ELEMENTS_PER_WORKER)) yield (i, Math.min(i + MAX_ELEMENTS_PER_WORKER-1, limit))
     
     val tasks = tuples.map { tuple =>
       val (start: Int, end: Int) = tuple
