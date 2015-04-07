@@ -10,6 +10,8 @@ import scala.collection.JavaConverters._
 
 class QueryExecutor() {
   
+  val listTaskStatus = List()
+  
   val DEFAULT_ELEMENTS_SELECT = 5
   val MAX_ELEMENTS_PER_WORKER = 1
   
@@ -39,10 +41,7 @@ class QueryExecutor() {
   def taskWhere(select: SelectTree, where: Condition) = {
     println("Task where started")
     val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT) }
-    println("Task where not implemented.")
-    println("Displaying results of Select instead.\n")
     
-        
     assignments.foreach(ass => {
         println("Assignment result :")
         val answersMap = ass.getAnswers().asScala.toMap
@@ -156,5 +155,7 @@ class QueryExecutor() {
     
     tasks
   }
+  
+  def getListTaskStatus() = this.listTaskStatus
   
 }
