@@ -10,10 +10,10 @@ import scala.collection.JavaConverters._
 
 class QueryExecutor() {
   
-  val listTaskStatus = List()
+  var listTaskStatus = List[TaskStatus]()
   
-  val DEFAULT_ELEMENTS_SELECT = 5
-  val MAX_ELEMENTS_PER_WORKER = 1
+  val DEFAULT_ELEMENTS_SELECT = 13
+  val MAX_ELEMENTS_PER_WORKER = 4
   
   def generateUniqueID():String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString +"--"+ new Random().nextInt(10000) 
   
@@ -40,6 +40,14 @@ class QueryExecutor() {
 
   def taskWhere(select: SelectTree, where: Condition) = {
     println("Task where started")
+    
+    val idStatus = generateUniqueID()
+    val status = new TaskStatus(idStatus)
+    status.setOperator("WHERE")
+    status.setNumberHits(DEFAULT_ELEMENTS_SELECT)
+    listTaskStatus = listTaskStatus ::: List(status)
+    printListTaskStatus
+    
     val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT) }
     
     assignments.foreach(ass => {
@@ -62,13 +70,26 @@ class QueryExecutor() {
             val task = new AMTTask(hit).exec}}
        
       })
-    
+    status.setCurrentStatus("Finished")
+    printListTaskStatus
+    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
+    //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
   }
   
   def taskSelect(from: Q, fields: List[P], limit: Int): List[Assignment] = {
     println("Task select started")
+    for (i <- List.range(1, limit, MAX_ELEMENTS_PER_WORKER)){
+      println(List.range(1, limit, MAX_ELEMENTS_PER_WORKER)+" " + i+" "+ Math.min(i + MAX_ELEMENTS_PER_WORKER-1, limit))}
+    val idStatus = generateUniqueID()
+    val status = new TaskStatus(idStatus)
+    status.setOperator("Select")
+    status.setNumberHits(List.range(1, limit, MAX_ELEMENTS_PER_WORKER).size)
+    listTaskStatus = listTaskStatus ::: List(status)
+    printListTaskStatus
+    
     val NLAssignments: List[Assignment] = from match {case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }   
     println("NL task has finished")
+   
     val firstNLAssignment:Assignment = NLAssignments.head
     val (uniqueID, answer) = firstNLAssignment.getAnswers().asScala.head // retrieving first answer of first assignment
     val url = answer.toString
@@ -78,6 +99,10 @@ class QueryExecutor() {
     
     Thread sleep 30 * 1000 // wait 30 seconds (useless as we wait just below, but it's fun to wait)
     val assignments: List[Assignment] = tasks.flatMap(_.waitResults) // we wait for all results from all workers
+    
+    status.setCurrentStatus("Finished")
+    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
+    printListTaskStatus
     
     assignments
   }
@@ -106,8 +131,14 @@ class QueryExecutor() {
   }
   
   def taskNaturalLanguage(s: String, fields: List[P]): List[Assignment] = {
-    
     println("Task natural language")
+    
+    val idStatus = generateUniqueID()
+    val status = new TaskStatus(idStatus)
+    status.setOperator("FROM")
+    status.setNumberHits(1)
+    listTaskStatus = listTaskStatus ::: List(status)
+    printListTaskStatus
     
     val questionTitle = "Find URL containing required information"
     val questionDescription = "What is the most relevant website to find ["+s+"] ?\nNote that we are interested by : "+fields.mkString(", ")
@@ -118,12 +149,15 @@ class QueryExecutor() {
     
     val question: Question = new URLQuestion(generateUniqueID(), questionTitle, questionDescription)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava) 
-    
-    println("     Asking worker : "+questionDescription)
-    
     val task = new AMTTask(hit)
+    val assignments = task.execBlocking()
     
-    task.execBlocking()
+    status.setCurrentStatus("finished")
+    status.setTaskResultNumber(1) //TODO to change if we choose that workers should retrieve more URLs
+    printListTaskStatus
+    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
+    
+    assignments
   }
   
   /**
@@ -157,5 +191,17 @@ class QueryExecutor() {
   }
   
   def getListTaskStatus() = this.listTaskStatus
+  
+  def printListTaskStatus() = {
+    println("Task status summary : ")
+    this.listTaskStatus.foreach(status => {
+      println("    Task " + status.getStatusId)
+      println("        Current Status : " +status.getCurrentStatus)
+      println("        Operator : " + status.getOperator)
+      println("        Number of hits : " + status.getNumberHits)
+      println("        Number of finished hits " + status.getFinishedNumberHits)
+      println("        Number of results : " + status.getTaskResultNumber)
+    })
+  }
   
 }
