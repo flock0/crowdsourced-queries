@@ -33,5 +33,9 @@ public class MultipleChoiceAnswer extends Answer {
     public void getAnswer(AnswerVisitor ex) {
         ex.visit(answer);
     }
+    
+    public String toString(){
+    	return answer.getText();
+    }
 
 }

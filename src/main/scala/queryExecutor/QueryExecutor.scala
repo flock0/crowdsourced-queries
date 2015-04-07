@@ -10,8 +10,8 @@ import scala.collection.JavaConverters._
 
 class QueryExecutor() {
   
-  val DEFAULT_ELEMENTS_SELECT = 3
-  val MAX_ELEMENTS_PER_WORKER = 2
+  val DEFAULT_ELEMENTS_SELECT = 5
+  val MAX_ELEMENTS_PER_WORKER = 1
   
   def generateUniqueID():String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString +"--"+ new Random().nextInt(10000) 
   
@@ -44,24 +44,25 @@ class QueryExecutor() {
     
         
     assignments.foreach(ass => {
-      println("Assignment result :")
-      val answersMap = ass.getAnswers()
-      println(answersMap)})
-      /*
-      val questionTitle = "Evaluate if a claim makes sense"
-      val questionDescription = "Is " + tuple + " coherent/true for the following predicate : " + where + " ?"
-      val optionYes = new MultipleChoiceOption("yes","yes")
-      val optionNo = new MultipleChoiceOption("no","no")
-      val listOptions = List(optionYes,optionNo)
-      val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava) 
-      val questionList = List(question)
-      val numWorkers = 1
-      val rewardUSD = 0.02 toFloat
-      val expireTime = 60 * 60 // 60 minutes
-      val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
-      
-      val task = new AMTTask(hit).exec*/
+        println("Assignment result :")
+        val answersMap = ass.getAnswers().asScala.toMap
+        println(answersMap)
+        answersMap.foreach{case(key, value) => { val questionTitle = "Evaluate if a claim makes sense"
+            val questionDescription = "Is [" + value + "] coherent/true for the following predicate : " + where + " ?"
+            val optionYes = new MultipleChoiceOption("yes","yes")
+            val optionNo = new MultipleChoiceOption("no","no")
+            val listOptions = List(optionYes,optionNo)
+            val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava) 
+            val questionList = List(question)
+            val numWorkers = 1
+            val rewardUSD = 0.02 toFloat
+            val expireTime = 60 * 60 // 60 minutes
+            val keywords = List("Claim evaluation", "Fast", "easy")
+            val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
+            
+            val task = new AMTTask(hit).exec}}
+       
+      })
     
   }
   
