@@ -95,6 +95,9 @@ public class PollAnswersTimerTask extends TimerTask {
             if (receivedEnoughAssignments() || cancellationRequested) {
                 this.cancel();
                 task.getCallback().jobFinished();
+                if (!cancellationRequested) {
+                	AMTCommunicator.finishTask(task);
+                }
                 task.disposeTask();
             }
         } catch (IOException | SAXException | XPathExpressionException | SignatureException ex) {
