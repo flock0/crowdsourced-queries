@@ -105,6 +105,7 @@ object Tree{
   
   case class NaturalLanguage(s: String) extends Condition with SelectTree with G with I {
     override def toString() = "[" + s + "]"
+    def countNodes = 0
   }
   
   trait I extends T

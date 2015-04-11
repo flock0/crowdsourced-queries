@@ -35,7 +35,7 @@ public class MultipleChoiceAnswer extends Answer {
     }
     
     public String toString(){
-    	return answer.getText();
+    	return answer.getIdentifier() + "," +answer.getText();
     }
 
 }

@@ -12,8 +12,8 @@ class QueryExecutor() {
   
   var listTaskStatus = List[TaskStatus]()
   
-  val DEFAULT_ELEMENTS_SELECT = 13
-  val MAX_ELEMENTS_PER_WORKER = 4
+  val DEFAULT_ELEMENTS_SELECT = 3
+  val MAX_ELEMENTS_PER_WORKER = 2
   
   def generateUniqueID():String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString +"--"+ new Random().nextInt(10000) 
   
@@ -35,43 +35,42 @@ class QueryExecutor() {
     }
       println("Starting execution of the query : \"" + query + "\"")
       startingPoint(query)
-      //println(t)
   }
 
   def taskWhere(select: SelectTree, where: Condition) = {
     println("Task where started")
-    
+    var results = List[String]()
     val idStatus = generateUniqueID()
     val status = new TaskStatus(idStatus)
     status.setOperator("WHERE")
     status.setNumberHits(DEFAULT_ELEMENTS_SELECT)
     listTaskStatus = listTaskStatus ::: List(status)
     printListTaskStatus
-    
+    var test: List[String] = List()
     val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT) }
     
     assignments.foreach(ass => {
         println("Assignment result :")
         val answersMap = ass.getAnswers().asScala.toMap
+        
         println(answersMap)
-        answersMap.foreach{case(key, value) => { val questionTitle = "Evaluate if a claim makes sense"
-            val questionDescription = "Is [" + value + "] coherent/true for the following predicate : " + where + " ?"
-            val optionYes = new MultipleChoiceOption("yes","yes")
-            val optionNo = new MultipleChoiceOption("no","no")
-            val listOptions = List(optionYes,optionNo)
-            val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava) 
-            val questionList = List(question)
-            val numWorkers = 1
-            val rewardUSD = 0.02 toFloat
-            val expireTime = 60 * 60 // 60 minutes
-            val keywords = List("Claim evaluation", "Fast", "easy")
-            val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
-            
-            val task = new AMTTask(hit).exec}}
+        answersMap.foreach{case(key, value) => { 
+            test = test ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
+         }}
        
       })
-    status.setCurrentStatus("Finished")
-    printListTaskStatus
+    val tasks = whereTasksGenerator(test,where)
+    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
+   
+    val assignmentsW: List[Assignment] = tasks.flatMap(_.waitResults)
+    assignmentsW.foreach{ass => {
+        val answersMapW = ass.getAnswers().asScala.toMap
+        answersMapW.foreach{case(key, value) => { 
+          val res = value.toString.split(",")
+          if (res(1) == "yes") {results = results ::: List(res(0))}
+        }}}}
+    println("Final results " + results)
+    //printListTaskStatus
     //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
     //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
   }
@@ -97,7 +96,6 @@ class QueryExecutor() {
     val tasks: List[AMTTask] = selectTasksGenerator(url, from.toString, fields, limit)
     tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
     
-    Thread sleep 30 * 1000 // wait 30 seconds (useless as we wait just below, but it's fun to wait)
     val assignments: List[Assignment] = tasks.flatMap(_.waitResults) // we wait for all results from all workers
     
     status.setCurrentStatus("Finished")
@@ -187,6 +185,29 @@ class QueryExecutor() {
       new AMTTask(hit)
     }
     
+    tasks
+  }
+  
+  /**
+   * Helper function to create a list of AMTTask to split the data retrieval jobs between several workers
+   */
+  def whereTasksGenerator(answers: List[String], where: Condition): List[AMTTask] = {
+    println(answers)
+    val tasks = answers.map(ans => {
+              val questionTitle = "Evaluate if a claim makes sense"
+              val questionDescription = "Is [" + ans + "] coherent/true for the following predicate : " + where + " ?"
+              val optionYes = new MultipleChoiceOption(ans+",yes","yes")
+              val optionNo = new MultipleChoiceOption(ans+",no","no")
+              val listOptions = List(optionYes,optionNo)
+              val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava) 
+              val questionList = List(question)
+              val numWorkers = 1
+              val rewardUSD = 0.02 toFloat
+              val expireTime = 60 * 60 // 60 minutes
+              val keywords = List("Claim evaluation", "Fast", "easy")
+              val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
+          
+              new AMTTask(hit)})
     tasks
   }
   
