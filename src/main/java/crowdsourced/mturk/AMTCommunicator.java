@@ -336,12 +336,12 @@ public class AMTCommunicator {
 			//Checking the file has enough lines to access the list elements
 			if (lines.size() > 1) {
 				//Retrieve lines in order
-				AMTCommunicator.ACCESS_KEY_ID = lines.get(0);
-				AMTCommunicator.ACCESS_KEY_SECRET_ID = lines.get(1);
+				AMTCommunicator.ACCESS_KEY_ID = lines.get(0).trim();
+				AMTCommunicator.ACCESS_KEY_SECRET_ID = lines.get(1).trim();
 				//Handling the case where the URL modifier is present (third line)
 				if (lines.size() > 2) {
 					//Pseudo boolean 1 : real AMT, anything else : Sandbox
-					if (lines.get(2).equals("1")) {
+					if (lines.get(2).trim().equals("1")) {
 						AMTCommunicator.AMT_URL = "https://mechanicalturk.amazonaws.com";
 					} else {
 						AMTCommunicator.AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
