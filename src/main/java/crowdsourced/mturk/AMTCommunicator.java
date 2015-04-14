@@ -7,12 +7,16 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -33,16 +37,16 @@ import org.w3c.dom.ls.LSSerializer;
 public class AMTCommunicator {
 
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
-	private static final String ACCESS_KEY_ID = "";
-	private static final String ACCESS_KEY_SECRET_ID = "";
+	private static String ACCESS_KEY_ID = "";
+	private static String ACCESS_KEY_SECRET_ID = "";
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
-	// can use "https://mechanicalturk.sandbox.amazonaws.com"
+	private static String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
 
-    private static final String AMT_REQUEST_BASE_URL = AMT_URL
+
+    private static String AMT_REQUEST_BASE_URL = AMT_URL
             + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
             + ACCESS_KEY_ID + "&Version=2014-08-15";
     private static AMTTaskSet tasks = new AMTTaskSet();
@@ -259,6 +263,7 @@ public class AMTCommunicator {
 	 * @throws Exception
 	 */
 	public static Document loadXMLFromString(String xml) throws Exception {
+		System.out.println("Non implemented method loadXMLFromString");
 		/*DOMImplementationRegistry registry;
 		try {
 			registry = DOMImplementationRegistry.newInstance();
@@ -316,4 +321,43 @@ public class AMTCommunicator {
     static void finishTask(AMTTask task) {
         tasks.finish(task);
     }
+
+    /**
+     * Loads credentials information from a file (UTF8 strings).
+     * Order to respect :
+     * 	- ACCESS_KEY_ID
+     * 	- ACCESS_KEY_SECRET_ID
+     * 	- 1 to use real AMT, else use Sandbox
+     * @param path the path to the credentials file
+     */
+    public static void loadCredentials(String path) {
+    	try {
+			List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
+			//Checking the file has enough lines to access the list elements
+			if (lines.size() > 1) {
+				//Retrieve lines in order
+				AMTCommunicator.ACCESS_KEY_ID = lines.get(0);
+				AMTCommunicator.ACCESS_KEY_SECRET_ID = lines.get(1);
+				//Handling the case where the URL modifier is present (third line)
+				if (lines.size() > 2) {
+					//Pseudo boolean 1 : real AMT, anything else : Sandbox
+					if (lines.get(2).equals("1")) {
+						AMTCommunicator.AMT_URL = "https://mechanicalturk.amazonaws.com";
+					} else {
+						AMTCommunicator.AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
+					}
+				}
+				//Needed in all cases, we need to update the value of this string.
+				AMTCommunicator.AMT_REQUEST_BASE_URL = AMTCommunicator.AMT_URL
+			            + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
+			            + AMTCommunicator.ACCESS_KEY_ID + "&Version=2014-08-15";
+				System.out.println("Credentials loaded.");
+			} else {
+				System.out.println("Incomplete credentials file");
+			}
+		} catch (IOException e) {
+			System.out.println("No credentials file found at path " + path);
+		}
+    }
+
 }
