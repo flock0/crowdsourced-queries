@@ -262,33 +262,6 @@ public class AMTCommunicator {
 	 * @return a XML document if the string was parsed successfully
 	 * @throws Exception
 	 */
-	public static Document loadXMLFromString(String xml) throws Exception {
-		System.out.println("Non implemented method loadXMLFromString");
-		/*DOMImplementationRegistry registry;
-		try {
-			registry = DOMImplementationRegistry.newInstance();
-			DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-			LSParser parser = impl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, "http://www.w3.org/TR/REC-xml");
-			LSInput input = impl.createLSInput();
-			input.setEncoding("UTF-8");
-			input.setStringData(xml);
-		    return parser.parse(input);
-
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassCastException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		return null;
-	}
 
     /**
      * Performs base64-encoding of input bytes.
@@ -301,8 +274,6 @@ public class AMTCommunicator {
     private static String encodeBase64(byte[] rawData) {
         return Base64.encodeBytes(rawData);
     }
-
-
 
     /**
      * Encodes a string to the URL standard format
