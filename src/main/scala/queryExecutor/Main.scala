@@ -8,15 +8,15 @@ import scala.collection.JavaConverters._
 object Main extends App {
   
  // val query = "SELECT (full name, date of birth) FROM [Presidents of the USA] WHERE [political party is democrat] ORDER BY date of birth"
-  //val query = "SELECT (movies) FROM [Movies with Angelina Jolie] JOIN SELECT (movies) FROM [Movies with Brad Pitt] ON movies"
+  val query = "SELECT (movies) FROM [Movies with Angelina Jolie] JOIN SELECT (movies) FROM [Movies with Brad Pitt] ON movies"
   
-  val query = "SELECT (full name) FROM [Presidents of USA] WHERE [political party is democrat]"
+  //val query = "SELECT (full name) FROM [Presidents of USA] WHERE [political party is democrat]"
   
   val queryExec = new QueryExecutor
   val parsedQuery = queryExec.parse(query)
-  //val executedQuery = queryExec.execute(parsedQuery)
+  val executedQuery = queryExec.execute(parsedQuery)
   val nodeCount = parsedQuery.countNodes
-    
+  /*  
   val questionTitle = "Data extraction from URL"
       val questionDescription = "Description"
       val question: Question = new StringQuestion("dummy_id", questionTitle, questionDescription)
@@ -37,7 +37,8 @@ object Main extends App {
           s.foreach(chaar => println(chaar+" "+chaar.size))
           
         }    }  
-  })
+  })*/
+  
     /*
     val questionDescription = "Is [ abc ] coherent/true for the following predicate : [ def ] ?"
             val optionYes = new MultipleChoiceOption("yes","yes")
