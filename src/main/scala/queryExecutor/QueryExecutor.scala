@@ -116,14 +116,16 @@ class QueryExecutor() {
 
     assignments
   }
+  
   def executeNode(node: Q): List[Assignment] = {
     node match {
 		case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
 		case Join(left, right, on) => taskJoin(left, right, on)
 		case Where(selectTree, where) => taskWhere(selectTree, where)
 		case _ => ???
-    }
+
   }
+    
   def taskJoin(left: Q, right: Q, on: String) = {
     val a = Future { executeNode(left) }
     val b = Future { executeNode(right) }
@@ -131,6 +133,7 @@ class QueryExecutor() {
     var testb = List[String]()
     var results = List[String]()
     println("Task join")
+    
     val resa = Await.result(a, Duration.Inf)
     val resb = Await.result(b, Duration.Inf)
 
@@ -217,6 +220,58 @@ class QueryExecutor() {
     assignments
   }
 
+  /**
+   * Extract the URL from a Natural language task.
+   */
+  def extractNaturalLanguageAnswers(assignments: List[Assignment]): String = {
+    val firstNLAssignment:Assignment = NLAssignments.head
+    val (uniqueID, answer) = firstNLAssignment.getAnswers().asScala.head // retrieving first answer of first assignment
+    answer.toString
+  }
+  
+  /**
+   * Extract the list of tuples from a Select task.
+   */
+  def extractSelectAnswers(assignments: List[Assignment]): List[String] = {
+    var results = List[String]()
+    assignments.foreach(ass => {
+        println("Assignment result :")
+        val answersMap = ass.getAnswers().asScala.toMap
+        
+        println(answersMap)
+        answersMap.foreach{case(key, value) => { 
+            results = results ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
+         }}
+       
+      })
+     results
+  }
+  
+  /**
+   * Extract the list of tuple satisfying the where clause.
+   */
+  def extractWhereAnswers(assignments: List[Assignment]): List[String] = {
+    var results = List[String]()
+    assignments.foreach{ass => {
+        val answersMap = ass.getAnswers().asScala.toMap
+        answersMap.foreach{case(key, value) => { 
+          val res = value.toString.split(",")//// TODO proper way
+          if (res(1) == "yes") {results = results ::: List(res(0))}
+        }}}}
+    results
+  }
+  
+  def extractJoinAnswers(assignments: List[Assignment]): List[String] = {
+    var results = List[String]()
+    assignments.foreach{ass => {
+        val answersMap = ass.getAnswers().asScala.toMap
+        answersMap.foreach{case(key, value) => { 
+          val res = value.toString.split(",")//// TODO proper way
+          if (res(1) == "yes") {results = results ::: List(res(0))}
+        }}}}
+    results
+  }
+  
   /**
    * Helper function to create a list of AMTTask to split the data retrieval jobs between several workers
    */
