@@ -12,8 +12,8 @@ class QueryExecutor() {
   
   var listTaskStatus = List[TaskStatus]()
   
-  val DEFAULT_ELEMENTS_SELECT = 3
-  val MAX_ELEMENTS_PER_WORKER = 2
+  val DEFAULT_ELEMENTS_SELECT = 44
+  val MAX_ELEMENTS_PER_WORKER = 4
   
   def generateUniqueID():String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString +"--"+ new Random().nextInt(10000) 
   
@@ -66,10 +66,11 @@ class QueryExecutor() {
     assignmentsW.foreach{ass => {
         val answersMapW = ass.getAnswers().asScala.toMap
         answersMapW.foreach{case(key, value) => { 
-          val res = value.toString.split(",")
+          val res = value.toString.split(",")//// TODO proper way
           if (res(1) == "yes") {results = results ::: List(res(0))}
         }}}}
     println("Final results " + results)
+    System.exit(1)
     //printListTaskStatus
     //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
     //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
@@ -141,9 +142,9 @@ class QueryExecutor() {
     val questionTitle = "Find URL containing required information"
     val questionDescription = "What is the most relevant website to find ["+s+"] ?\nNote that we are interested by : "+fields.mkString(", ")
     val keywords = List("URL retrieval","Fast")
-    val expireTime = 30 * 60 // 30 minutes
+    val expireTime = 60 * 60 * 120// 30 minutes
     val numAssignments = 1
-    val rewardUSD = 0.02 toFloat
+    val rewardUSD = 0.01 toFloat
     
     val question: Question = new URLQuestion(generateUniqueID(), questionTitle, questionDescription)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava) 
@@ -177,8 +178,8 @@ class QueryExecutor() {
       val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
       val questionList = List(question)
       val numWorkers = 1
-      val rewardUSD = 0.02 toFloat
-      val expireTime = 60 * 60 // 60 minutes
+      val rewardUSD = 0.01 toFloat
+      val expireTime = 60 * 60 * 120// 60 minutes
       val keywords = List("data extraction", "URL", "easy")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
       
@@ -202,8 +203,8 @@ class QueryExecutor() {
               val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava) 
               val questionList = List(question)
               val numWorkers = 1
-              val rewardUSD = 0.02 toFloat
-              val expireTime = 60 * 60 // 60 minutes
+              val rewardUSD = 0.01 toFloat
+              val expireTime = 60 * 60 * 120 // 60 minutes
               val keywords = List("Claim evaluation", "Fast", "easy")
               val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
           
