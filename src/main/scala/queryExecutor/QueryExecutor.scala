@@ -49,38 +49,13 @@ class QueryExecutor() {
     status.setNumberHits(DEFAULT_ELEMENTS_SELECT)
     listTaskStatus = listTaskStatus ::: List(status)
     printListTaskStatus
-    var test: List[String] = List()
-    val assignments = select match { case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT) }
-
-    assignments.foreach(ass => {
-      println("Assignment result :")
-      val answersMap = ass.getAnswers().asScala.toMap
-
-      println(answersMap)
-      answersMap.foreach {
-        case (key, value) => {
-          test = test ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
-        }
-      }
-
-    })
-    val tasks = whereTasksGenerator(test, where)
+    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)}
+    val tasks = whereTasksGenerator(extractSelectAnswers(assignments), where)
     tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
-
-    val assignmentsW: List[Assignment] = tasks.flatMap(_.waitResults)
-    assignmentsW.foreach { ass =>
-      {
-        val answersMapW = ass.getAnswers().asScala.toMap
-        answersMapW.foreach {
-          case (key, value) => {
-            val res = value.toString.split(",") //// TODO proper way
-            if (res(1) == "yes") { results = results ::: List(res(0)) }
-          }
-        }
-      }
-    }
-    println("Final results " + results)
-    assignmentsW
+    val assignements = tasks.flatMap(_.waitResults)
+   
+    println("Final results " + extractWhereAnswers(assignements))
+    assignements
     //printListTaskStatus
     //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
     //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
@@ -99,13 +74,8 @@ class QueryExecutor() {
     printListTaskStatus
 
     val NLAssignments: List[Assignment] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
-    println("NL task has finished")
-
-    val firstNLAssignment: Assignment = NLAssignments.head
-    val (uniqueID, answer) = firstNLAssignment.getAnswers().asScala.head // retrieving first answer of first assignment
-    val url = answer.toString
-
-    val tasks: List[AMTTask] = selectTasksGenerator(url, from.toString, fields, limit)
+    
+    val tasks: List[AMTTask] = selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, limit)
     tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
 
     val assignments: List[Assignment] = tasks.flatMap(_.waitResults) // we wait for all results from all workers
@@ -123,7 +93,16 @@ class QueryExecutor() {
 		case Join(left, right, on) => taskJoin(left, right, on)
 		case Where(selectTree, where) => taskWhere(selectTree, where)
 		case _ => ???
-
+    }
+  }
+    
+  def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
+    node match {
+    case Select(nl, fields) => extractSelectAnswers(assignments)
+    case Join(left, right, on) => extractJoinAnswers(assignments)
+    case Where(selectTree, where) => extractWhereAnswers(assignments)
+    case _ => ???
+    }
   }
     
   def taskJoin(left: Q, right: Q, on: String) = {
@@ -134,52 +113,17 @@ class QueryExecutor() {
     var results = List[String]()
     println("Task join")
     
-    val resa = Await.result(a, Duration.Inf)
-    val resb = Await.result(b, Duration.Inf)
-
-    resa.foreach(ass => {
-      println("Assignment result :")
-      val answersMap = ass.getAnswers().asScala.toMap
-
-      println(answersMap)
-      answersMap.foreach {
-        case (key, value) => {
-          testa = testa ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
-        }
-      }
-
-    })
-    resb.foreach(ass => {
-      println("Assignment result :")
-      val answersMap = ass.getAnswers().asScala.toMap
-
-      println(answersMap)
-      answersMap.foreach {
-        case (key, value) => {
-          testb = testb ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
-        }
-      }
-
-    })
-    val tasks = joinTasksGenerator(testa, testb)
+    val resultsLeft = Await.result(a, Duration.Inf)
+    val resultsRight = Await.result(b, Duration.Inf)
+    
+    val tasks = joinTasksGenerator(extractNodeAnswers(left, resultsLeft), extractNodeAnswers(right, resultsRight))
     tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
 
-    val assignmentsW: List[Assignment] = tasks.flatMap(_.waitResults)
-    assignmentsW.foreach { ass =>
-      {
-        val answersMapW = ass.getAnswers().asScala.toMap
-        answersMapW.foreach {
-          case (key, value) => {
-            val res = value.toString.split(",") //// TODO proper way
-            if (res(1) == "yes") { results = results ::: List(res(0)) }
-          }
-        }
-      }
-    }
-    println("Final results " + results)
+    val assignments: List[Assignment] = tasks.flatMap(_.waitResults)
+    
+    println("Final results " + extractJoinAnswers(assignments))
 
-    //TODO join with Await.result(a, Duration.inf) and Await.result(b, Duration.inf)*/
-    List[Assignment]() //TODO
+    assignments
   }
   def taskOrderBy(q: Q3, order: O, by: String): List[Assignment] = {
     val a = q match {
@@ -224,7 +168,7 @@ class QueryExecutor() {
    * Extract the URL from a Natural language task.
    */
   def extractNaturalLanguageAnswers(assignments: List[Assignment]): String = {
-    val firstNLAssignment:Assignment = NLAssignments.head
+    val firstNLAssignment:Assignment = assignments.head
     val (uniqueID, answer) = firstNLAssignment.getAnswers().asScala.head // retrieving first answer of first assignment
     answer.toString
   }
