@@ -142,7 +142,7 @@ class QueryExecutor() {
     val questionTitle = "Find URL containing required information"
     val questionDescription = "What is the most relevant website to find ["+s+"] ?\nNote that we are interested by : "+fields.mkString(", ")
     val keywords = List("URL retrieval","Fast")
-    val expireTime = 60 * 60 * 120// 30 minutes
+    val expireTime = 60 * 30// 30 minutes
     val numAssignments = 1
     val rewardUSD = 0.01 toFloat
     
@@ -179,7 +179,7 @@ class QueryExecutor() {
       val questionList = List(question)
       val numWorkers = 1
       val rewardUSD = 0.01 toFloat
-      val expireTime = 60 * 60 * 120// 60 minutes
+      val expireTime = 60 * 60// 60 minutes
       val keywords = List("data extraction", "URL", "easy")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
       
@@ -204,7 +204,7 @@ class QueryExecutor() {
               val questionList = List(question)
               val numWorkers = 1
               val rewardUSD = 0.01 toFloat
-              val expireTime = 60 * 60 * 120 // 60 minutes
+              val expireTime = 60 * 60 // 60 minutes
               val keywords = List("Claim evaluation", "Fast", "easy")
               val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
           

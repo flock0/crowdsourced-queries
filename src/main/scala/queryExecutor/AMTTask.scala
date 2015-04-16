@@ -26,7 +26,10 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
    * Sends the request to AMT and set itself as the callback object
    * This function is non-blocking
    */
-  def exec(): PendingJob = AMTCommunicator.sendHIT(hit, this)
+  def exec(): PendingJob = {  
+    AMTCommunicator.loadCredentials("../credentials.txt")
+    AMTCommunicator.sendHIT(hit, this)
+  }
   
   /**
    * Will block until we have the complete list of result
