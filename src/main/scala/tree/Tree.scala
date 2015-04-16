@@ -51,6 +51,7 @@ object Tree{
     def computeList(e: List[P]): String = e match {
       case e :: Nil => e + ""
       case h :: t => h + ", " + computeList(t)
+      case Nil => ""
     }
     def countNodes = 1 + from.countNodes
     override def toString() = "SELECT (" + computeList(elem) + ") FROM " + from
