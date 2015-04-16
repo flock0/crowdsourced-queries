@@ -1,11 +1,5 @@
 package crowdsourced.mturk;
 
-import net.iharder.Base64;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,18 +7,27 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.Timer;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+
+import net.iharder.Base64;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 
 /**
  * The class dedicated to direct communications with AMT
@@ -34,21 +37,19 @@ import javax.crypto.spec.SecretKeySpec;
 public class AMTCommunicator {
 
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
-	private static final String ACCESS_KEY_ID = "";
-	private static final String ACCESS_KEY_SECRET_ID = "";
+	private static String ACCESS_KEY_ID = "";
+	private static String ACCESS_KEY_SECRET_ID = "";
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static final String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
-	// can use "https://mechanicalturk.sandbox.amazonaws.com"
+	private static String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
 
-    private static final String AMT_REQUEST_BASE_URL = AMT_URL
+
+    private static String AMT_REQUEST_BASE_URL = AMT_URL
             + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
             + ACCESS_KEY_ID + "&Version=2014-08-15";
-
-	private static final long POLLING_INITIAL_DELAY_MILLISECONDS = 3 * 1000;
-	private static final long POLLING_RATE_MILLISECONDS = 5 * 1000;
+    private static AMTTaskSet tasks = new AMTTaskSet();
 
     /**
      * Sends a REST GET request using the default base URL and with the
@@ -183,10 +184,11 @@ public class AMTCommunicator {
 				return null;
 			}
 
-			PendingJob job = new PendingJob(hit);
-			new Timer().schedule(new PollingTask(job, callback),
-			        POLLING_INITIAL_DELAY_MILLISECONDS, POLLING_RATE_MILLISECONDS);
-			return job;
+
+			AMTTask task = new AMTTask(hit, callback);
+			task.startPolling();
+			tasks.add(task);
+			return task.getJob();
 
 		} catch  (IOException e) {
 			System.out.println("The GET request couldn't be sent.");
@@ -254,39 +256,12 @@ public class AMTCommunicator {
 	    return lsSerializer.writeToString(document);
 	}
 
-
-	/**
+    /**
 	 * Parses a String to generate a XML document
 	 * @param xml the string to parse
 	 * @return a XML document if the string was parsed successfully
 	 * @throws Exception
 	 */
-	public static Document loadXMLFromString(String xml) throws Exception {
-		/*DOMImplementationRegistry registry;
-		try {
-			registry = DOMImplementationRegistry.newInstance();
-			DOMImplementationLS impl = (DOMImplementationLS) registry.getDOMImplementation("LS");
-			LSParser parser = impl.createLSParser(DOMImplementationLS.MODE_SYNCHRONOUS, "http://www.w3.org/TR/REC-xml");
-			LSInput input = impl.createLSInput();
-			input.setEncoding("UTF-8");
-			input.setStringData(xml);
-		    return parser.parse(input);
-
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassCastException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		return null;
-	}
 
     /**
      * Performs base64-encoding of input bytes.
@@ -300,8 +275,6 @@ public class AMTCommunicator {
         return Base64.encodeBytes(rawData);
     }
 
-
-
     /**
      * Encodes a string to the URL standard format
      * @param question the string to encode
@@ -312,5 +285,50 @@ public class AMTCommunicator {
 		return  URLEncoder.encode(question, "UTF-8");
 	}
 
+    /**
+     * Removes this task from the collection of active tasks.
+     * @param task The task to remove.
+     */
+    static void finishTask(AMTTask task) {
+        tasks.finish(task);
+    }
+
+    /**
+     * Loads credentials information from a file (UTF8 strings).
+     * Order to respect :
+     * 	- ACCESS_KEY_ID
+     * 	- ACCESS_KEY_SECRET_ID
+     * 	- 1 to use real AMT, else use Sandbox
+     * @param path the path to the credentials file
+     */
+    public static void loadCredentials(String path) {
+    	try {
+			List<String> lines = Files.readAllLines(Paths.get(path), StandardCharsets.UTF_8);
+			//Checking the file has enough lines to access the list elements
+			if (lines.size() > 1) {
+				//Retrieve lines in order
+				AMTCommunicator.ACCESS_KEY_ID = lines.get(0).trim();
+				AMTCommunicator.ACCESS_KEY_SECRET_ID = lines.get(1).trim();
+				//Handling the case where the URL modifier is present (third line)
+				if (lines.size() > 2) {
+					//Pseudo boolean 1 : real AMT, anything else : Sandbox
+					if (lines.get(2).trim().equals("1")) {
+						AMTCommunicator.AMT_URL = "https://mechanicalturk.amazonaws.com";
+					} else {
+						AMTCommunicator.AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
+					}
+				}
+				//Needed in all cases, we need to update the value of this string.
+				AMTCommunicator.AMT_REQUEST_BASE_URL = AMTCommunicator.AMT_URL
+			            + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
+			            + AMTCommunicator.ACCESS_KEY_ID + "&Version=2014-08-15";
+				System.out.println("Credentials loaded.");
+			} else {
+				System.out.println("Incomplete credentials file");
+			}
+		} catch (IOException e) {
+			System.out.println("No credentials file found at path " + path);
+		}
+    }
 
 }

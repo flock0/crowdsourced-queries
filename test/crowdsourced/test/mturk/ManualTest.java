@@ -3,13 +3,16 @@ package crowdsourced.test.mturk;
 import java.util.ArrayList;
 import java.util.List;
 
+import crowdsourced.mturk.AMTCommunicator;
 import crowdsourced.mturk.BooleanChoiceQuestion;
 import crowdsourced.mturk.HIT;
 import crowdsourced.mturk.MultipleChoiceOption;
 import crowdsourced.mturk.MultipleChoiceQuestion;
 import crowdsourced.mturk.NumericQuestion;
+import crowdsourced.mturk.PendingJob;
 import crowdsourced.mturk.Question;
 import crowdsourced.mturk.StringQuestion;
+import crowdsourced.mturk.URLQuestion;
 
 /**
  * An extensive manual test.
@@ -46,9 +49,8 @@ public class ManualTest {
         stringDefaultText.setDefaultText("Write here. Don't write bullshit!");
         quests.add(stringDefaultText);
 
-        // Deactivated while the URL-REGEX doesn't work.
-        //Question url = new URLQuestion("url", "Sailing in Cote d'Ivoire", "Find a website and write the URL.");
-        //quests.add(url);
+        Question url = new URLQuestion("url", "Sailing in Cote d'Ivoire", "Find a website and write the URL.");
+        quests.add(url);
 
         Question numericDefault = new NumericQuestion(
                 "numericDefault", "Count Swiss cantons", "How many cantons are there in Switzerland?");
@@ -78,8 +80,8 @@ public class ManualTest {
         HIT hit = new HIT(
                 "Answer various questions", "Answer various questions of different type.",
                 quests, 900, 5, 0.01f, 600, kws);
-        // Deactivated as long as the sendHIT-method is protected. Why not public?
-        // PendingJob job = AMTCommunicator.sendHIT(hit, new ManualTestCallback());
+
+        PendingJob job = AMTCommunicator.sendHIT(hit, new ManualTestCallback());
         try {
             Thread.sleep(600 * 1000);
         } catch (InterruptedException e) {
