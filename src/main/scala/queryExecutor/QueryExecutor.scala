@@ -22,8 +22,11 @@ class QueryExecutor() {
   }
 
   def execute(query: Q) = {
-
-    def startingPoint(node: Q): Unit = node match{
+      println("Starting execution of the query : \"" + query + "\"")
+      startingPoint(query)
+  }
+  
+  def startingPoint(node: Q): List[Assignment] = node match{
         // TODO we need to pass a limit to taskSelect. The dataset could be very small or huge...
         // TODO maybe get this from the request using the LIMIT keyword. Or ask a worker for number of elements in the web page
         case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
@@ -33,10 +36,7 @@ class QueryExecutor() {
         case _ => println("Problem");
 
     }
-      println("Starting execution of the query : \"" + query + "\"")
-      startingPoint(query)
-  }
-
+ 
   def taskWhere(select: SelectTree, where: Condition) = {
     println("Task where started")
     var results = List[String]()
@@ -107,19 +107,22 @@ class QueryExecutor() {
   }
   
   def taskJoin(left: Q, right: Q, on: String) = {
-    val a = left match  {
+    val a: Future[List[Assignment]] = Future{startingPoint(left)}
+    /*left match  {
       case Select(nl,fields)=> taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
       case Where(select,where) => taskWhere(select, where)
       //case NaturalLanguage(s) => taskNaturalLanguage(s)
-    }
+    }*/
     
-    val b = right match  {
+    val b: Future[List[Assignment]] = Future{startingPoint(right)}/*
+    right match  {
       case Select(nl,fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
       case Where(select,where) => taskWhere(select, where)
       //case NaturalLanguage(s) => taskNaturalLanguage(s)
-    }
-    println("Task join")
+    }*/
     
+    println("Task join")
+    ???  //TODO join with Await.result(a, Duration.inf) and Await.result(b, Duration.inf)
   }
   def taskOrderBy(q: Q3, order: O, by: String) = {
     val a = q match  {
