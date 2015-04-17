@@ -15,7 +15,7 @@ public class PendingJob {
         this.task = _task;
     }
     public void abort() {
-        throw new UnsupportedOperationException("Not yet implemented"); // TODO
+        task.finishTask();
     }
 
     public HIT getHIT() {
