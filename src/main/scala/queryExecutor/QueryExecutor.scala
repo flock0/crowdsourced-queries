@@ -16,8 +16,8 @@ class QueryExecutor() {
 
   var listTaskStatus = List[TaskStatus]()
 
-  val DEFAULT_ELEMENTS_SELECT = 3
-  val MAX_ELEMENTS_PER_WORKER = 3
+  val DEFAULT_ELEMENTS_SELECT = 4
+  val MAX_ELEMENTS_PER_WORKER = 2
 
   def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(10000)
 
@@ -119,17 +119,42 @@ class QueryExecutor() {
     case _ => ???
     }
   }
+  def printGroupByRes(tuples: List[String], fAssignments: List[Future[List[Assignment]]]) = {
+     var results = List[(String,String)]()
+     val assignments = fAssignments.flatMap(x => Await.result(x, Duration.Inf))
+    tuples.zip(assignments).map(x =>{
+       val answersMap = x._2.getAnswers().asScala.toMap
+        answersMap.foreach{case(key, value) => { 
+          results = results ::: List((x._1,value.toString))}
+        }})
   
+    results
+  }
   def taskGroupBy(q: Q, by: String) = {
     println("Task GROUPBY")
     val toGroupBy = executeNode(q)
+//    val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
+//    val tuples = extractNodeAnswers(q, finishedToGroupBy)
+//    val tasks = groupByTasksGenerator(tuples,by)
+//    tasks.foreach(_.exec)
+//    val assignments = tasks.map(x => Future{x.waitResults})
+    val fAssignments = toGroupBy.map(x => {
+      val p = promise[List[Assignment]]()
+      val f = p.future //Future[List[Assignment]]
+      x onSuccess { //onSuccess of Future[List[Assignment]]
+      case a => {
+        val tasks = groupByTasksGenerator(extractNodeAnswers(q, a), by)
+        tasks.foreach(_.exec)
+        p success tasks.flatMap(_.waitResults)
+      }
+      }
+      f
+      })
+    //println(extractGroupByAnswers(tuples,assignments))
     val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToGroupBy)
-    val tasks = groupByTasksGenerator(tuples,by)
-    tasks.foreach(_.exec)
-    val assignments = tasks.map(x => Future{x.waitResults})
-    //println(extractGroupByAnswers(tuples,assignments))
-    assignments
+    Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
+    fAssignments
   }
 
   def taskJoin(left: Q, right: Q, on: String) = {
@@ -137,10 +162,11 @@ class QueryExecutor() {
     val b = Future { executeNode(right) }
     println("Task join")
     
-    val resultsLeft = Await.result(a, Duration.Inf) //List[Future[List[Assignment]]]
+    val resultsLeft = Await.result(a, Duration.Inf) //Future[List[Assignment]]
     val resultsRight = Await.result(b, Duration.Inf)
-    val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf))
-    val fAssignments = resultsRight.map(x => {
+    val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf)) //List[Assignment]
+    val resRight = resultsRight.flatMap(Await.result(_, Duration.Inf))
+    /*val fAssignments = resultsRight.map(x => {
       val p = promise[List[Assignment]]()
       val f = p.future //Future[List[Assignment]]
       x onSuccess { //onSuccess of Future[List[Assignment]]
@@ -151,16 +177,16 @@ class QueryExecutor() {
       }
       }
       f
-      })
-      fAssignments
-//    val tasks = joinTasksGenerator(extractNodeAnswers(left, resultsLeft), extractNodeAnswers(right, resultsRight))
-//    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
+      })*/ //Does not work yet !
+//      fAssignments
+    val tasks = joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
 
-//    val assignments: List[Assignment] = tasks.flatMap(_.waitResults)
+    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
     
 //    println("Final results " + extractJoinAnswers(assignments))
 
-//    assignments
+    assignments
   }
   
   def ascOrDesc(order: O): String = order match {

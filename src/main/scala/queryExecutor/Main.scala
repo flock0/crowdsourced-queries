@@ -10,8 +10,8 @@ import tree.Tree._
 object Main extends App {
   
  // val query = "SELECT (full name, date of birth) FROM [Presidents of the USA] WHERE [political party is democrat] ORDER BY date of birth"
-  //val query = "SELECT (movies) FROM [Movies with Angelina Jolie] JOIN SELECT (movies) FROM [Movies with Brad Pitt] ON movies"
-  val query = "SELECT (full name) FROM [Presidents of USA] ORDER BY name ASC"
+  val query = "SELECT (movies) FROM [Movies with Angelina Jolie] JOIN SELECT (movies) FROM [Movies with Brad Pitt] ON movies"
+  //val query = "SELECT (full name) FROM [Presidents of USA] ORDER BY name ASC"
   //val query = "SELECT (full name) FROM [Presidents of USA] WHERE [political party is democrat]"
   
   val queryExec = new QueryExecutor
