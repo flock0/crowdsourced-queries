@@ -33,7 +33,7 @@ class QueryExecutor() {
       case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
       case Join(left, right, on) => taskJoin(left, right, on) //recursiveTraversal(left); recursiveTraversal(right);
       case Where(selectTree, where) => taskWhere(selectTree, where)
-      case OrderBy(query, ascendingOrDescending, field) => List[Assignment]() //TODO
+      case OrderBy(query, ascendingOrDescending, field) => taskOrderBy(query,ascendingOrDescending, field) //TODO
       case _ => List[Assignment]() //TODO
 
     }
@@ -60,7 +60,8 @@ class QueryExecutor() {
     //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
     //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
   }
-
+  
+  
   def taskSelect(from: Q, fields: List[P], limit: Int): List[Assignment] = {
     println("Task select started")
     for (i <- List.range(1, limit, MAX_ELEMENTS_PER_WORKER)) {
@@ -104,13 +105,20 @@ class QueryExecutor() {
     case _ => ???
     }
   }
-    
+  
+  def taskGroupBy(q: Q, by: String) = {
+    println("Task GROUPBY")
+    val toGroupBy = executeNode(q)
+    val tuples = extractNodeAnswers(q, toGroupBy)
+    val tasks = groupByTasksGenerator(tuples,by)
+    tasks.foreach(_.exec)
+    val assignments = tasks.flatMap(_.waitResults)
+    println(extractGroupByAnswers(tuples,assignments))
+  }
+
   def taskJoin(left: Q, right: Q, on: String) = {
     val a = Future { executeNode(left) }
     val b = Future { executeNode(right) }
-    var testa = List[String]()
-    var testb = List[String]()
-    var results = List[String]()
     println("Task join")
     
     val resultsLeft = Await.result(a, Duration.Inf)
@@ -125,15 +133,30 @@ class QueryExecutor() {
 
     assignments
   }
-  def taskOrderBy(q: Q3, order: O, by: String): List[Assignment] = {
-    val a = q match {
-      case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
-      case Where(select, where) => taskWhere(select, where)
-    }
-    println("Task order by")
-    List[Assignment]()
+  
+  def ascOrDesc(order: O): String = order match {
+      case ASC() => "ascending"
+      case DESC() => "descending"
+    
   }
-
+  
+  def taskOrderBy(q: Q3, order: O, by: String): List[Assignment] = {
+    val toOrder = executeNode(q)
+    val tuples = extractNodeAnswers(q, toOrder)
+    val questionTitle = "Sort a list of " + tuples.size +" elements."
+    val questionDescription = "Please sort the following list : [ " + tuples.mkString(", ") + " ]  on [ " + by + " ] attribute by [ " + ascOrDesc(order) + " ] order, please put only one element per line."
+    val keywords = List("URL retrieval", "Fast")
+    val expireTime = 60 * 30 // 30 minutes
+    val numAssignments = 1
+    val rewardUSD = 0.01 toFloat
+    val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava)
+    val task = new AMTTask(hit)
+    val assignments = task.execBlocking()
+    
+    println("Final results " + extractOrderByAnswers(assignments))
+    assignments
+  }
   def taskNaturalLanguage(s: String, fields: List[P]): List[Assignment] = {
     println("Task natural language")
 
@@ -190,7 +213,20 @@ class QueryExecutor() {
       })
      results
   }
-  
+  def extractOrderByAnswers(assignments: List[Assignment]): List[String] = {
+    var results = List[String]()
+    assignments.foreach(ass => {
+        println("Assignment result :")
+        val answersMap = ass.getAnswers().asScala.toMap
+        
+        println(answersMap)
+        answersMap.foreach{case(key, value) => { 
+            results = results ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
+         }}
+       
+      })
+     results
+  }
   /**
    * Extract the list of tuple satisfying the where clause.
    */
@@ -215,6 +251,18 @@ class QueryExecutor() {
         }}}}
     results
   }
+  
+  def extractGroupByAnswers(tuples: List[String], assignments: List[Assignment]): List[(String,String)] = {
+    var results = List[(String,String)]()
+    tuples.zip(assignments).map(x =>{
+       val answersMap = x._2.getAnswers().asScala.toMap
+        answersMap.foreach{case(key, value) => { 
+          results = results ::: List((x._1,value.toString))}
+        }})
+  
+    results
+  }
+  
   
   /**
    * Helper function to create a list of AMTTask to split the data retrieval jobs between several workers
@@ -285,6 +333,22 @@ class QueryExecutor() {
       val keywords = List("Claim evaluation", "Fast", "easy")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava)
 
+      new AMTTask(hit)
+    })
+    tasks
+  }
+  
+  def groupByTasksGenerator(tuples: List[String], by: String): List[AMTTask] = {
+    val tasks = tuples.map(tuple=> {
+      val questionTitle = "Simple question"
+      val questionDescription = "For the following element [ " + tuple + " ], what is its [ " + by + " ] ?" 
+      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
+      val questionList = List(question)
+      val numWorkers = 1
+      val rewardUSD = 0.01 toFloat
+      val expireTime = 60 * 60 // 60 minutes
+      val keywords = List("simple question", "question", "easy")
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava)
       new AMTTask(hit)
     })
     tasks
