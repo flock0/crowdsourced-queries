@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Arrays
 import scala.collection.JavaConverters._
+import parser.Parser._
+import tree.Tree._
 
 object Main extends App {
   
@@ -14,6 +16,7 @@ object Main extends App {
   
   val queryExec = new QueryExecutor
   val parsedQuery = queryExec.parse(query)
+  //val parsedQuery = GroupBy(Select(NaturalLanguage("Presidents of USA"),List(ElementStr("fullname"))),"political party")
   val executedQuery = queryExec.execute(parsedQuery)
   val nodeCount = parsedQuery.countNodes
   /*  

@@ -34,6 +34,7 @@ class QueryExecutor() {
       case Join(left, right, on) => taskJoin(left, right, on) //recursiveTraversal(left); recursiveTraversal(right);
       case Where(selectTree, where) => taskWhere(selectTree, where)
       case OrderBy(query, ascendingOrDescending, field) => taskOrderBy(query,ascendingOrDescending, field) //TODO
+      case GroupBy(query,by)=>taskGroupBy(query,by)
       case _ => List[Assignment]() //TODO
 
     }
@@ -114,6 +115,7 @@ class QueryExecutor() {
     tasks.foreach(_.exec)
     val assignments = tasks.flatMap(_.waitResults)
     println(extractGroupByAnswers(tuples,assignments))
+    assignments
   }
 
   def taskJoin(left: Q, right: Q, on: String) = {
@@ -260,7 +262,7 @@ class QueryExecutor() {
           results = results ::: List((x._1,value.toString))}
         }})
   
-    results
+    results.groupBy(x=>x._2)
   }
   
   
