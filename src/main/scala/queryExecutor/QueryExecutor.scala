@@ -1,8 +1,9 @@
 package queryExecutor
+
 import parser.Parser
 import tree.Tree._
 import crowdsourced.mturk._
-import scala.collection.mutable.LinkedList
+import scala.collection.mutable.ListBuffer
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import scala.util.Random
@@ -14,12 +15,12 @@ import scala.util.{ Success, Failure }
 
 class QueryExecutor() {
 
-  var listTaskStatus = List[TaskStatus]()
+  val listTaskStatus = ListBuffer[TaskStatus]()
 
   val DEFAULT_ELEMENTS_SELECT = 4
   val MAX_ELEMENTS_PER_WORKER = 2
 
-  def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(10000)
+  def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
 
   def parse(query: String): Q = {
     return Parser.parseQuery(query).get
@@ -36,20 +37,19 @@ class QueryExecutor() {
       case OrderBy(query, ascendingOrDescending, field) => taskOrderBy(query,ascendingOrDescending, field) //TODO
       case GroupBy(query,by)=>taskGroupBy(query,by)
       case _ => List[Future[List[Assignment]]]() //TODO
-
     }
     startingPoint(query)
   }
 
   def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
     println("Task where started")
-    var results = List[String]()
-    val idStatus = generateUniqueID()
-    val status = new TaskStatus(idStatus)
-    status.setOperator("WHERE")
-    status.setNumberHits(DEFAULT_ELEMENTS_SELECT)
-    listTaskStatus = listTaskStatus ::: List(status)
+    val taskID = generateUniqueID()
+    
+    val status = new TaskStatus(taskID, "WHERE")
+    listTaskStatus += status
+    
     printListTaskStatus
+    
     val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)}
     val fAssignments = assignments.map(x => {
       val p = promise[List[Assignment]]()
@@ -57,7 +57,7 @@ class QueryExecutor() {
       x onSuccess { //onSuccess of Future[List[Assignment]]
       case a => {
         val tasks = whereTasksGenerator(extractSelectAnswers(a), where)
-        tasks.foreach(_.exec)
+        status.addTasks(tasks)
         p success tasks.flatMap(_.waitResults)
       }
       }
@@ -81,22 +81,20 @@ class QueryExecutor() {
     for (i <- List.range(1, limit, MAX_ELEMENTS_PER_WORKER)) {
       println(List.range(1, limit, MAX_ELEMENTS_PER_WORKER) + " " + i + " " + Math.min(i + MAX_ELEMENTS_PER_WORKER - 1, limit))
     }
-    val idStatus = generateUniqueID()
-    val status = new TaskStatus(idStatus)
-    status.setOperator("Select")
-    status.setNumberHits(List.range(1, limit, MAX_ELEMENTS_PER_WORKER).size)
-    listTaskStatus = listTaskStatus ::: List(status)
+    val taskID = generateUniqueID()
+    val status = new TaskStatus(taskID, "SELECT")
+    listTaskStatus += status
+    
     printListTaskStatus
 
     val NLAssignments: List[Assignment] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
     
-    val tasks: List[AMTTask] = selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, limit)
-    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
-
+    val tasks = selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, limit)
+    tasks.foreach(_.exec)
+    status.addTasks(tasks)
+    
     val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults}) // we wait for all results from all workers
 
-    status.setCurrentStatus("Finished")
-    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
     printListTaskStatus
 
     assignments
@@ -125,13 +123,19 @@ class QueryExecutor() {
     tuples.zip(assignments).map(x =>{
        val answersMap = x._2.getAnswers().asScala.toMap
         answersMap.foreach{case(key, value) => { 
-          results = results ::: List((x._1,value.toString))}
+          results = results ::: List((x._1, value.toString))}
         }})
   
     results
   }
   def taskGroupBy(q: Q, by: String) = {
     println("Task GROUPBY")
+    val taskID = generateUniqueID()
+    val status = new TaskStatus(taskID, "GROUPBY")
+    listTaskStatus += status
+    
+    printListTaskStatus
+    
     val toGroupBy = executeNode(q)
 //    val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
 //    val tuples = extractNodeAnswers(q, finishedToGroupBy)
@@ -145,6 +149,7 @@ class QueryExecutor() {
       case a => {
         val tasks = groupByTasksGenerator(extractNodeAnswers(q, a), by)
         tasks.foreach(_.exec)
+        status.addTasks(tasks)
         p success tasks.flatMap(_.waitResults)
       }
       }
@@ -158,6 +163,7 @@ class QueryExecutor() {
   }
 
   def taskJoin(left: Q, right: Q, on: String) = {
+    // TODO add taskStatus for JOIN
     val a = Future { executeNode(left) }
     val b = Future { executeNode(right) }
     println("Task join")
@@ -196,6 +202,13 @@ class QueryExecutor() {
   }
   
   def taskOrderBy(q: Q3, order: O, by: String): List[Future[List[Assignment]]] = {
+    println("Task order by")
+    
+    val taskID = generateUniqueID()
+    val status = new TaskStatus(taskID, "ORDER BY")
+    listTaskStatus += status
+    printListTaskStatus
+    
     val toOrder = executeNode(q)
     val finishedToOrder = toOrder.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToOrder)
@@ -205,10 +218,12 @@ class QueryExecutor() {
     val expireTime = 60 * 30 // 30 minutes
     val numAssignments = 1
     val rewardUSD = 0.01 toFloat
-    val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
+    val question: Question = new StringQuestion(taskID, questionTitle, questionDescription)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava)
     val task = new AMTTask(hit)
-    val assignments = Future{task.execBlocking()}::List()
+    task.exec()
+    status.addTask(task)
+    val assignments = Future{task.waitResults()}::List()
     
 //    println("Final results " + extractOrderByAnswers(assignments))
     assignments
@@ -216,29 +231,26 @@ class QueryExecutor() {
   def taskNaturalLanguage(s: String, fields: List[P]): List[Assignment] = {
     println("Task natural language")
 
-    val idStatus = generateUniqueID()
-    val status = new TaskStatus(idStatus)
-    status.setOperator("FROM")
-    status.setNumberHits(1)
-    listTaskStatus = listTaskStatus ::: List(status)
-    printListTaskStatus
-
+    val taskID = generateUniqueID()
     val questionTitle = "Find URL containing required information"
     val questionDescription = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
     val keywords = List("URL retrieval", "Fast")
     val expireTime = 60 * 30 // 30 minutes
     val numAssignments = 1
     val rewardUSD = 0.01 toFloat
+    
+    val status = new TaskStatus(taskID, "FROM")
+    listTaskStatus += status
+    printListTaskStatus
 
-    val question: Question = new URLQuestion(generateUniqueID(), questionTitle, questionDescription)
+    val question: Question = new URLQuestion(taskID, questionTitle, questionDescription)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava)
     val task = new AMTTask(hit)
-    val assignments = task.execBlocking()
-
-    status.setCurrentStatus("finished")
-    status.setTaskResultNumber(1) //TODO to change if we choose that workers should retrieve more URLs
+    task.exec()
+    status.addTask(task)
+    val assignments = task.waitResults() // waiting for results
+    
     printListTaskStatus
-    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
 
     assignments
   }
@@ -248,7 +260,7 @@ class QueryExecutor() {
    */
   def extractNaturalLanguageAnswers(assignments: List[Assignment]): String = {
     val firstNLAssignment:Assignment = assignments.head
-    val (uniqueID, answer) = firstNLAssignment.getAnswers().asScala.head // retrieving first answer of first assignment
+    val (uniqueID, answer) = firstNLAssignment.getAnswers().asScala.head // TODO, here we only retrieve first answer of first assignment
     answer.toString
   }
   
@@ -257,12 +269,12 @@ class QueryExecutor() {
    */
   def extractSelectAnswers(assignments: List[Assignment]): List[String] = {
     var results = List[String]()
-    assignments.foreach(ass => {
+    assignments.foreach(ass => { // TODO modify it in a flatMap
         println("Assignment result :")
         val answersMap = ass.getAnswers().asScala.toMap
         
         println(answersMap)
-        answersMap.foreach{case(key, value) => { 
+        answersMap.foreach{case(key, value) => { // TODO modify if in a flatMap
             results = results ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
          }}
        
@@ -312,7 +324,7 @@ class QueryExecutor() {
     var results = List[(String,String)]()
     tuples.zip(assignments).map(x =>{
        val answersMap = x._2.getAnswers().asScala.toMap
-        answersMap.foreach{case(key, value) => { 
+        answersMap.foreach{case(key, value) => {  // TODO proper way
           results = results ::: List((x._1,value.toString))}
         }})
   
@@ -410,18 +422,11 @@ class QueryExecutor() {
     tasks
   }
 
-  def getListTaskStatus() = this.listTaskStatus
+  def getListTaskStatus(): List[TaskStatus] = this.listTaskStatus.toList
 
   def printListTaskStatus() = {
     println("Task status summary : ")
-    this.listTaskStatus.foreach(status => {
-      println("    Task " + status.getStatusId)
-      println("        Current Status : " + status.getCurrentStatus)
-      println("        Operator : " + status.getOperator)
-      println("        Number of hits : " + status.getNumberHits)
-      println("        Number of finished hits " + status.getFinishedNumberHits)
-      println("        Number of results : " + status.getTaskResultNumber)
-    })
+    getListTaskStatus().foreach(println)
   }
 
 }
