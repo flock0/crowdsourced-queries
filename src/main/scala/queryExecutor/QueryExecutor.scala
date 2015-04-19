@@ -19,6 +19,9 @@ class QueryExecutor() {
 
   val DEFAULT_ELEMENTS_SELECT = 4
   val MAX_ELEMENTS_PER_WORKER = 2
+  val REWARD_PER_HIT = 0.01
+  //val HIT_LIFETIME = 60 * 60 * 24 * 4 // 4 Days
+  val HIT_LIFETIME = 60 * 60 // 1 Hour
 
   def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
 
@@ -34,8 +37,8 @@ class QueryExecutor() {
       case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
       case Join(left, right, on) => taskJoin(left, right, on) //recursiveTraversal(left); recursiveTraversal(right);
       case Where(selectTree, where) => taskWhere(selectTree, where)
-      case OrderBy(query, ascendingOrDescending, field) => taskOrderBy(query,ascendingOrDescending, field) //TODO
-      case GroupBy(query,by)=>taskGroupBy(query,by)
+      case OrderBy(query, List(ascendingOrDescending)) => taskOrderBy(query,ascendingOrDescending) //TODO
+      case Group(query,by)=>taskGroupBy(query,by)
       case _ => List[Future[List[Assignment]]]() //TODO
     }
     startingPoint(query)
@@ -196,14 +199,17 @@ class QueryExecutor() {
   }
   
   def ascOrDesc(order: O): String = order match {
-      case ASC() => "ascending"
-      case DESC() => "descending"
+      case OrdAsc(_) => "ascending"
+      case OrdDesc(_) => "descending"
     
   }
   
-  def taskOrderBy(q: Q3, order: O, by: String): List[Future[List[Assignment]]] = {
+  def taskOrderBy(q: Q3, order: O): List[Future[List[Assignment]]] = {
     println("Task order by")
-    
+    val by = order match {
+      case OrdAsc(string) => string
+      case OrdDesc(string) => string
+    }
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "ORDER BY")
     listTaskStatus += status
@@ -215,11 +221,9 @@ class QueryExecutor() {
     val questionTitle = "Sort a list of " + tuples.size +" elements."
     val questionDescription = "Please sort the following list : [ " + tuples.mkString(", ") + " ]  on [ " + by + " ] attribute by [ " + ascOrDesc(order) + " ] order, please put only one element per line."
     val keywords = List("URL retrieval", "Fast")
-    val expireTime = 60 * 30 // 30 minutes
     val numAssignments = 1
-    val rewardUSD = 0.01 toFloat
     val question: Question = new StringQuestion(taskID, questionTitle, questionDescription)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
     val task = new AMTTask(hit)
     task.exec()
     status.addTask(task)
@@ -235,16 +239,13 @@ class QueryExecutor() {
     val questionTitle = "Find URL containing required information"
     val questionDescription = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
     val keywords = List("URL retrieval", "Fast")
-    val expireTime = 60 * 30 // 30 minutes
     val numAssignments = 1
-    val rewardUSD = 0.01 toFloat
-    
     val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
     printListTaskStatus
 
     val question: Question = new URLQuestion(taskID, questionTitle, questionDescription)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
     val task = new AMTTask(hit)
     task.exec()
     status.addTask(task)
@@ -351,10 +352,8 @@ class QueryExecutor() {
       val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
       val questionList = List(question)
       val numWorkers = 1
-      val rewardUSD = 0.01 toFloat
-      val expireTime = 60 * 60 // 60 minutes
       val keywords = List("data extraction", "URL", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
 
       new AMTTask(hit)
     }
@@ -376,10 +375,8 @@ class QueryExecutor() {
       val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava)
       val questionList = List(question)
       val numWorkers = 1
-      val rewardUSD = 0.01 toFloat
-      val expireTime = 60 * 60 // 60 minutes
       val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
 
       new AMTTask(hit)
     })
@@ -396,10 +393,8 @@ class QueryExecutor() {
       val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava)
       val questionList = List(question)
       val numWorkers = 1
-      val rewardUSD = 0.01 toFloat
-      val expireTime = 60 * 60 // 60 minutes
       val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
 
       new AMTTask(hit)
     })
@@ -413,10 +408,8 @@ class QueryExecutor() {
       val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
       val questionList = List(question)
       val numWorkers = 1
-      val rewardUSD = 0.01 toFloat
-      val expireTime = 60 * 60 // 60 minutes
       val keywords = List("simple question", "question", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
       new AMTTask(hit)
     })
     tasks
