@@ -60,6 +60,7 @@ class QueryExecutor() {
       x onSuccess { //onSuccess of Future[List[Assignment]]
       case a => {
         val tasks = whereTasksGenerator(extractSelectAnswers(a), where)
+        tasks.foreach(_.exec)
         status.addTasks(tasks)
         p success tasks.flatMap(_.waitResults)
       }
@@ -166,11 +167,17 @@ class QueryExecutor() {
   }
 
   def taskJoin(left: Q, right: Q, on: String) = {
-    // TODO add taskStatus for JOIN
+ 
+    println("Task join started")
+    val taskID = generateUniqueID()
+    val status = new TaskStatus(taskID, "JOIN")
+    listTaskStatus += status
+    
+    printListTaskStatus
+    
     val a = Future { executeNode(left) }
     val b = Future { executeNode(right) }
-    println("Task join")
-    
+   
     val resultsLeft = Await.result(a, Duration.Inf) //Future[List[Assignment]]
     val resultsRight = Await.result(b, Duration.Inf)
     val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf)) //List[Assignment]
