@@ -29,6 +29,7 @@ class QueryExecutor(val queryID: Int) {
   //val HIT_LIFETIME = 60 * 60 * 24 * 4 // 4 Days
   val HIT_LIFETIME = 60 * 60 // 1 Hour
   val MAJORITY_VOTE = 1 //TODO Implement majority votes for WHERE and JOIN tasks.
+  val REWARD_SORT = 0.05 //Sort is longer so we should pay more
 
   def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
 
@@ -180,7 +181,7 @@ class QueryExecutor(val queryID: Int) {
       })
     val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToGroupBy)
-    Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
+    //Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
     fAssignments
   }
 
@@ -247,8 +248,8 @@ class QueryExecutor(val queryID: Int) {
     val questionDescription = "Please sort the following list : [ " + tuples.mkString(", ") + " ]  on [ " + by + " ] attribute by [ " + ascOrDesc(order) + " ] order, please put only one element per line."
     val keywords = List("URL retrieval", "Fast")
     val numAssignments = 1
-    val question: Question = new StringQuestion(taskID, questionTitle, questionDescription)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+    val question: Question = new StringQuestion(taskID, questionTitle, questionDescription, "", 0)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_SORT toFloat, 3600, keywords.asJava)
     val task = new AMTTask(hit)
     task.exec()
     status.addTask(task)
@@ -264,7 +265,7 @@ class QueryExecutor(val queryID: Int) {
     val questionTitle = "Find URL containing required information"
     val questionDescription = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
     val keywords = List("URL retrieval", "Fast")
-    val numAssignments = 3
+    val numAssignments = 1
     val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
     printListTaskStatus
@@ -374,7 +375,7 @@ class QueryExecutor(val queryID: Int) {
                               Select only items in the range $start to $end (both included)
                               URL : $url
                               Please provide one element per line."""
-      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
+      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription, "", 0)
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("data extraction", "URL", "easy")
@@ -429,8 +430,8 @@ class QueryExecutor(val queryID: Int) {
   def groupByTasksGenerator(tuples: List[String], by: String): List[AMTTask] = {
     val tasks = tuples.map(tuple=> {
       val questionTitle = "Simple question"
-      val questionDescription = "For the following element [ " + tuple + " ], what is its [ " + by + " ] ?" 
-      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription)
+      val questionDescription = "For the following element [ " + tuple + " ], what is its [ " + by + " ] ? Please put your answer after the coma and before the right parenthesis." 
+      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription, "("+tuple+",)", 1)
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("simple question", "question", "easy")
