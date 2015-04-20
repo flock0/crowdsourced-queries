@@ -27,6 +27,7 @@ class QueryExecutor(val queryID: Int) {
   val REWARD_PER_HIT = 0.01
   //val HIT_LIFETIME = 60 * 60 * 24 * 4 // 4 Days
   val HIT_LIFETIME = 60 * 60 // 1 Hour
+  val MAJORITY_VOTE = 1 //TODO Implement majority votes for WHERE and JOIN tasks.
 
   def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
 
@@ -251,7 +252,7 @@ class QueryExecutor(val queryID: Int) {
     val questionTitle = "Find URL containing required information"
     val questionDescription = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
     val keywords = List("URL retrieval", "Fast")
-    val numAssignments = 1
+    val numAssignments = 3
     val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
     printListTaskStatus
@@ -388,7 +389,7 @@ class QueryExecutor(val queryID: Int) {
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
 
       new AMTTask(hit)
     })
@@ -406,7 +407,7 @@ class QueryExecutor(val queryID: Int) {
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
 
       new AMTTask(hit)
     })
