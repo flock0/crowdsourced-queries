@@ -17,7 +17,8 @@ import play.api.libs.json._
 class QueryExecutor(val queryID: Int) {
 
   val listTaskStatus = ListBuffer[TaskStatus]()
-  
+  val listResult = ListBuffer[String]()
+	
   private val NOT_STARTED = "Not started"
   private val PROCESSING = "Processing"
   private val FINISHED = "Finished"
@@ -46,9 +47,26 @@ class QueryExecutor(val queryID: Int) {
       case Group(query,by)=>taskGroupBy(query,by)
       case _ => List[Future[List[Assignment]]]() //TODO
     }
-    startingPoint(query)
+    val res = startingPoint(query)
+    queryResultToString(query, res)
+    res.map(Await.result(_, Duration.Inf))
+    println(listResult.toString)
   }
-
+  
+  def queryResultToString(query: Q, res: List[Future[List[Assignment]]]) = {
+    res.map(x => {
+    	x onSuccess{
+    	  case assign => {
+    	    query match {
+	    	    case Join(_,_,_) | Where(_,_) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-4)))
+	    	    case _ => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.map(_._2.toString))
+    	    }
+    	  }
+    	}
+      }
+    )
+  }
+  
   def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
     println("Task where started")
     val taskID = generateUniqueID()
@@ -61,8 +79,8 @@ class QueryExecutor(val queryID: Int) {
     val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)}
     val fAssignments = assignments.map(x => {
       val p = promise[List[Assignment]]()
-      val f = p.future //Future[List[Assignment]]
-      x onSuccess { //onSuccess of Future[List[Assignment]]
+      val f = p.future 
+      x onSuccess {
       case a => {
         val tasks = whereTasksGenerator(extractSelectAnswers(a), where)
         tasks.foreach(_.exec)
@@ -146,15 +164,10 @@ class QueryExecutor(val queryID: Int) {
     printListTaskStatus
     
     val toGroupBy = executeNode(q)
-//    val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
-//    val tuples = extractNodeAnswers(q, finishedToGroupBy)
-//    val tasks = groupByTasksGenerator(tuples,by)
-//    tasks.foreach(_.exec)
-//    val assignments = tasks.map(x => Future{x.waitResults})
     val fAssignments = toGroupBy.map(x => {
       val p = promise[List[Assignment]]()
-      val f = p.future //Future[List[Assignment]]
-      x onSuccess { //onSuccess of Future[List[Assignment]]
+      val f = p.future 
+      x onSuccess { 
       case a => {
         val tasks = groupByTasksGenerator(extractNodeAnswers(q, a), by)
         tasks.foreach(_.exec)
@@ -164,7 +177,6 @@ class QueryExecutor(val queryID: Int) {
       }
       f
       })
-    //println(extractGroupByAnswers(tuples,assignments))
     val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToGroupBy)
     Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
