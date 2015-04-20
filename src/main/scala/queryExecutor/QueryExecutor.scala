@@ -51,8 +51,9 @@ class QueryExecutor(val queryID: Int) {
     val res = startingPoint(query)
     queryResultToString(query, res)
     res.map(Await.result(_, Duration.Inf))
+    
     println("Results :")
-    listResult.foreach(println("\t"+_.toString))
+    getResults.foreach(r => println("\t"+r))
   }
   
   def queryResultToString(query: Q, res: List[Future[List[Assignment]]]) = {
