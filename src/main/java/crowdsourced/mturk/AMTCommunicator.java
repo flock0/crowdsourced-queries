@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -62,6 +63,7 @@ public class AMTCommunicator {
      * @throws IOException
      * @throws SignatureException
      */
+
 
 	public static String sendGet(Map<String, String> parameters) throws IOException, SignatureException {
 		String operation = null;
@@ -162,6 +164,7 @@ public class AMTCommunicator {
 			params.put("Question", serial);
 			params.put("AssignmentDurationInSeconds", Integer.toString(hit.getAssignmentDurationInSeconds()));
 			params.put("LifetimeInSeconds", Integer.toString(hit.getLifetimeInSeconds()));
+			params.put("MaxAssignments", Integer.toString(hit.getMaxAssignments()));
 			String tempKeywords = Arrays.toString(hit.getKeywords().toArray());
 			String keywords = "default";
 			if (tempKeywords.length() > 2) {
