@@ -93,12 +93,12 @@ class TaskStatus(val statusID: String, val operator: String) {
    * returns the JSON object containing all information about the current task
    */
   def getJSON(): JsValue = JsObject(Seq(
-      "task id" -> JsString(this.statusID),
-      "task status" -> JsString(getCurrentStatus),
-      "task operator" -> JsString(this.operator),
-      "number of hits" -> JsNumber(getNumberHits),
-      "finished hits" -> JsNumber(getNumberFinishedHits),
-      "task results number" -> JsNumber(getTaskAssignmentNumber)
+      "task_id" -> JsString(this.statusID),
+      "task_status" -> JsString(getCurrentStatus),
+      "task_operator" -> JsString(this.operator),
+      "number_of_hits" -> JsNumber(getNumberHits),
+      "finished_hits" -> JsNumber(getNumberFinishedHits),
+      "task_results_number" -> JsNumber(getTaskAssignmentNumber)
       ))
   
   /**

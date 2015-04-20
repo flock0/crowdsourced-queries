@@ -51,7 +51,8 @@ class QueryExecutor(val queryID: Int) {
     val res = startingPoint(query)
     queryResultToString(query, res)
     res.map(Await.result(_, Duration.Inf))
-    println(listResult.toString)
+    println("Results :")
+    listResult.foreach(println("\t"+_.toString))
   }
   
   def queryResultToString(query: Q, res: List[Future[List[Assignment]]]) = {
@@ -449,13 +450,13 @@ class QueryExecutor(val queryID: Int) {
   }
   
   def getListTaskStatus(): List[TaskStatus] = this.listTaskStatus.toList
-  // TODO top query task should store the results, maybe in a ListBuffer I could use here
-  def getResults(): List[String] = List("first result", "second result")
+  
+  def getResults(): List[String] = this.listResult.toList
   
   def printListTaskStatus() = {
     println("Task status summary : ")
     getListTaskStatus().foreach(println)
-    println(getJSON.toString) // TODO for testing only
+    println(getJSON.toString) // TODO print JSONs for testing only
   }
   
   def getStartTime(): Long = {
@@ -466,11 +467,11 @@ class QueryExecutor(val queryID: Int) {
   def getEndTime(): Long = getListTaskStatus.map(_.getEndTime).max
   
   def getJSON(): JsValue = JsObject(Seq(
-      "query id" -> JsNumber(this.queryID),
-      "query status" -> JsString(getStatus()),
-      "query results number" -> JsNumber(getResults().length),
-      "start time" -> JsNumber(getStartTime()),
-      "end time" -> JsNumber(getEndTime()),
-      "detailed query results" -> JsArray(getResults().map(JsString(_)).toSeq)
+      "query_id" -> JsNumber(this.queryID),
+      "query_status" -> JsString(getStatus()),
+      "query_results_number" -> JsNumber(getResults().length),
+      "start_time" -> JsNumber(getStartTime()),
+      "end_time" -> JsNumber(getEndTime()),
+      "detailed_query_results" -> JsArray(getResults().map(JsString(_)).toSeq)
       ))
 }

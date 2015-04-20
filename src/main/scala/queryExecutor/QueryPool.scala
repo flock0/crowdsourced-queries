@@ -23,12 +23,12 @@ class QueryPool() extends QueryInterface {
   
   def getQueryExecutors: List[QueryExecutor] = executors.toList
 
-  //TODO Not urgent, for this query, we should abort all running HIT.
+  //TODO Not urgent, for this query, we should abort all running HITs.
   def abortQuery(queryId: String): Unit = {
     println("ABORT QUERY NOT IMPLEMENTED YET.")
   }
   
   def getJSON: JsValue = JsObject(Seq(
-      "list of queries" -> JsArray(getQueryExecutors.map(_.getJSON).toSeq)
+      "list_of_queries" -> JsArray(getQueryExecutors.map(_.getJSON).toSeq)
       ))
 }
