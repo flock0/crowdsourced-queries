@@ -52,7 +52,6 @@ class QueryExecutor(val queryID: Int) {
     val res = startingPoint(query)
     queryResultToString(query, res)
     res.map(Await.result(_, Duration.Inf))
-    
     println("Results :")
     getResults.foreach(r => println("\t"+r))
   }
@@ -63,16 +62,19 @@ class QueryExecutor(val queryID: Int) {
     	  case assign => {
     	    query match {
 	    	    case Join(_,_,_) | Where(_,_) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
-            case Group(_, _) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.groupBy(_._2).map(_._2.toString))
-	    	    case _ => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.map(_._2.toString))
-          
+            case Group(_, _) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap).map(s => stringToTuple(s._2.toString)).groupBy(_._2).map(x=> x.toString)
+	    	    case _ => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap).flatMap(_._2.toString.stripMargin.split("[\r\n\r\n]").toList)
     	    }
     	  }
     	}
       }
     )
   }
-  
+  //takes a string in format (_, _) and converts it to a tuple
+  def stringToTuple(s: String): Tuple2[String, String] = {
+    val tup = s.split(",")
+    (tup(0).tail, tup(1).take(tup(1).length-1))
+  }
   def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
     println("Task where started")
     val taskID = generateUniqueID()
