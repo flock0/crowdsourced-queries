@@ -455,12 +455,22 @@ class QueryExecutor(val queryID: Int) {
   def printListTaskStatus() = {
     println("Task status summary : ")
     getListTaskStatus().foreach(println)
+    println(getJSON.toString) // TODO for testing only
   }
+  
+  def getStartTime(): Long = {
+    val starts = getListTaskStatus.map(_.getStartTime).filter(_ > 0)
+    if (starts.length > 0) starts.min
+    else -1
+  }
+  def getEndTime(): Long = getListTaskStatus.map(_.getEndTime).max
   
   def getJSON(): JsValue = JsObject(Seq(
       "query id" -> JsNumber(this.queryID),
       "query status" -> JsString(getStatus()),
       "query results number" -> JsNumber(getResults().length),
+      "start time" -> JsNumber(getStartTime()),
+      "end time" -> JsNumber(getEndTime()),
       "detailed query results" -> JsArray(getResults().map(JsString(_)).toSeq)
       ))
 }
