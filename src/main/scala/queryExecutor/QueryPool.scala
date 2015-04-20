@@ -1,23 +1,34 @@
 package queryExecutor
 
+import crowdsourced.http.QueryInterface
 import scala.collection.mutable.ListBuffer
+import play.api.libs.json._
 
-class QueryPool() {
+class QueryPool() extends QueryInterface {
   
-  val executorsList = ListBuffer[QueryExecutor]()
+  val executors = ListBuffer[QueryExecutor]()
   
-  def queriesInfo(): String = "" //TODO Return JSON
+  def queriesInfo(): String = getJSON.toString
 
   def newQuery(query: String): String = {
     
-    val queryExec = new QueryExecutor(1) //TODO Handle ID creation
-    executorsList += queryExec
+    val queryID = this.executors.length
+    val queryExec = new QueryExecutor(queryID)
+    executors += queryExec
     val parsedQuery = queryExec.parse(query)
     val executedQuery = queryExec.execute(parsedQuery)
     
-    "" //TODO Return results
+    queryID.toString // returning the id as a string
   }
-
-  def abortQuery(queryId: String): Unit = {}//TODO Not urgent, for this query, we should abort all running HIT.
   
+  def getQueryExecutors: List[QueryExecutor] = executors.toList
+
+  //TODO Not urgent, for this query, we should abort all running HITs.
+  def abortQuery(queryId: String): Unit = {
+    println("ABORT QUERY NOT IMPLEMENTED YET.")
+  }
+  
+  def getJSON: JsValue = JsObject(Seq(
+      "list_of_queries" -> JsArray(getQueryExecutors.map(_.getJSON).toSeq)
+      ))
 }
