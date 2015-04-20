@@ -18,13 +18,17 @@ import scala.collection.mutable.ListBuffer
  */
 class AMTTask(val hit: HIT) extends AnswerCallback  {
   
+  private val NOT_STARTED = "Not started"
+  private val PROCESSING = "Processing"
+  private val FINISHED = "Finished"
+  
   private var finished: Boolean = false
   private var started: Boolean = false
   private val assignments: ListBuffer[Assignment] = ListBuffer()
   private val WAIT_TIME_RESULTS: Int = 1000 // wait time between checks if results arrived
   
   AMTCommunicator.loadCredentials("../credentials.txt")
-  
+ 
   /**
    * Sends the request to AMT and set itself as the callback object
    * This function is non-blocking
@@ -51,6 +55,12 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
     waitResults()
   }
   
+  def getStatus(): String = {
+    if (isFinished()) FINISHED
+    else if (hasStarted()) PROCESSING
+    else NOT_STARTED
+  }
+  
   /**
    * Returns the list of assignments already received
    */
@@ -66,7 +76,7 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
    */
   def hasStarted(): Boolean = this.started
   /**
-   * Callback method executed automatically when AMT returns results.
+   * Callback method executed automatically when AMT returns some results
    */
   override def newAssignmentsReceived(newAssignments: java.util.List[Assignment]): Unit = {
     println("New assignments received from AMT.")
@@ -80,17 +90,18 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
       val answersMap: Map[String, Answer] = ass.getAnswers().asScala.toMap
       answersMap.foreach { case (key, value) => println(key+" => "+value) }
     })
-    
-    this.setFinished // TODO we assume, for now, that one result means end of task (later, AMT team will call jobFinished and we can delete this line)
   }
   
+  /**
+   * Saves the fact that the task is finished
+   */
   private def setFinished() = this.finished = true
   
   /**
    * Callback method automatically executed when AMT has finished processing the HIT.
    */
   override def jobFinished(): Unit = {
-    println("HIT finished successfully (callback called).")
+    println("HIT finished successfully.")
     this.setFinished
   }
   

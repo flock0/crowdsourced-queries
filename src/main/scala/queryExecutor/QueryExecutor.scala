@@ -12,11 +12,16 @@ import scala.concurrent._
 import ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.util.{ Success, Failure }
+import play.api.libs.json._
 
-class QueryExecutor() {
+class QueryExecutor(val queryID: Int) {
 
   val listTaskStatus = ListBuffer[TaskStatus]()
-
+  
+  private val NOT_STARTED = "Not started"
+  private val PROCESSING = "Processing"
+  private val FINISHED = "Finished"
+  
   val DEFAULT_ELEMENTS_SELECT = 4
   val MAX_ELEMENTS_PER_WORKER = 2
   val REWARD_PER_HIT = 0.01
@@ -421,12 +426,28 @@ class QueryExecutor() {
     })
     tasks
   }
-
+  
+  def isQueryFinished(): Boolean = getListTaskStatus().foldLeft(true)((res, ts) => if(ts.getCurrentStatus != FINISHED) false else res)
+  def hasQueryStarted(): Boolean = getListTaskStatus().foldLeft(false)((res, ts) => if(ts.getCurrentStatus != NOT_STARTED) true else res)
+  def getStatus(): String = {
+    if (isQueryFinished()) FINISHED
+    else if (hasQueryStarted()) PROCESSING
+    else NOT_STARTED
+  }
+  
   def getListTaskStatus(): List[TaskStatus] = this.listTaskStatus.toList
-
+  // TODO top query task should store the results, maybe in a ListBuffer I could use here
+  def getResults(): List[String] = List("first result", "second result")
+  
   def printListTaskStatus() = {
     println("Task status summary : ")
     getListTaskStatus().foreach(println)
   }
-
+  
+  def getJSON(): JsValue = JsObject(Seq(
+      "query id" -> JsNumber(this.queryID),
+      "query status" -> JsString(getStatus()),
+      "query results number" -> JsNumber(getResults().length),
+      "detailed query results" -> JsArray(getResults().map(JsString(_)).toSeq)
+      ))
 }

@@ -138,6 +138,10 @@
       <id>base64</id>
       <url>http://repo1.maven.org/maven2/net/iharder/base64/</url>
     </repository>
+    <repository>
+      <id>Typesafe Repo</id>
+      <url>http://repo.typesafe.com/typesafe/releases/</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -166,6 +170,11 @@
         <groupId>org.glassfish.grizzly</groupId>
         <artifactId>grizzly-http-server</artifactId>
         <version>2.3.19</version>
+    </dependency>
+    <dependency>
+        <groupId>com.typesafe.play</groupId>
+        <artifactId>play-json_2.10</artifactId>
+        <version>2.2.0</version>
     </dependency>
     <!-- Hadoop dependencies -->
     <!--

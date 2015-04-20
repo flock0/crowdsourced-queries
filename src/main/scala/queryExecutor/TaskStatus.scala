@@ -1,6 +1,7 @@
 package queryExecutor
 
 import scala.collection.mutable.ListBuffer
+import play.api.libs.json._
 
 /**
  * TaskStatus encapsulates statistics related to a specific query task (one or more hits).
@@ -89,6 +90,18 @@ class TaskStatus(val statusID: String, val operator: String) {
   }
   
   /**
+   * returns the JSON object containing all information about the current task
+   */
+  def getJSON(): JsValue = JsObject(Seq(
+      "task id" -> JsString(this.statusID),
+      "task status" -> JsString(getCurrentStatus),
+      "task operator" -> JsString(this.operator),
+      "number of hits" -> JsNumber(getNumberHits),
+      "finished hits" -> JsNumber(getNumberFinishedHits),
+      "task results number" -> JsNumber(getTaskAssignmentNumber)
+      ))
+  
+  /**
    * Returns true if the task is finished, i.e. all hits are done.
    */
   def areHitsDone: Boolean = getNumberHits == getNumberFinishedHits
@@ -111,7 +124,7 @@ class TaskStatus(val statusID: String, val operator: String) {
   /**
    * Returns the number of assignments already recevied
    */
-  def getTaskAssignmentNumber = getTaskList.foldLeft(0)((ctr, t) => t.getAssignments.length + ctr)
+  def getTaskAssignmentNumber: Int = getTaskList.foldLeft(0)((ctr, t) => t.getAssignments.length + ctr)
   
   /**
    * Checks if at least one of the AMTTask has started (so that the HIT is visible to workers)

@@ -13,7 +13,8 @@ object Main extends App {
   val query = "(SELECT (movies) FROM [Movies with Angelina Jolie]) JOIN (SELECT (movies) FROM [Movies with Brad Pitt]) ON movies"
   //val query = "(SELECT (full name) FROM [Presidents of USA]) WHERE [political party is democrat]"
   
-  val queryExec = new QueryExecutor
+  val queryID = 0
+  val queryExec = new QueryExecutor(queryID)
   val parsedQuery = queryExec.parse(query)
   //val parsedQuery = GroupBy(Select(NaturalLanguage("Presidents of USA"),List(ElementStr("fullname"))),"political party")
   val executedQuery = queryExec.execute(parsedQuery)
