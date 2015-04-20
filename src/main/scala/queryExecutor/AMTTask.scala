@@ -28,7 +28,7 @@ class AMTTask(val hit: HIT) extends AnswerCallback  {
   private val WAIT_TIME_RESULTS: Int = 1000 // wait time between checks if results arrived
   
   AMTCommunicator.loadCredentials("../credentials.txt")
- 
+  
   /**
    * Sends the request to AMT and set itself as the callback object
    * This function is non-blocking
