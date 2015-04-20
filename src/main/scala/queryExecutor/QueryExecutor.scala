@@ -59,8 +59,10 @@ class QueryExecutor(val queryID: Int) {
     	x onSuccess{
     	  case assign => {
     	    query match {
-	    	    case Join(_,_,_) | Where(_,_) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-4)))
+	    	    case Join(_,_,_) | Where(_,_) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
+            case Group(_, _) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.groupBy(_._2).map(_._2.toString))
 	    	    case _ => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.map(_._2.toString))
+          
     	    }
     	  }
     	}
