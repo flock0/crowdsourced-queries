@@ -36,7 +36,7 @@
 
     $(document).ready(function() {
        $("#driver").click(function(event){
-          $.getJSON('result.json', function(jd) {
+          $.getJSON('/query/all', function(jd) {
               $('#stage').empty();
               $('#stage').append('<p class="selected first"> Queries: ' + jd.queries_status+ '</p>');
               var $tthead=$("#usertable thead");
@@ -71,7 +71,7 @@
                          });
 
          function display(value) {
-                $.getJSON('result.json', function(jd) {
+                $.getJSON('/query/all', function(jd) {
                 var $tdetail = $("#detail tbody");
                 $tdetail.html("");
                 var tabledetail = "";
