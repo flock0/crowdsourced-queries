@@ -21,6 +21,8 @@ public interface QueryInterface {
 
     /** Abort a query.
      * @param question The query ID of the query to abort.
+     * @return A JSON object containing the status of the query (succussful or
+     * not) and an eventual textual message.
      */
-    void abortQuery(String queryId);
+    String abortQuery(String queryId);
 }
