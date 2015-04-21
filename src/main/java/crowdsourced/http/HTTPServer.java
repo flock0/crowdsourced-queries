@@ -24,7 +24,7 @@ public class HTTPServer implements Runnable {
 
     private QueryInterface qif;
     private HttpServer server;
-    private final static Logger logger = Logger.getLogger("HttpServer");
+    private final static Logger LOGGER = Logger.getLogger("HttpServer");
     private final static int SERVER_BIND_PORT = 8080;
     private final static String SERVER_BIND_HOST = "localhost";
 
@@ -84,24 +84,25 @@ public class HTTPServer implements Runnable {
         }
     }
 
+    /** Handle request to the application through the QueryInterface object.*/
     public class QueryHandler extends HttpHandler {
         public void service(Request request, Response response) throws Exception {
             String json = null;
             String path = request.getPathInfo();
 
             if (path.equals("/all")) {
-                logger.info("All queries infos requested");
+                LOGGER.info("All queries infos requested");
                 json = qif.queriesInfo();
             } else if (path.equals("/new")) {
                 String queryString = request.getParameter("question");
-                logger.info("New query: " + queryString);
+                LOGGER.info("New query: " + queryString);
                 json = qif.newQuery(queryString);
             } else if (path.equals("/abort")) {
                 String queryId = request.getParameter("query");
-                logger.info("Abort query: " + queryId);
+                LOGGER.info("Abort query: " + queryId);
                 json = qif.abortQuery(queryId);
             } else {
-                logger.info("Unknown QueryHandler request. PathInfo: " + path);
+                LOGGER.info("Unknown QueryHandler request. PathInfo: " + path);
                 response.setStatus(HttpStatus.NOT_FOUND_404);
                 response.setContentType("text/html");
                 response.getWriter().write("<h1>Not found</h1>");
