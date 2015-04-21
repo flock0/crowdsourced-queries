@@ -118,13 +118,14 @@
       </head>
 
      <section>
-        <div id="stage1" >
-           Please enter your query <input type="text" name="query" size="50">
-        </div>
-        <div id="stage">
-        </div>
-        <br />
-        <input type="button" id="driver" value="submit query" formaction="/queryexample.html"/>
+       <form method="POST" action="/query/new">
+         <div id="stage1" >
+             Please enter your query <input type="text" name="question" size="50" />
+         </div>
+         <div id="stage"> </div>
+         <br />
+         <input type="button" id="driver" value="submit query" />
+       </form>
 
         <br />
         <br />
