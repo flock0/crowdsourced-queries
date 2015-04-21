@@ -52,8 +52,11 @@ class QueryExecutor(val queryID: Int) {
     val res = startingPoint(query)
     queryResultToString(query, res)
     res.map(Await.result(_, Duration.Inf))
+    Thread sleep 5000
     println("Results :")
     getResults.foreach(r => println("\t"+r))
+    printListTaskStatus
+    println("Total duration : " + getDurationString)
   }
   
   def queryResultToString(query: Q, res: List[Future[List[Assignment]]]) = {
@@ -479,7 +482,7 @@ class QueryExecutor(val queryID: Int) {
     if (getStartTime < 0) "Task hasn't started yet"
     else if (getEndTime < 0) "Task is still running"
     else {
-      val duration_sec = this.synchronized { (this.endTime - this.startTime)/1000 }
+      val duration_sec = (getEndTime - getStartTime)/1000 
       val days: Long = duration_sec / 86400
       val hours: Long = (duration_sec - days * 86400) / 3600
       val minutes: Long = (duration_sec - days * 86400 - hours * 3600) / 60
