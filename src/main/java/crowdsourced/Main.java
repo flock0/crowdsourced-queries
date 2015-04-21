@@ -3,7 +3,7 @@ package crowdsourced;
 import crowdsourced.http.HTTPServer;
 import crowdsourced.http.QueryInterface;
 import java.io.IOException;
-import queryExecutor.QueryPool;
+//import queryExecutor.QueryPool;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 
@@ -15,8 +15,9 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Hello");
-        QueryPool qp = new QueryPool();
-        HTTPServer httpd = new HTTPServer(qp);
+        //QueryPool qp = new QueryPool();
+        //HTTPServer httpd = new HTTPServer(qp);
+        HTTPServer httpd = new HTTPServer(new DummyQueryInterface());
         httpd.run();
 
         System.out.println("Press any key to exit.");
@@ -29,7 +30,7 @@ public class Main {
     }
 
     /** A dummy QueryInterface that provides empty answers. */
-    /*static class DummyQueryInterface implements QueryInterface {
+    static class DummyQueryInterface implements QueryInterface {
 
         /** Get a resource against Main.class.
          * @param name The resource name
@@ -68,5 +69,5 @@ public class Main {
         public String abortQuery(String queryId) {
             return "{ status = \"error\", message: \"Not implemented\"}";
         }
-    }*/
+    }
 }
