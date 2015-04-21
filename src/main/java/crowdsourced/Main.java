@@ -3,7 +3,6 @@ package crowdsourced;
 import crowdsourced.http.HTTPServer;
 import crowdsourced.http.QueryInterface;
 import java.io.IOException;
-import queryExecutor.QueryPool;
 import java.io.InputStream;
 import org.apache.commons.io.IOUtils;
 
@@ -15,8 +14,25 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Hello");
-        QueryPool qp = new QueryPool();
-        HTTPServer httpd = new HTTPServer(qp);
+
+        /* Instantiate queryExecutor.QueryPool using reflection. We can't
+         * instantiate it the normal way since the compiler doesn't know about
+         * it at compile time (Scala code is compiled after the Java code). */
+        Object queryPool = null;
+        try {
+            queryPool = Class.forName("queryExecutor.QueryPool").newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.exit(1);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+        HTTPServer httpd = new HTTPServer((QueryInterface) queryPool);
         httpd.run();
 
         System.out.println("Press any key to exit.");
@@ -29,7 +45,7 @@ public class Main {
     }
 
     /** A dummy QueryInterface that provides empty answers. */
-    /*static class DummyQueryInterface implements QueryInterface {
+    static class DummyQueryInterface implements QueryInterface {
 
         /** Get a resource against Main.class.
          * @param name The resource name
@@ -68,5 +84,5 @@ public class Main {
         public String abortQuery(String queryId) {
             return "{ status = \"error\", message: \"Not implemented\"}";
         }
-    }*/
+    }
 }
