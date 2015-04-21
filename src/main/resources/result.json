@@ -1,66 +1,83 @@
-{
-"queries_status": "under process",
+  {
 
-"list_of_queries":[
-  { 
-  	"query_id": 1,
-  	"query_status": "finished",
-  	"query_results_number": "2",
-  	"query_results":"string",
-    "tasks_number" : 3,
-    "list_of_tasks":
-    [
-      {
-       "task_id" :1,
-       "task_status": "finished",
-       "task_operation": "JOIN",
-       "number_of_hits": 4,
-       "finished_hits":4,
-       "task_result_number": 5
-      },
-      {
-       "task_id" :2,
-       "task_status": "finished",
-       "task_operation": "SELECT",
-       "number_of_hits": 5,
-       "finished_hits":5,
-       "task_result_number": "3"
-      },
-      {"task_id" :3,
-       "task_status": "finished",
-       "task_operation": "GROUPBY",
-       "number_of_hits": 5,
-       "finished_hits":5,
-       "task_result_number": 2
-      }
-    ] 
-  },
-  { 
-  	"query_id": 2,
-  	"query_status": "under process",
-  	"query_results_number": null,
-  	"query_results": [
-      null
-  	],
-    "tasks_number" : 2,
-    "list_of_tasks":
-    [
-      {
-       "task_id" :1,
-       "task_status": "finished",
-       "task_operation": "SELECT",
-       "number_of_hits": 4,
-       "finished_hits":3,
-       "task_result_number": "5"
-      },   
-      {"task_id" :2,
-       "task_status": "under process",
-       "task_operation": "ORDERBY",
-       "number_of-hits": 5,
-       "finished_hits":0,
-       "task_result_number": "null"
-      }
-    ] 
+  "list_of_queries":[
+    {
+        "query_id": 1,
+        "query_status": "finished",
+        "query_results_number": 2,
+        "detailed_query_results": [
+      "string 1",
+      "string 2"
+      ],
+      "tasks_number" : 3,
+      "start_time" : 1429527933000,
+      "end_time" : 1429527933500,
+      "list_of_tasks":
+      [
+        {
+         "task_id" :"MY AMT ID 1234",
+         "task_status": "finished",
+         "task_operator": "JOIN",
+         "number_of_hits": 4,
+         "finished_hits":4,
+         "task_result_number": 5,
+         "start_time":1429527933000,
+         "end_time" : 1429527933500
+        },
+        {
+         "task_id" :"MY AMT ID 3456",
+         "task_status": "finished",
+         "task_operator": "SELECT",
+         "number_of_hits": 5,
+         "finished_hits":5,
+         "task_result_number": 3,
+         "start_time":1429527933000,
+         "end_time" : 1429527933500
+        },
+        {"task_id" :"MY AMT ID 3458",
+         "task_status": "finished",
+         "task_operator": "GROUPBY",
+         "number_of_hits": 5,
+         "finished_hits":5,
+         "task_result_number": 2,
+         "start_time":1429527933000,
+         "end_time" : 1429527933500
+        }
+      ]
+    },
+    {
+        "query_id": 2,
+        "query_status": "under process",
+        "query_results_number": 2,
+        "detailed query results": [
+      "string 1",
+      "string 2"
+      ],
+      "tasks_number" : 2,
+      "start_time":1429527933000,
+      "end_time" : -1,
+      "list_of_tasks":
+      [
+        {
+         "task_id" :"MY AMT ID 3458",
+         "task_status": "finished",
+         "task_operator": "SELECT",
+         "number_of_hits": 4,
+         "finished_hits":3,
+         "task_result_number": 5,
+         "start_time":1429527933000,
+         "end_time" : 1429527933500
+        },
+        {"task_id" :"MY AMT ID 3489",
+         "task_status": "under process",
+         "task_operator": "ORDERBY",
+         "number_of-hits": 5,
+         "finished_hits":0,
+         "task_result_number": "null",
+         "start_time":1429527933000,
+         "end_time" : 1429527933500
+        }
+      ]
+    }
+  ]
   }
-]
-}
