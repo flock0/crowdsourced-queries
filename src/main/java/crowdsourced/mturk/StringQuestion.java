@@ -33,11 +33,12 @@ public class StringQuestion extends Question {
      * @param content
      *            The text of the question.
      */
-    public StringQuestion(String identifier, String name, String content, String defaultText, int numberLines) {
+    public StringQuestion(String identifier, String name, String content, String _defaultText, int numberLines) {
         super(identifier, name, content);
-        setDefaultText(defaultText);
-        if (numberLines > 0) { setSuggestedLineCount(numberLines);}
-        
+        setDefaultText(_defaultText);
+        if (numberLines > 0) {
+            setSuggestedLineCount(numberLines);
+        }
     }
 
     /**

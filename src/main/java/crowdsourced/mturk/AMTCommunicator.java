@@ -13,7 +13,6 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.SignatureException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,18 +37,18 @@ import org.w3c.dom.ls.LSSerializer;
 public class AMTCommunicator {
 
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
-	private static String ACCESS_KEY_ID = "";
-	private static String ACCESS_KEY_SECRET_ID = "";
+	private static String accessKeyId = "";
+	private static String accessKeySecretId = "";
 	//DO NOT STORE THE CREDENTIALS WHEN PUSHING
 
 	private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 	private static final String USER_AGENT = "Mozilla/5.0";
-	private static String AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
+	private static String amtUrl = "https://mechanicalturk.sandbox.amazonaws.com";
 
 
-    private static String AMT_REQUEST_BASE_URL = AMT_URL
+    private static String amtRequestBaseUrl = amtUrl
             + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
-            + ACCESS_KEY_ID + "&Version=2014-08-15";
+            + accessKeyId + "&Version=2014-08-15";
     private static AMTTaskSet tasks = new AMTTaskSet();
 
     /**
@@ -70,7 +69,7 @@ public class AMTCommunicator {
 		String service = "AWSMechanicalTurkRequester";
 		String timestamp = getTimestamp();
 		StringBuffer url = new StringBuffer();
-		url.append(AMT_REQUEST_BASE_URL);
+		url.append(amtRequestBaseUrl);
 		for (String key : parameters.keySet()) {
 			url.append(String.format("&%s=%s", key, encodeUrl(parameters.get(key))));
 			if (key.equals("Operation")) {
@@ -85,7 +84,7 @@ public class AMTCommunicator {
 		url.append("&Timestamp=");
 		url.append(encodeUrl(timestamp));
 		url.append("&Signature=");
-		url.append(encodeUrl(calculateSignature(service + operation + timestamp, ACCESS_KEY_SECRET_ID)));
+		url.append(encodeUrl(calculateSignature(service + operation + timestamp, accessKeySecretId)));
 
 		return sendGet(url.toString());
 	}
@@ -299,8 +298,8 @@ public class AMTCommunicator {
     /**
      * Loads credentials information from a file (UTF8 strings).
      * Order to respect :
-     * 	- ACCESS_KEY_ID
-     * 	- ACCESS_KEY_SECRET_ID
+     * 	- accessKeyId
+     * 	- accessKeySecretId
      * 	- 1 to use real AMT, else use Sandbox
      * @param path the path to the credentials file
      */
@@ -310,21 +309,21 @@ public class AMTCommunicator {
 			//Checking the file has enough lines to access the list elements
 			if (lines.size() > 1) {
 				//Retrieve lines in order
-				AMTCommunicator.ACCESS_KEY_ID = lines.get(0).trim();
-				AMTCommunicator.ACCESS_KEY_SECRET_ID = lines.get(1).trim();
+				AMTCommunicator.accessKeyId = lines.get(0).trim();
+				AMTCommunicator.accessKeySecretId = lines.get(1).trim();
 				//Handling the case where the URL modifier is present (third line)
 				if (lines.size() > 2) {
 					//Pseudo boolean 1 : real AMT, anything else : Sandbox
 					if (lines.get(2).trim().equals("1")) {
-						AMTCommunicator.AMT_URL = "https://mechanicalturk.amazonaws.com";
+						AMTCommunicator.amtUrl = "https://mechanicalturk.amazonaws.com";
 					} else {
-						AMTCommunicator.AMT_URL = "https://mechanicalturk.sandbox.amazonaws.com";
+						AMTCommunicator.amtUrl = "https://mechanicalturk.sandbox.amazonaws.com";
 					}
 				}
 				//Needed in all cases, we need to update the value of this string.
-				AMTCommunicator.AMT_REQUEST_BASE_URL = AMTCommunicator.AMT_URL
+				AMTCommunicator.amtRequestBaseUrl = AMTCommunicator.amtUrl
 			            + "/?Service=AWSMechanicalTurkRequester" + "&AWSAccessKeyId="
-			            + AMTCommunicator.ACCESS_KEY_ID + "&Version=2014-08-15";
+			            + AMTCommunicator.accessKeyId + "&Version=2014-08-15";
 				System.out.println("Credentials loaded.");
 			} else {
 				System.out.println("Incomplete credentials file");
