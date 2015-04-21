@@ -5,7 +5,7 @@
                  background-color:black;
                  color:white;
                  text-align:center;
-                 padding:5px;   
+                 padding:5px;
         }
          nav {
              line-height:30px;
@@ -13,14 +13,14 @@
              height:400px;
              width:600px;
              float:left;
-             padding:10px;       
+             padding:10px;
         }
          section {
                   width:600px;
                   float:right;
-                  padding:10px;    
+                  padding:10px;
         }
-   
+
        </style>
       </head>
 
@@ -28,16 +28,16 @@
       <header>
           <h1>Generate your own query</h1>
       </header>
-      <script type="text/javascript" 
+      <script type="text/javascript"
               src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
       <script type="text/javascript" language="javascript">
       var i=0;
-    
+
       $(document).ready(function() {
          $("#driver").click(function(event){
             $.getJSON('/query/all', function(jd) {
                 var $tbody = $("#usertable tbody");
-                 $tbody.html(""); 
+                 $tbody.html("");
                   var tabledata = "";
                       for(i = 0; i < jd.list_of_queries.length; i++ ){
                             tabledata = "";
@@ -52,11 +52,11 @@
                             "</td>";
 
                             tabledata += "</tr>";
-                            $tbody.append(tabledata); 
-            
+                            $tbody.append(tabledata);
+
                                          }
                                       });
-                                  }); 
+                                  });
                            });
 
            function abort(value){
@@ -79,9 +79,9 @@
                             tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
                             "</td>";
                             tabledata += "</tr>";
-                             $tbody.append(tabledata); 
-                          }                      
-                         
+                             $tbody.append(tabledata);
+                          }
+
                         }
                      });
             // need to change and return the json object if abort button is clicked.
@@ -91,7 +91,7 @@
 
 
 
-      
+
            function display(value) {
                   $.getJSON('result.json', function(jd) {
                   var $tdetail = $("#detail tbody");
@@ -101,7 +101,7 @@
                       tabledetail = "";
                       tabledetail += "<tr>";
                       tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_id + "</td>";
-                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_status + "</td>"; 
+                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_status + "</td>";
                       tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_operator + "</td>";
                       tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].number_of_hits + "</td>";
                       tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].finished_hits + "</td>";
@@ -110,7 +110,7 @@
                         tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].end_time + "</td>";
 
                       tabledetail +="</tr>";
-                      $tdetail.append(tabledetail); 
+                      $tdetail.append(tabledetail);
                     }
                   });
              }
@@ -125,7 +125,7 @@
         </div>
         <br />
         <input type="button" id="driver" value="submit query" formaction="/queryexample.html"/>
-        
+
         <br />
         <br />
           <table id="usertable" border="1" cellpadding="5" cellspacing=0>
@@ -138,12 +138,12 @@
                <th>start time</th>
                <th> end time </th>
                <th>action</th>
-             </tr> 
+             </tr>
             </thead>
             <tbody> </tbody>
          </table>
         <br />
-        
+
         <form>
            <input type="submit" id="submit" value="go back"formaction="/queryexample.html"  >
         </form>
