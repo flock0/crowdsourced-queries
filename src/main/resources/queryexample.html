@@ -35,7 +35,7 @@
     
       $(document).ready(function() {
          $("#driver").click(function(event){
-            $.getJSON('result.json', function(jd) {
+            $.getJSON('/query/all', function(jd) {
                 var $tbody = $("#usertable tbody");
                  $tbody.html(""); 
                   var tabledata = "";
@@ -61,7 +61,7 @@
 
            function abort(value){
             // get the json object here and change the display of the table
-             $.getJSON('result.json', function(jd) {
+             $.getJSON('/query/all', function(jd) {
               var $tthead=$("#usertable thead");
               var $tbody = $("#usertable tbody");
               $tbody.html(" ");
