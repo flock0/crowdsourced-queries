@@ -57,7 +57,7 @@
               </descriptorRefs>
               <archive>
                 <manifest>
-                  <mainClass>queryExecutor.Main</mainClass>
+                  <mainClass>crowdsourced.Main</mainClass>
                 </manifest>
               </archive>
             </configuration>
