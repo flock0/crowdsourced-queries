@@ -364,7 +364,6 @@ class QueryExecutor(val queryID: Int) {
     results
   }
   
-  
   /**
    * Helper function to create a list of AMTTask to split the data retrieval jobs between several workers
    */
@@ -470,7 +469,29 @@ class QueryExecutor(val queryID: Int) {
     if (starts.length > 0) starts.min
     else -1
   }
+  
   def getEndTime(): Long = getListTaskStatus.map(_.getEndTime).max
+  
+    /**
+   * Returns a nice string of the duration of the query
+   */
+  def getDurationString: String = {
+    if (getStartTime < 0) "Task hasn't started yet"
+    else if (getEndTime < 0) "Task is still running"
+    else {
+      val duration_sec = this.synchronized { (this.endTime - this.startTime)/1000 }
+      val days: Long = duration_sec / 86400
+      val hours: Long = (duration_sec - days * 86400) / 3600
+      val minutes: Long = (duration_sec - days * 86400 - hours * 3600) / 60
+      val seconds: Long = duration_sec - days * 86400 - hours * 3600 - minutes * 60
+      val s = new StringBuilder()
+      if (days > 0) s ++= days+"d "
+      if (hours > 0) s ++= hours+"h "
+      if (minutes > 0) s ++= minutes +"m "
+      s ++= seconds +"s "
+      s.toString
+    }
+  }
   
   def getJSON(): JsValue = JsObject(Seq(
       "query_id" -> JsNumber(this.queryID),
