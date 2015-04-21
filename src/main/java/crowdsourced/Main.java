@@ -35,7 +35,7 @@ public class Main {
         HTTPServer httpd = new HTTPServer((QueryInterface) queryPool);
         httpd.run();
 
-        System.out.println("Press any key to exit.");
+        System.out.println("Press enter to exit.");
         try {
             System.in.read();
         } catch (IOException e) {
