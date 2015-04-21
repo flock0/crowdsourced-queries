@@ -5,12 +5,19 @@ import scala.collection.mutable.ListBuffer
 import play.api.libs.json._
 
 class QueryPool() extends QueryInterface {
+  println("QueryPool started...")
 
   val executors = ListBuffer[QueryExecutor]()
 
-  def queriesInfo(): String = getJSON.toString
+  def queriesInfo(): String = {
+    val json = getJSON.toString
+    println("Returning queries status to interface.")
+    println("JSON content : "+json)
+    json
+  }
 
   def newQuery(query: String): String = {
+    println("Query received : "+query)
 
     val queryID = this.executors.length
     val queryExec = new QueryExecutor(queryID)
