@@ -526,6 +526,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       "query_results_number" -> JsNumber(getResults().length),
       "start_time" -> JsNumber(getStartTime()),
       "end_time" -> JsNumber(getEndTime()),
+      "list_of_tasks" -> JsArray(getListTaskStatus.map(_.getJSON).toSeq),
       "detailed_query_results" -> JsArray(getResults().map(JsString(_)).toSeq)
       ))
   
