@@ -34,7 +34,9 @@
       var i=0;
 
       $(document).ready(function() {
-         $("#driver").click(function(event){
+         $("#question_form").on('submit', function(event){
+           alert("foo");
+            $.post( "/query/new", { question: $("#question_input").val()} );
             $.getJSON('/query/all', function(jd) {
                 var $tbody = $("#usertable tbody");
                  $tbody.html("");
@@ -118,13 +120,13 @@
       </head>
 
      <section>
-       <form method="POST" action="/query/new">
+       <form id="question_form">
          <div id="stage1" >
-             Please enter your query <input type="text" name="question" size="50" />
+             Please enter your query <input id="question_input" type="text" name="question" size="50" />
          </div>
          <div id="stage"> </div>
          <br />
-         <input type="button" id="driver" value="submit query" />
+         <input type="submit" id="driver" value="submit query" />
        </form>
 
         <br />
