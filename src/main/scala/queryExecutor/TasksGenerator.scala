@@ -174,7 +174,7 @@ object TasksGenerator {
   /**
    * Returns the string on which we will sort
    */
-  def returnString(order: O): string = order match {
+  def returnString(order: O): String = order match {
       case OrdAsc(string) => string
       case OrdDesc(string) => string
   }
