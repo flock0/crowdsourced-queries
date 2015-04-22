@@ -2,80 +2,69 @@ package tree
 
 object Tree{
   
-  trait Q extends G with T with java.io.Serializable {
-    def countNodes: Int
-  }
+  trait Q extends G with T with java.io.Serializable
   
   case class In(left: Q, right: Q) extends Q {
     override def toString() = "(" + left + ") IN (" + right + ")"
-    def countNodes = 1 + left.countNodes + right.countNodes
   }
   case class NotIn(left: Q, right: Q) extends Q {
     override def toString() = "(" + left + ") IN (" + right + ")"
-    def countNodes = 1 + left.countNodes + right.countNodes
   }
   case class Join(left: Q, right: Q, on: String) extends Q {
     override def toString() = "(" + left + ") JOIN (" + right + ") ON " + on
-    def countNodes = 1 + left.countNodes + right.countNodes
   }
   
   case class Intersect(left: Q, right: Q) extends Q {
     override def toString() = "(" + left + ") INTERSECT (" + right + ")"
-    def countNodes = 1 + left.countNodes + right.countNodes
   }
   case class Union(left: Q, right: Q) extends Q {
     override def toString() = "(" + left + ") UNION (" + right + ")"
-    def countNodes = 1 + left.countNodes + right.countNodes
   }
   
   case class ErrorString() extends Q {
     override def toString() = "Error on parsing"
-    def countNodes = 0
   }
   
   trait Q1 extends Q
   
   case class Limit(q: Q2, limit: I) extends Q1 {
     override def toString() = q + " LIMIT " + limit
-    def countNodes = 1 + q.countNodes
   }
   
   trait Q2 extends Q1
   
   case class OrderBy(q: Q3, order: List[O]) extends Q2 {
   def recOrder(ord: List[O]): String = ord match {
+    case Nil => ""
     case h :: Nil => h.toString
     case h :: tail => h.toString + ", " + recOrder(tail)
   }
   
     override def toString() = q +" ORDER BY " + recOrder(order)
-    def countNodes = 1 + q.countNodes
   }
   
   trait Q3 extends Q2
   
   case class Group(q: Q4, by: String) extends Q3 {
     override def toString() = q + " GROUP BY " + by
-    def countNodes = 1 + q.countNodes
   }
   
   trait Q4 extends Q3
   
   case class Where(select: SelectTree, where: Condition) extends Q4 {
     override def toString() = select + " WHERE " + where
-    def countNodes = 1 + select.countNodes
   }
   
   trait SelectTree extends Q4
   
   case class Select(from: Q, elem: List[P]) extends SelectTree {
     def computeList(e: List[P]): String = e match {
+      case Nil => ""
       case e :: Nil => e + ""
       case h :: t => h + ", " + computeList(t)
     }
     
     override def toString() = "SELECT (" + computeList(elem) + ") FROM " + from
-    def countNodes = 1 + from.countNodes
   }
   
   
@@ -146,6 +135,7 @@ object Tree{
   trait G
   case class CondGroup(g: List[T]) extends G {
   def group(e: List[T]): String = e match {
+    case Nil => ""
     case h :: Nil => h.toString
     case h :: tail => h + ", " + group(tail)
   }
@@ -156,7 +146,6 @@ object Tree{
   
   case class NaturalLanguage(s: String) extends Condition with SelectTree with G with S with I {
     override def toString() = "[" + s + "]"
-    def countNodes = 0
   }
   
   trait I extends T
