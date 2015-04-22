@@ -18,6 +18,7 @@ import play.api.libs.json._
  * This class represents and can execute a complete query in our query language.
  * Construct an object by submitting an ID and the string to parse.
  * Call execute() in order to run the request and to start recursive interaction with Amazon Mechanical Turk
+ * @authors Joachim Hugonot, Francois Farquet, Kristof Szabo
  */
 class QueryExecutor(val queryID: Int, val queryString: String) {
 
@@ -41,11 +42,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   val HIT_LIFETIME = 60 * 60 // 1 Hour
   val MAJORITY_VOTE = 1 //TODO Implement majority votes for WHERE and JOIN tasks.
   val REWARD_SORT = 0.05 //Sort is longer so we should pay more
-  
-  /**
-   * Creates a unique ID which is the full date followed by random numbers
-   */
-  def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
   
   /**
    * Use parser to return the full tree of the parsed request
@@ -103,14 +99,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     	}
       }
     )
-  }
-  
-  /**
-   * Takes a string in format "(_, _)" and converts it to a tuple
-   */
-  def stringToTuple(s: String): Tuple2[String, String] = {
-    val tup = s.split(",")
-    (tup(0).tail, tup(1).take(tup(1).length-1))
   }
   
   /********************************* TASKS CREATIONS ********************************/
@@ -419,6 +407,19 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     case Where(selectTree, where) => extractWhereAnswers(assignments)
     case _ => ???
     }
+  }
+  
+  /**
+   * Creates a unique ID which is the full date followed by random numbers
+   */
+  def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
+  
+  /**
+   * Takes a string in format "(_, _)" and converts it to a tuple
+   */
+  def stringToTuple(s: String): Tuple2[String, String] = {
+    val tup = s.split(",")
+    (tup(0).tail, tup(1).take(tup(1).length-1))
   }
   
   /**
