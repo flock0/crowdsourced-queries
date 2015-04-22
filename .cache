@@ -1,0 +1,516 @@
+format version: 5
+output mode:
+1 items
+0 -> multiple
+output directories:
+2 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin
+compile options:
+8 items
+0 -> -javabootclasspath
+1 -> /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rhino.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunpkcs11.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/java-atk-wrapper.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/zipfs.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/sunjce_provider.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/dnsns.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/icedtea-sound.jar:/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/ext/localedata.jar
+2 -> -javaextdirs
+3 ->  
+4 -> -bootclasspath
+5 -> /home/chernobyl/data/eclipse_scala/plugins/org.scala-ide.scala210.jars_4.0.0.201503031935/target/jars/scala-library.jar
+6 -> -encoding
+7 -> UTF-8
+javac options:
+0 items
+compiler version:
+1 items
+0 -> 2.10.5
+compile order:
+1 items
+0 -> Mixed
+name hashing:
+1 items
+0 -> false
+products:
+138 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/crowdsourced/Main.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$3$$anonfun$apply$11.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4$$anonfun$apply$12.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4$$anonfun$apply$13.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4$$anonfun$apply$14.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5$$anonfun$apply$15.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5$$anonfun$apply$16.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5$$anonfun$apply$17.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6$$anonfun$apply$18.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6$$anonfun$apply$19.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6$$anonfun$apply$20.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$7$$anonfun$apply$21.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$7.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseE$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseI$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseI$2$$anonfun$apply$22.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseI$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseNl$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseNl$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseNl$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$1$$anonfun$apply$9$$anonfun$apply$10.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$1$$anonfun$apply$9.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$4.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$5.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$6$$anonfun$apply$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$6.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$7.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ1$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ1$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$4.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$4$$anonfun$apply$5.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$4.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$6.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$6$$anonfun$apply$7.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$6.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$7.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$4$$anonfun$apply$8.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$4.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$5.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$4.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$5.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ASC$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ASC.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$And$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$And.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Bool$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Bool.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$CIn$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$CIn.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Condition.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$DESC$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$DESC.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Distinct$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Distinct.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementNum$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementNum.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementStr$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementStr.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Equals$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Equals.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ErrorString$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ErrorString.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$G.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThan$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThan.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThanOrEqual$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThanOrEqual.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GroupBy$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GroupBy.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$I.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$In$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$In.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$IntL$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$IntL.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Ints$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Ints.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Join$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Join.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThan$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThan.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThanOrEqual$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThanOrEqual.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Limit$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Limit.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NaturalLanguage$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NaturalLanguage.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NotIn$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NotIn.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$O.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Or$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Or.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$OrderBy$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$OrderBy.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$P.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q1.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q2.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q3.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Select$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Select.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$SelectTree.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Str$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Str.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Strings$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Strings.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$T.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Where$.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Where.class
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree.class
+binary dependencies:
+5 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java -> /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/data/eclipse_scala/plugins/org.scala-ide.scala210.jars_4.0.0.201503031935/target/jars/scala-library.jar
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /home/chernobyl/data/eclipse_scala/plugins/org.scala-ide.scala210.jars_4.0.0.201503031935/target/jars/scala-library.jar
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> /usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar
+direct source dependencies:
+2 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> /home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala
+direct external dependencies:
+0 items
+public inherited source dependencies:
+0 items
+public inherited external dependencies:
+0 items
+member reference internal dependencies:
+0 items
+member reference external dependencies:
+0 items
+inheritance internal dependencies:
+0 items
+inheritance external dependencies:
+0 items
+class names:
+138 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java -> crowdsourced.Main
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseBaseP$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseBaseP$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseBaseP$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseBaseP$3$$anonfun$apply$11
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$4
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$4$$anonfun$apply$12
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$4$$anonfun$apply$13
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$4$$anonfun$apply$14
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$5
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$5$$anonfun$apply$15
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$5$$anonfun$apply$16
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$5$$anonfun$apply$17
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$6
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$6$$anonfun$apply$18
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$6$$anonfun$apply$19
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$6$$anonfun$apply$20
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$7
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseC$7$$anonfun$apply$21
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseE$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseI$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseI$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseI$2$$anonfun$apply$22
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseNl$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseNl$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseNl$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseP$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseP$1$$anonfun$apply$9
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseP$1$$anonfun$apply$9$$anonfun$apply$10
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseP$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$4
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$5
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$6
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$6$$anonfun$apply$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ$7
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ1$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ1$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$4
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$5
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$5$$anonfun$apply$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$5$$anonfun$apply$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$5$$anonfun$apply$4
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$5$$anonfun$apply$4$$anonfun$apply$5
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$5$$anonfun$apply$6
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$6
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$6$$anonfun$apply$7
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ2$7
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ3$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ3$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ3$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ3$4
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ3$4$$anonfun$apply$8
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseQ3$5
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseSelectTree$1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseSelectTree$2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseSelectTree$3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseSelectTree$4
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> parser.Parser$$anonfun$parseSelectTree$5
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ASC
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ASC$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$And
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$And$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Bool
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Bool$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$CIn
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$CIn$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Condition
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$DESC
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$DESC$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Distinct
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Distinct$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ElementNum
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ElementNum$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ElementStr
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ElementStr$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Equals
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Equals$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ErrorString
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$ErrorString$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$G
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$GreaterThan
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$GreaterThan$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$GreaterThanOrEqual
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$GreaterThanOrEqual$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$GroupBy
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$GroupBy$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$I
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$In
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$In$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$IntL
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$IntL$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Ints
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Ints$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Join
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Join$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$LessThan
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$LessThan$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$LessThanOrEqual
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$LessThanOrEqual$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Limit
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Limit$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$NaturalLanguage
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$NaturalLanguage$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$NotIn
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$NotIn$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$O
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Or
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Or$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$OrderBy
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$OrderBy$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$P
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Q
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Q1
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Q2
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Q3
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Select
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Select$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$SelectTree
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Str
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Str$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Strings
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Strings$
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$T
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Where
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> tree.Tree$Where$
+used names:
+0 items
+product stamps:
+138 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/crowdsourced/Main.class -> lastModified(1429725932000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$3$$anonfun$apply$11.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseBaseP$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4$$anonfun$apply$12.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4$$anonfun$apply$13.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4$$anonfun$apply$14.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$4.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5$$anonfun$apply$15.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5$$anonfun$apply$16.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5$$anonfun$apply$17.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$5.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6$$anonfun$apply$18.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6$$anonfun$apply$19.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6$$anonfun$apply$20.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$6.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$7$$anonfun$apply$21.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseC$7.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseE$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseI$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseI$2$$anonfun$apply$22.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseI$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseNl$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseNl$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseNl$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$1$$anonfun$apply$9$$anonfun$apply$10.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$1$$anonfun$apply$9.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseP$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$4.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$5.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$6$$anonfun$apply$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$6.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ$7.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ1$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ1$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$4.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$4$$anonfun$apply$5.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$4.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5$$anonfun$apply$6.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$5.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$6$$anonfun$apply$7.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$6.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ2$7.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$4$$anonfun$apply$8.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$4.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseQ3$5.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$1.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$2.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$3.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$4.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$$anonfun$parseSelectTree$5.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser$.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/parser/Parser.class -> lastModified(1429730654000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ASC$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ASC.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$And$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$And.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Bool$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Bool.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$CIn$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$CIn.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Condition.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$DESC$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$DESC.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Distinct$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Distinct.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementNum$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementNum.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementStr$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ElementStr.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Equals$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Equals.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ErrorString$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$ErrorString.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$G.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThan$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThan.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThanOrEqual$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GreaterThanOrEqual.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GroupBy$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$GroupBy.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$I.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$In$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$In.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$IntL$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$IntL.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Ints$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Ints.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Join$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Join.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThan$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThan.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThanOrEqual$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$LessThanOrEqual.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Limit$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Limit.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NaturalLanguage$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NaturalLanguage.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NotIn$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$NotIn.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$O.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Or$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Or.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$OrderBy$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$OrderBy.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$P.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q1.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q2.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Q3.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Select$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Select.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$SelectTree.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Str$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Str.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Strings$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Strings.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$T.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Where$.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree$Where.class -> lastModified(1429725931000)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/bin/tree/Tree.class -> lastModified(1429725931000)
+source stamps:
+3 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java -> hash(57bebbf8db2302ec61d830a34d08044d72f35727)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> hash(d1d06a3fc3162bd6c7fa1e99e3d907721cbc78a4)
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> hash(2dc73a59c4272c9b4d3ed6a99c4bae266a8cbe63)
+binary stamps:
+2 items
+/home/chernobyl/data/eclipse_scala/plugins/org.scala-ide.scala210.jars_4.0.0.201503031935/target/jars/scala-library.jar -> lastModified(1425411324000)
+/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar -> lastModified(1429173098000)
+class names:
+2 items
+/home/chernobyl/data/eclipse_scala/plugins/org.scala-ide.scala210.jars_4.0.0.201503031935/target/jars/scala-library.jar -> scala.Product
+/usr/lib/jvm/java-7-openjdk-amd64/jre/lib/rt.jar -> java.lang.Object
+internal apis:
+3 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java -> 
+rO0ABXNyABB4c2J0aS5hcGkuU291cmNlFlpwRASfbtoCAAZJAAdhcGlIYXNoWgAIaGFzTWFjcm9MABhfaW50ZXJuYWxPbmx5X25hbWVIYXNoZXN0ACRMeHNidGkvYXBpL19pbnRlcm5hbE9ubHlfTmFtZUhhc2hlcztMAANhcGl0ABVMeHNidGkvYXBpL1NvdXJjZUFQSTtMAAtjb21waWxhdGlvbnQAF0x4c2J0aS9hcGkvQ29tcGlsYXRpb247WwAEaGFzaHQAAltCeHB4yq+wAHNyACJ4c2J0aS5hcGkuX2ludGVybmFsT25seV9OYW1lSGFzaGVzVNq+mfrU7EwCAAJbAA9pbXBsaWNpdE1lbWJlcnN0ACNbTHhzYnRpL2FwaS9faW50ZXJuYWxPbmx5X05hbWVIYXNoO1sADnJlZ3VsYXJNZW1iZXJzcQB+AAd4cHVyACNbTHhzYnRpLmFwaS5faW50ZXJuYWxPbmx5X05hbWVIYXNoO0lagLbdlov0AgAAeHAAAAAAdXEAfgAJAAAAAHNyABN4c2J0aS5hcGkuU291cmNlQVBJuV6n+SkjOKQCAAJbAAtkZWZpbml0aW9uc3QAF1tMeHNidGkvYXBpL0RlZmluaXRpb247WwAIcGFja2FnZXN0ABRbTHhzYnRpL2FwaS9QYWNrYWdlO3hwdXIAF1tMeHNidGkuYXBpLkRlZmluaXRpb247iMlc57TjXg4CAAB4cAAAAAJzcgATeHNidGkuYXBpLkNsYXNzTGlrZYM0HKHfsJdsAgAETAAOZGVmaW5pdGlvblR5cGV0ABpMeHNidGkvYXBpL0RlZmluaXRpb25UeXBlO1sAEHNhdmVkQW5ub3RhdGlvbnN0ABNbTGphdmEvbGFuZy9TdHJpbmc7TAAIc2VsZlR5cGV0ABBMeHNidGkvYXBpL0xhenk7TAAJc3RydWN0dXJlcQB+ABV4cgAheHNidGkuYXBpLlBhcmFtZXRlcml6ZWREZWZpbml0aW9u+RFusdVQPOICAAFbAA50eXBlUGFyYW1ldGVyc3QAGltMeHNidGkvYXBpL1R5cGVQYXJhbWV0ZXI7eHIAFHhzYnRpLmFwaS5EZWZpbml0aW9uhyob6HFC40YCAARMAAZhY2Nlc3N0ABJMeHNidGkvYXBpL0FjY2VzcztbAAthbm5vdGF0aW9uc3QAF1tMeHNidGkvYXBpL0Fubm90YXRpb247TAAJbW9kaWZpZXJzdAAVTHhzYnRpL2FwaS9Nb2RpZmllcnM7TAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwc3IAEHhzYnRpLmFwaS5QdWJsaWO6WD2ubC1gQgIAAHhyABB4c2J0aS5hcGkuQWNjZXNz3WKa+B1jMUgCAAB4cHVyABdbTHhzYnRpLmFwaS5Bbm5vdGF0aW9uO+uX6xkQ9o1IAgAAeHAAAAAAc3IAE3hzYnRpLmFwaS5Nb2RpZmllcnPHERMhaZzcJAIAAUIABWZsYWdzeHAAdAARY3Jvd2Rzb3VyY2VkLk1haW51cgAaW0x4c2J0aS5hcGkuVHlwZVBhcmFtZXRlcjvZbSYPKJ3ytgIAAHhwAAAAAH5yABh4c2J0aS5hcGkuRGVmaW5pdGlvblR5cGUAAAAAAAAAABIAAHhyAA5qYXZhLmxhbmcuRW51bQAAAAAAAAAAEgAAeHB0AAhDbGFzc0RlZnVyABNbTGphdmEubGFuZy5TdHJpbmc7rdJW5+kde0cCAAB4cAAAAAF0AAxzY2FsYS50aHJvd3NzcgATeHNidGkuU2FmZUxhenkkSW1wbDuRTxH0RUzJAgADWgAIYml0bWFwJDBMAAJfdHQAEkxqYXZhL2xhbmcvT2JqZWN0O0wABGV2YWx0ABFMc2NhbGEvRnVuY3Rpb24wO3hyABZ4c2J0aS5hcGkuQWJzdHJhY3RMYXp503e1AV+756ACAAB4cABwc3IAIHhzYnRpLlNhZmVMYXp5JCRhbm9uZnVuJHN0cmljdCQxAAAAAAAAAAACAAFMAAd2YWx1ZSQxcQB+ADB4cHNyABN4c2J0aS5hcGkuRW1wdHlUeXBlvP2eRkk7iSQCAAB4cgAUeHNidGkuYXBpLlNpbXBsZVR5cGVyeGKIISO/QAIAAHhyAA54c2J0aS5hcGkuVHlwZT9q2SEWSarKAgAAeHBzcQB+AC8AcHNxAH4ANHNyABN4c2J0aS5hcGkuU3RydWN0dXJlqar5gJNv2AACAANMAAhkZWNsYXJlZHEAfgAVTAAJaW5oZXJpdGVkcQB+ABVMAAdwYXJlbnRzcQB+ABV4cQB+ADhzcQB+AC8AcHNxAH4ANHVxAH4AEAAAAABzcQB+AC8AcHNxAH4ANHVxAH4AEAAAAABzcQB+AC8AcHNxAH4ANHVyABFbTHhzYnRpLmFwaS5UeXBlO3T/pVp7+elBAgAAeHAAAAABc3IAFHhzYnRpLmFwaS5Qcm9qZWN0aW9u89KNVOlFpC0CAAJMAAJpZHEAfgAcTAAGcHJlZml4dAAWTHhzYnRpL2FwaS9TaW1wbGVUeXBlO3hxAH4AN3QABk9iamVjdHNyABN4c2J0aS5hcGkuU2luZ2xldG9u/Kdf+M9W5EYCAAFMAARwYXRodAAQTHhzYnRpL2FwaS9QYXRoO3hxAH4AN3NyAA54c2J0aS5hcGkuUGF0aJs9XAjOpSeEAgABWwAKY29tcG9uZW50c3QAGltMeHNidGkvYXBpL1BhdGhDb21wb25lbnQ7eHB1cgAaW0x4c2J0aS5hcGkuUGF0aENvbXBvbmVudDtD2gl0LWcWdAIAAHhwAAAAA3NyAAx4c2J0aS5hcGkuSWSYMmyLN1PEQAIAAUwAAmlkcQB+ABx4cgAXeHNidGkuYXBpLlBhdGhDb21wb25lbnRfmiJbLoafvAIAAHhwdAAEamF2YXNxAH4AVHQABGxhbmdzcgAOeHNidGkuYXBpLlRoaXPbCe2mzFpAXAIAAHhxAH4AVXNxAH4AEnEAfgAgcQB+ACJxAH4AJHEAfgAlcQB+ACd+cQB+ACh0AAZNb2R1bGV1cQB+ACwAAAAAc3EAfgAvAHBzcQB+ADRxAH4AOXNxAH4ALwBwc3EAfgA0c3EAfgA8c3EAfgAvAHBzcQB+ADR1cQB+ABAAAAABc3IADXhzYnRpLmFwaS5EZWZSvp/ifLQ2aQIAAkwACnJldHVyblR5cGV0ABBMeHNidGkvYXBpL1R5cGU7WwAPdmFsdWVQYXJhbWV0ZXJzdAAaW0x4c2J0aS9hcGkvUGFyYW1ldGVyTGlzdDt4cQB+ABZxAH4AIHVxAH4AIQAAAABzcQB+ACMAdAAEbWFpbnEAfgAnc3EAfgBIdAAEVW5pdHNxAH4ATHNxAH4AT3VxAH4AUgAAAAJzcQB+AFR0AAVzY2FsYXEAfgBbdXIAGltMeHNidGkuYXBpLlBhcmFtZXRlckxpc3Q79dM6HfKzcO4CAAB4cAAAAAFzcgAXeHNidGkuYXBpLlBhcmFtZXRlckxpc3TWxbwcZEl04wIAAloACmlzSW1wbGljaXRbAApwYXJhbWV0ZXJzdAAcW0x4c2J0aS9hcGkvTWV0aG9kUGFyYW1ldGVyO3hwAHVyABxbTHhzYnRpLmFwaS5NZXRob2RQYXJhbWV0ZXI7z7jFXaXdtW0CAAB4cAAAAAFzcgAZeHNidGkuYXBpLk1ldGhvZFBhcmFtZXRlch9FrhfTSbDqAgAEWgAKaGFzRGVmYXVsdEwACG1vZGlmaWVydAAdTHhzYnRpL2FwaS9QYXJhbWV0ZXJNb2RpZmllcjtMAARuYW1lcQB+ABxMAAN0cGVxAH4AaXhwAH5yABt4c2J0aS5hcGkuUGFyYW1ldGVyTW9kaWZpZXIAAAAAAAAAABIAAHhxAH4AKXQABVBsYWludAAAc3IAF3hzYnRpLmFwaS5QYXJhbWV0ZXJpemVkFmzuaQPJu38CAAJMAAhiYXNlVHlwZXEAfgBJWwANdHlwZUFyZ3VtZW50c3QAEVtMeHNidGkvYXBpL1R5cGU7eHEAfgA3c3EAfgBIdAAFQXJyYXlzcQB+AExzcQB+AE91cQB+AFIAAAACc3EAfgBUdAAFc2NhbGFxAH4AW3VxAH4ARgAAAAFzcQB+AEh0AAZTdHJpbmdzcQB+AExzcQB+AE91cQB+AFIAAAADc3EAfgBUdAAEamF2YXNxAH4AVHQABGxhbmdxAH4AW3NxAH4ALwBwc3EAfgA0dXEAfgAQAAAAAHNxAH4ALwBwc3EAfgA0dXEAfgBGAAAAAHVyABRbTHhzYnRpLmFwaS5QYWNrYWdlO1sTGTdwpyehAgAAeHAAAAABc3IAEXhzYnRpLmFwaS5QYWNrYWdlflmP9q7OOVgCAAFMAARuYW1lcQB+ABx4cHQADGNyb3dkc291cmNlZHNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOJOVgt1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5cQB+ABxMAA9zb3VyY2VEaXJlY3RvcnlxAH4AHHhwdABLL2hvbWUvY2hlcm5vYnlsL3NjYWxhL3dvcmtzcGFjZS9jcm93ZHNvdXJzaW5nL2JkMTUtY3Jvd2Rzb3VyY2VkLXF1ZXJpZXMvYmludABLL2hvbWUvY2hlcm5vYnlsL3NjYWxhL3dvcmtzcGFjZS9jcm93ZHNvdXJzaW5nL2JkMTUtY3Jvd2Rzb3VyY2VkLXF1ZXJpZXMvc3Jjc3EAfgCodABLL2hvbWUvY2hlcm5vYnlsL3NjYWxhL3dvcmtzcGFjZS9jcm93ZHNvdXJzaW5nL2JkMTUtY3Jvd2Rzb3VyY2VkLXF1ZXJpZXMvYmludABVL2hvbWUvY2hlcm5vYnlsL3NjYWxhL3dvcmtzcGFjZS9jcm93ZHNvdXJzaW5nL2JkMTUtY3Jvd2Rzb3VyY2VkLXF1ZXJpZXMvc3JjL21haW4vamF2YXVyAAJbQqzzF/gGCFTgAgAAeHAAAAAUV767+NsjAuxh2DCjTQgETXLzVyc=
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> 
+rO0ABXNyABB4c2J0aS5hcGkuU291cmNlFlpwRASfbtoCAAZJAAdhcGlIYXNoWgAIaGFzTWFjcm9MABhfaW50ZXJuYWxPbmx5X25hbWVIYXNoZXN0ACRMeHNidGkvYXBpL19pbnRlcm5hbE9ubHlfTmFtZUhhc2hlcztMAANhcGl0ABVMeHNidGkvYXBpL1NvdXJjZUFQSTtMAAtjb21waWxhdGlvbnQAF0x4c2J0aS9hcGkvQ29tcGlsYXRpb247WwAEaGFzaHQAAltCeHB9UFtOAHNyACJ4c2J0aS5hcGkuX2ludGVybmFsT25seV9OYW1lSGFzaGVzVNq+mfrU7EwCAAJbAA9pbXBsaWNpdE1lbWJlcnN0ACNbTHhzYnRpL2FwaS9faW50ZXJuYWxPbmx5X05hbWVIYXNoO1sADnJlZ3VsYXJNZW1iZXJzcQB+AAd4cHVyACNbTHhzYnRpLmFwaS5faW50ZXJuYWxPbmx5X05hbWVIYXNoO0lagLbdlov0AgAAeHAAAAAAdXEAfgAJAAAAAHNyABN4c2J0aS5hcGkuU291cmNlQVBJuV6n+SkjOKQCAAJbAAtkZWZpbml0aW9uc3QAF1tMeHNidGkvYXBpL0RlZmluaXRpb247WwAIcGFja2FnZXN0ABRbTHhzYnRpL2FwaS9QYWNrYWdlO3hwdXIAF1tMeHNidGkuYXBpLkRlZmluaXRpb247iMlc57TjXg4CAAB4cAAAAAFzcgATeHNidGkuYXBpLkNsYXNzTGlrZYM0HKHfsJdsAgAETAAOZGVmaW5pdGlvblR5cGV0ABpMeHNidGkvYXBpL0RlZmluaXRpb25UeXBlO1sAEHNhdmVkQW5ub3RhdGlvbnN0ABNbTGphdmEvbGFuZy9TdHJpbmc7TAAIc2VsZlR5cGV0ABBMeHNidGkvYXBpL0xhenk7TAAJc3RydWN0dXJlcQB+ABV4cgAheHNidGkuYXBpLlBhcmFtZXRlcml6ZWREZWZpbml0aW9u+RFusdVQPOICAAFbAA50eXBlUGFyYW1ldGVyc3QAGltMeHNidGkvYXBpL1R5cGVQYXJhbWV0ZXI7eHIAFHhzYnRpLmFwaS5EZWZpbml0aW9uhyob6HFC40YCAARMAAZhY2Nlc3N0ABJMeHNidGkvYXBpL0FjY2VzcztbAAthbm5vdGF0aW9uc3QAF1tMeHNidGkvYXBpL0Fubm90YXRpb247TAAJbW9kaWZpZXJzdAAVTHhzYnRpL2FwaS9Nb2RpZmllcnM7TAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwc3IAEHhzYnRpLmFwaS5QdWJsaWO6WD2ubC1gQgIAAHhyABB4c2J0aS5hcGkuQWNjZXNz3WKa+B1jMUgCAAB4cHVyABdbTHhzYnRpLmFwaS5Bbm5vdGF0aW9uO+uX6xkQ9o1IAgAAeHAAAAAAc3IAE3hzYnRpLmFwaS5Nb2RpZmllcnPHERMhaZzcJAIAAUIABWZsYWdzeHAAdAANcGFyc2VyLlBhcnNlcnVyABpbTHhzYnRpLmFwaS5UeXBlUGFyYW1ldGVyO9ltJg8onfK2AgAAeHAAAAAAfnIAGHhzYnRpLmFwaS5EZWZpbml0aW9uVHlwZQAAAAAAAAAAEgAAeHIADmphdmEubGFuZy5FbnVtAAAAAAAAAAASAAB4cHQABk1vZHVsZXVyABNbTGphdmEubGFuZy5TdHJpbmc7rdJW5+kde0cCAAB4cAAAAAJ0ABBzY2FsYS5kZXByZWNhdGVkdAAac2NhbGEuYW5ub3RhdGlvbi5taWdyYXRpb25zcgATeHNidGkuU2FmZUxhenkkSW1wbDuRTxH0RUzJAgADWgAIYml0bWFwJDBMAAJfdHQAEkxqYXZhL2xhbmcvT2JqZWN0O0wABGV2YWx0ABFMc2NhbGEvRnVuY3Rpb24wO3hyABZ4c2J0aS5hcGkuQWJzdHJhY3RMYXp503e1AV+756ACAAB4cAFzcgATeHNidGkuYXBpLkVtcHR5VHlwZbz9nkZJO4kkAgAAeHIAFHhzYnRpLmFwaS5TaW1wbGVUeXBlcnhiiCEjv0ACAAB4cgAOeHNidGkuYXBpLlR5cGU/atkhFkmqygIAAHhwcHNxAH4AMAFzcgATeHNidGkuYXBpLlN0cnVjdHVyZamq+YCTb9gAAgADTAAIZGVjbGFyZWRxAH4AFUwACWluaGVyaXRlZHEAfgAVTAAHcGFyZW50c3EAfgAVeHEAfgA3c3EAfgAwAXVxAH4AEAAAAABwc3EAfgAwAXVxAH4AEAAAAABwc3EAfgAwAXVyABFbTHhzYnRpLmFwaS5UeXBlO3T/pVp7+elBAgAAeHAAAAAFc3IAFHhzYnRpLmFwaS5Qcm9qZWN0aW9u89KNVOlFpC0CAAJMAAJpZHEAfgAcTAAGcHJlZml4dAAWTHhzYnRpL2FwaS9TaW1wbGVUeXBlO3hxAH4ANnQADFNlcmlhbGl6YWJsZXNyABN4c2J0aS5hcGkuU2luZ2xldG9u/Kdf+M9W5EYCAAFMAARwYXRodAAQTHhzYnRpL2FwaS9QYXRoO3hxAH4ANnNyAA54c2J0aS5hcGkuUGF0aJs9XAjOpSeEAgABWwAKY29tcG9uZW50c3QAGltMeHNidGkvYXBpL1BhdGhDb21wb25lbnQ7eHB1cgAaW0x4c2J0aS5hcGkuUGF0aENvbXBvbmVudDtD2gl0LWcWdAIAAHhwAAAAA3NyAAx4c2J0aS5hcGkuSWSYMmyLN1PEQAIAAUwAAmlkcQB+ABx4cgAXeHNidGkuYXBpLlBhdGhDb21wb25lbnRfmiJbLoafvAIAAHhwdAAEamF2YXNxAH4AT3QAAmlvc3IADnhzYnRpLmFwaS5UaGlz2wntpsxaQFwCAAB4cQB+AFBzcQB+AEN0AAxSZWdleFBhcnNlcnNzcQB+AEdzcQB+AEp1cQB+AE0AAAAFc3EAfgBPdAAFc2NhbGFzcQB+AE90AAR1dGlsc3EAfgBPdAAHcGFyc2luZ3NxAH4AT3QACmNvbWJpbmF0b3JxAH4AVnNxAH4AQ3QAB1BhcnNlcnNxAH4AWXNxAH4AQ3QABk9iamVjdHNxAH4AR3NxAH4ASnVxAH4ATQAAAANzcQB+AE9xAH4AUnNxAH4AT3QABGxhbmdxAH4AVnNxAH4AQ3QAA0FueXNxAH4AR3NxAH4ASnVxAH4ATQAAAAJzcQB+AE9xAH4AXXEAfgBWcHB1cgAUW0x4c2J0aS5hcGkuUGFja2FnZTtbExk3cKcnoQIAAHhwAAAAAXNyABF4c2J0aS5hcGkuUGFja2FnZX5Zj/auzjlYAgABTAAEbmFtZXEAfgAceHB0AAZwYXJzZXJzcgAVeHNidGkuYXBpLkNvbXBpbGF0aW9u7frgw2rooEICAAJKAAlzdGFydFRpbWVbAAdvdXRwdXRzdAAaW0x4c2J0aS9hcGkvT3V0cHV0U2V0dGluZzt4cAAAAUzilm4wdXIAGltMeHNidGkuYXBpLk91dHB1dFNldHRpbmc7f2rC86eHpUICAAB4cAAAAAJzcgAXeHNidGkuYXBpLk91dHB1dFNldHRpbmd62ZpHdPsdewIAAkwAD291dHB1dERpcmVjdG9yeXEAfgAcTAAPc291cmNlRGlyZWN0b3J5cQB+ABx4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4AfnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmF1cgACW0Ks8xf4BghU4AIAAHhwAAAAFNHQaj/DFivWx/oemePZB3IcvHik
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> 
+rO0ABXNyABB4c2J0aS5hcGkuU291cmNlFlpwRASfbtoCAAZJAAdhcGlIYXNoWgAIaGFzTWFjcm9MABhfaW50ZXJuYWxPbmx5X25hbWVIYXNoZXN0ACRMeHNidGkvYXBpL19pbnRlcm5hbE9ubHlfTmFtZUhhc2hlcztMAANhcGl0ABVMeHNidGkvYXBpL1NvdXJjZUFQSTtMAAtjb21waWxhdGlvbnQAF0x4c2J0aS9hcGkvQ29tcGlsYXRpb247WwAEaGFzaHQAAltCeHA8N3EdAHNyACJ4c2J0aS5hcGkuX2ludGVybmFsT25seV9OYW1lSGFzaGVzVNq+mfrU7EwCAAJbAA9pbXBsaWNpdE1lbWJlcnN0ACNbTHhzYnRpL2FwaS9faW50ZXJuYWxPbmx5X05hbWVIYXNoO1sADnJlZ3VsYXJNZW1iZXJzcQB+AAd4cHVyACNbTHhzYnRpLmFwaS5faW50ZXJuYWxPbmx5X05hbWVIYXNoO0lagLbdlov0AgAAeHAAAAAAdXEAfgAJAAAAAHNyABN4c2J0aS5hcGkuU291cmNlQVBJuV6n+SkjOKQCAAJbAAtkZWZpbml0aW9uc3QAF1tMeHNidGkvYXBpL0RlZmluaXRpb247WwAIcGFja2FnZXN0ABRbTHhzYnRpL2FwaS9QYWNrYWdlO3hwdXIAF1tMeHNidGkuYXBpLkRlZmluaXRpb247iMlc57TjXg4CAAB4cAAAAAFzcgATeHNidGkuYXBpLkNsYXNzTGlrZYM0HKHfsJdsAgAETAAOZGVmaW5pdGlvblR5cGV0ABpMeHNidGkvYXBpL0RlZmluaXRpb25UeXBlO1sAEHNhdmVkQW5ub3RhdGlvbnN0ABNbTGphdmEvbGFuZy9TdHJpbmc7TAAIc2VsZlR5cGV0ABBMeHNidGkvYXBpL0xhenk7TAAJc3RydWN0dXJlcQB+ABV4cgAheHNidGkuYXBpLlBhcmFtZXRlcml6ZWREZWZpbml0aW9u+RFusdVQPOICAAFbAA50eXBlUGFyYW1ldGVyc3QAGltMeHNidGkvYXBpL1R5cGVQYXJhbWV0ZXI7eHIAFHhzYnRpLmFwaS5EZWZpbml0aW9uhyob6HFC40YCAARMAAZhY2Nlc3N0ABJMeHNidGkvYXBpL0FjY2VzcztbAAthbm5vdGF0aW9uc3QAF1tMeHNidGkvYXBpL0Fubm90YXRpb247TAAJbW9kaWZpZXJzdAAVTHhzYnRpL2FwaS9Nb2RpZmllcnM7TAAEbmFtZXQAEkxqYXZhL2xhbmcvU3RyaW5nO3hwc3IAEHhzYnRpLmFwaS5QdWJsaWO6WD2ubC1gQgIAAHhyABB4c2J0aS5hcGkuQWNjZXNz3WKa+B1jMUgCAAB4cHVyABdbTHhzYnRpLmFwaS5Bbm5vdGF0aW9uO+uX6xkQ9o1IAgAAeHAAAAAAc3IAE3hzYnRpLmFwaS5Nb2RpZmllcnPHERMhaZzcJAIAAUIABWZsYWdzeHAAdAAJdHJlZS5UcmVldXIAGltMeHNidGkuYXBpLlR5cGVQYXJhbWV0ZXI72W0mDyid8rYCAAB4cAAAAAB+cgAYeHNidGkuYXBpLkRlZmluaXRpb25UeXBlAAAAAAAAAAASAAB4cgAOamF2YS5sYW5nLkVudW0AAAAAAAAAABIAAHhwdAAGTW9kdWxldXIAE1tMamF2YS5sYW5nLlN0cmluZzut0lbn6R17RwIAAHhwAAAAAHNyABN4c2J0aS5TYWZlTGF6eSRJbXBsO5FPEfRFTMkCAANaAAhiaXRtYXAkMEwAAl90dAASTGphdmEvbGFuZy9PYmplY3Q7TAAEZXZhbHQAEUxzY2FsYS9GdW5jdGlvbjA7eHIAFnhzYnRpLmFwaS5BYnN0cmFjdExhennTd7UBX7vnoAIAAHhwAHBzcgAgeHNidGkuU2FmZUxhenkkJGFub25mdW4kc3RyaWN0JDEAAAAAAAAAAAIAAUwAB3ZhbHVlJDFxAH4AL3hwc3IAE3hzYnRpLmFwaS5FbXB0eVR5cGW8/Z5GSTuJJAIAAHhyABR4c2J0aS5hcGkuU2ltcGxlVHlwZXJ4YoghI79AAgAAeHIADnhzYnRpLmFwaS5UeXBlP2rZIRZJqsoCAAB4cHNxAH4ALgBwc3EAfgAzc3IAE3hzYnRpLmFwaS5TdHJ1Y3R1cmWpqvmAk2/YAAIAA0wACGRlY2xhcmVkcQB+ABVMAAlpbmhlcml0ZWRxAH4AFUwAB3BhcmVudHNxAH4AFXhxAH4AN3NxAH4ALgBwc3EAfgAzdXEAfgAQAAAAAHNxAH4ALgBwc3EAfgAzdXEAfgAQAAAAAHNxAH4ALgBwc3EAfgAzdXIAEVtMeHNidGkuYXBpLlR5cGU7dP+lWnv56UECAAB4cAAAAAJzcgAUeHNidGkuYXBpLlByb2plY3Rpb27z0o1U6UWkLQIAAkwAAmlkcQB+ABxMAAZwcmVmaXh0ABZMeHNidGkvYXBpL1NpbXBsZVR5cGU7eHEAfgA2dAAGT2JqZWN0c3IAE3hzYnRpLmFwaS5TaW5nbGV0b278p1/4z1bkRgIAAUwABHBhdGh0ABBMeHNidGkvYXBpL1BhdGg7eHEAfgA2c3IADnhzYnRpLmFwaS5QYXRomz1cCM6lJ4QCAAFbAApjb21wb25lbnRzdAAaW0x4c2J0aS9hcGkvUGF0aENvbXBvbmVudDt4cHVyABpbTHhzYnRpLmFwaS5QYXRoQ29tcG9uZW50O0PaCXQtZxZ0AgAAeHAAAAADc3IADHhzYnRpLmFwaS5JZJgybIs3U8RAAgABTAACaWRxAH4AHHhyABd4c2J0aS5hcGkuUGF0aENvbXBvbmVudF+aIlsuhp+8AgAAeHB0AARqYXZhc3EAfgBTdAAEbGFuZ3NyAA54c2J0aS5hcGkuVGhpc9sJ7abMWkBcAgAAeHEAfgBUc3EAfgBHdAADQW55c3EAfgBLc3EAfgBOdXEAfgBRAAAAAnNxAH4AU3QABXNjYWxhcQB+AFp1cgAUW0x4c2J0aS5hcGkuUGFja2FnZTtbExk3cKcnoQIAAHhwAAAAAXNyABF4c2J0aS5hcGkuUGFja2FnZX5Zj/auzjlYAgABTAAEbmFtZXEAfgAceHB0AAR0cmVlc3IAFXhzYnRpLmFwaS5Db21waWxhdGlvbu364MNq6KBCAgACSgAJc3RhcnRUaW1lWwAHb3V0cHV0c3QAGltMeHNidGkvYXBpL091dHB1dFNldHRpbmc7eHAAAAFM4k5WC3VyABpbTHhzYnRpLmFwaS5PdXRwdXRTZXR0aW5nO39qwvOnh6VCAgAAeHAAAAACc3IAF3hzYnRpLmFwaS5PdXRwdXRTZXR0aW5netmaR3T7HXsCAAJMAA9vdXRwdXREaXJlY3RvcnlxAH4AHEwAD3NvdXJjZURpcmVjdG9yeXEAfgAceHB0AEsvaG9tZS9jaGVybm9ieWwvc2NhbGEvd29ya3NwYWNlL2Nyb3dkc291cnNpbmcvYmQxNS1jcm93ZHNvdXJjZWQtcXVlcmllcy9iaW50AEsvaG9tZS9jaGVybm9ieWwvc2NhbGEvd29ya3NwYWNlL2Nyb3dkc291cnNpbmcvYmQxNS1jcm93ZHNvdXJjZWQtcXVlcmllcy9zcmNzcQB+AGx0AEsvaG9tZS9jaGVybm9ieWwvc2NhbGEvd29ya3NwYWNlL2Nyb3dkc291cnNpbmcvYmQxNS1jcm93ZHNvdXJjZWQtcXVlcmllcy9iaW50AFUvaG9tZS9jaGVybm9ieWwvc2NhbGEvd29ya3NwYWNlL2Nyb3dkc291cnNpbmcvYmQxNS1jcm93ZHNvdXJjZWQtcXVlcmllcy9zcmMvbWFpbi9qYXZhdXIAAltCrPMX+AYIVOACAAB4cAAAABQtxzpZxCcsm00+1qmcS64maoy+Yw==
+external apis:
+0 items
+source infos:
+3 items
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/main/java/crowdsourced/Main.java -> 
+AAAAAAAAAAA=
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/parser/Parser.scala -> 
+AAAAAAAAAAA=
+/home/chernobyl/scala/workspace/crowdsoursing/bd15-crowdsourced-queries/src/tree/Tree.scala -> 
+AAAAAAAAAAA=
+compilations:
+7 items
+0 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOJOVgt1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4ABXQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmE=
+1 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOJOk311cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4ABXQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmE=
+2 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOJrxwR1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4ABXQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmE=
+3 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOKOT5x1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4ABXQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmE=
+4 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOKOioN1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4ABXQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmE=
+5 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOKWCuV1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4ABXQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmE=
+6 -> rO0ABXNyABV4c2J0aS5hcGkuQ29tcGlsYXRpb27t+uDDauigQgIAAkoACXN0YXJ0VGltZVsAB291dHB1dHN0ABpbTHhzYnRpL2FwaS9PdXRwdXRTZXR0aW5nO3hwAAABTOKWbjB1cgAaW0x4c2J0aS5hcGkuT3V0cHV0U2V0dGluZzt/asLzp4elQgIAAHhwAAAAAnNyABd4c2J0aS5hcGkuT3V0cHV0U2V0dGluZ3rZmkd0+x17AgACTAAPb3V0cHV0RGlyZWN0b3J5dAASTGphdmEvbGFuZy9TdHJpbmc7TAAPc291cmNlRGlyZWN0b3J5cQB+AAZ4cHQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyY3NxAH4ABXQASy9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL2JpbnQAVS9ob21lL2NoZXJub2J5bC9zY2FsYS93b3Jrc3BhY2UvY3Jvd2Rzb3Vyc2luZy9iZDE1LWNyb3dkc291cmNlZC1xdWVyaWVzL3NyYy9tYWluL2phdmE=
