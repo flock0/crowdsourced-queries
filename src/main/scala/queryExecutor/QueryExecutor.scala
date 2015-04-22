@@ -64,6 +64,9 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     this.futureResults = startingPoint(queryTree)
   }
   
+  /**
+   * Blocking function until request has reached the end of execution
+   */
   def waitAndPrintResults(): Unit = {
     if (this.queryTree == null) {
       println("[Error] Query hasn't been executed yet. Call execute() first.")
@@ -78,6 +81,9 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     }
   }
 
+  /**
+   * Add results to the list of partial results as soon as one is received
+   */
   def queryResultToString(query: Q, res: List[Future[List[Assignment]]]): Unit = {
     res.map(x => {
     	x onSuccess{
@@ -288,20 +294,28 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val tup = s.split(",")
     (tup(0).tail, tup(1).take(tup(1).length-1))
   }
+        
+  /**
+   * Helper function when nodes have left and right parts
+   */
+  private def executeNode(node: Q): List[Future[List[Assignment]]] = {
+    node match {
+    case Select(nl, fields) => taskSelect(nl, fields)
+    case Join(left, right, on) => taskJoin(left, right, on)
+    case Where(selectTree, where) => taskWhere(selectTree, where)
+    case _ => ???
+    }
+  }
   
   /**
-   * Special way for printing GROUPBY results
+   * Converts Assignments received by workers to nice String results depending on node type
    */
-  def printGroupByRes(tuples: List[String], fAssignments: List[Future[List[Assignment]]]) = {
-     var results = List[(String,String)]() // TODO remove vars...
-     val assignments = fAssignments.flatMap(x => Await.result(x, Duration.Inf))
-    tuples.zip(assignments).map(x =>{
-       val answersMap = x._2.getAnswers().asScala.toMap
-        answersMap.foreach{case(key, value) => { 
-          results = results ::: List((x._1, value.toString))}
-        }})
-  
-    results
+  private def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
+    node match {
+    case Join(_, _, _) | Where(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
+    case Group(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap).map(s => stringToTuple(s._2.toString)).groupBy(_._2).map(x=> x.toString).toList
+    case _ => assignments.flatMap(_.getAnswers().asScala.toMap).flatMap(_._2.toString.stripMargin.split("[\r\n\r\n]").toList)
+    }
   }
   
   /**
@@ -319,8 +333,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     else NOT_STARTED
   }
   
-  
-  
   /**
    * Returns the list of all TaskStatus related to this query
    */
@@ -330,15 +342,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    * Returns the final results if the request is finished or the partial results if it is still running
    */
   def getResults(): List[String] = this.listResult.toList
-  
-  /**
-   * Print the status of all tasks related to this query
-   */
-  def printListTaskStatus() = {
-    println("Task status summary : ")
-    getListTaskStatus().foreach(println)
-    println(getJSON.toString) // TODO print JSONs for testing only
-  }
   
   /**
    * Returns the timestamp stating when the query has started or -1 if it has not
@@ -396,28 +399,13 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    * Creates a unique ID which is the full date followed by random numbers
    */
   def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
-      
-     /******************** EXTRACT FUNCTIONS THAT WE SHOULD DELETE *******************/
-  /***** We have to write a more general function to replace the copy/pastes ******/
-  /********************* from here until the end of the file **********************/
-
-    /**
-   * Helper function when nodes have left and right parts
+  
+  /**
+   * Print the status of all tasks related to this query
    */
-  private def executeNode(node: Q): List[Future[List[Assignment]]] = {
-    node match {
-    case Select(nl, fields) => taskSelect(nl, fields)
-    case Join(left, right, on) => taskJoin(left, right, on)
-    case Where(selectTree, where) => taskWhere(selectTree, where)
-    case _ => ???
-    }
-  }
-    
-  private def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
-    node match {
-    case Join(_, _, _) | Where(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
-    case Group(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap).map(s => stringToTuple(s._2.toString)).groupBy(_._2).map(x=> x.toString).toList
-    case _ => assignments.flatMap(_.getAnswers().asScala.toMap).flatMap(_._2.toString.stripMargin.split("[\r\n\r\n]").toList)
-    }
+  def printListTaskStatus() = {
+    println("Task status summary : ")
+    getListTaskStatus().foreach(println)
+    println(getJSON.toString) // TODO we print JSONs for testing only
   }
 }
