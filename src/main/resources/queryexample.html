@@ -34,32 +34,33 @@
       var i=0;
 
       $(document).ready(function() {
-         $("#question_form").on('submit', function(event){
-           alert("foo");
-            $.post( "/query/new", { question: $("#question_input").val()} );
-            $.getJSON('/query/all', function(jd) {
-                var $tbody = $("#usertable tbody");
-                 $tbody.html("");
-                  var tabledata = "";
-                      for(i = 0; i < jd.list_of_queries.length; i++ ){
-                            tabledata = "";
-                            tabledata += "<tr>";
-                            tabledata += "<td>" + jd.list_of_queries[i].query_id + "</td>";
-                            tabledata += "<td>" + jd.list_of_queries[i].query_status + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].query_results_number + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].detaied_query_results + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].start_time + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].end_time + "</td>";
-                            tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
-                            "</td>";
+        $("#question_form").on('submit', function(event){
+          alert("foo");
+          $.post( "/query/new", { question: $("#question_input").val()} );
+          $.getJSON('/query/all', function(jd) {
+            var $tbody = $("#usertable tbody");
+            $tbody.html("");
+            var tabledata = "";
+            for(i = 0; i < jd.list_of_queries.length; i++ ){
+              tabledata = "";
+              tabledata += "<tr>";
+              tabledata += "<td>" + jd.list_of_queries[i].query_id + "</td>";
+              tabledata += "<td>" + jd.list_of_queries[i].query_status + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].query_results_number + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].detaied_query_results + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].start_time + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].end_time + "</td>";
+              tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
+                "</td>";
 
-                            tabledata += "</tr>";
-                            $tbody.append(tabledata);
+              tabledata += "</tr>";
+              $tbody.append(tabledata);
 
-                                         }
-                                      });
-                                  });
-                           });
+            }
+          });
+          return false;
+        });
+      });
 
            function abort(value){
             // get the json object here and change the display of the table
