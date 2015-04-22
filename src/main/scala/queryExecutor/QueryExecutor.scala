@@ -42,6 +42,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   val HIT_LIFETIME = 60 * 60 // 1 Hour
   val MAJORITY_VOTE = 1 //TODO Implement majority votes for WHERE and JOIN tasks.
   val REWARD_SORT = 0.05 //Sort is longer so we should pay more
+  val ASSIGNMENT_LIFETIME = 600
   
   /**
    * Use parser to return the full tree of the parsed request
@@ -263,7 +264,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val keywords = List("URL retrieval", "Fast")
     val numAssignments = 1
     val question: Question = new StringQuestion(taskID, questionTitle, questionDescription, "", 0)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_SORT toFloat, 3600, keywords.asJava)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_SORT toFloat, HIT_LIFETIME, keywords.asJava)
     val task = new AMTTask(hit)
     task.exec()
     status.addTask(task)
@@ -285,7 +286,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
 
     val question: Question = new URLQuestion(taskID, questionTitle, questionDescription)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
     val task = new AMTTask(hit)
     task.exec()
     status.addTask(task)
@@ -318,7 +319,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("data extraction", "URL", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
 
       new AMTTask(hit)
     }
@@ -341,7 +342,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
 
       new AMTTask(hit)
     })
@@ -362,7 +363,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
 
       new AMTTask(hit)
     })
@@ -375,16 +376,17 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   def groupByTasksGenerator(tuples: List[String], by: String): List[AMTTask] = {
     val tasks = tuples.map(tuple=> {
       val questionTitle = "Simple question"
-      val questionDescription = "For the following element [ " + tuple + " ], what is its [ " + by + " ] ? Please put your answer after the coma and before the right parenthesis." 
-      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription, "("+tuple+",)", 1)
+      val questionDescription = "Question description" 
+      //TODO For all questions.
+      val questionText = "For the following element [ " + tuple + " ], what is its [ " + by + " ] ? Please put your answer after the coma and before the right parenthesis." 
+      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionText, "("+tuple+",)", 1)
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("simple question", "question", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, 3600, keywords.asJava)
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, ASSIGNMENT_LIFETIME, keywords.asJava)
       new AMTTask(hit)
     })
     tasks
-  }
   
   /******************************* HELPERS, GETTERS AND PRINTS **********************************/
   
