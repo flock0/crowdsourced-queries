@@ -77,16 +77,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       println("Total duration : " + getDurationString)
     }
   }
-  
+
   def queryResultToString(query: Q, res: List[Future[List[Assignment]]]): Unit = {
     res.map(x => {
     	x onSuccess{
     	  case assign => {
-    	    query match {
-	    	    case Join(_,_,_) | Where(_,_) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
-            case Group(_, _) => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap).map(s => stringToTuple(s._2.toString)).groupBy(_._2).map(x=> x.toString)
-	    	    case _ => listResult ++= assign.flatMap(_.getAnswers().asScala.toMap).flatMap(_._2.toString.stripMargin.split("[\r\n\r\n]").toList)
-    	    }
+          listResult ++= extractNodeAnswers(query, assign)
     	  }
     	}
       }
@@ -134,7 +130,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
         val f = p.future
         x onSuccess {
           case nl => {
-            val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(nl), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+            val tasks = TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
             tasks.foreach(_.exec)
             status.addTasks(tasks)
             p success tasks.flatMap(_.waitResults)
@@ -142,11 +138,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
         }
         f
     })
-//    val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
-//    tasks.foreach(_.exec)
-//    status.addTasks(tasks)
-//    
-//    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults}) // we wait for all results from all workers
 
     printListTaskStatus
 
@@ -171,7 +162,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val f = p.future 
       x onSuccess {
       case a => {
-        val tasks = TasksGenerator.whereTasksGenerator(extractSelectAnswers(a), where)
+        val tasks = TasksGenerator.whereTasksGenerator(extractNodeAnswers(select, a), where)
         tasks.foreach(_.exec)
         status.addTasks(tasks)
         p success tasks.flatMap(_.waitResults)
@@ -409,84 +400,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
      /******************** EXTRACT FUNCTIONS THAT WE SHOULD DELETE *******************/
   /***** We have to write a more general function to replace the copy/pastes ******/
   /********************* from here until the end of the file **********************/
-   
-      
-  /**
-   * Extract the URL from a Natural language task.
-   */
-  def extractNaturalLanguageAnswers(assignments: List[Assignment]): String = {
-    val firstNLAssignment:Assignment = assignments.head
-    val (uniqueID, answer) = firstNLAssignment.getAnswers().asScala.head // TODO, here we only retrieve first answer of first assignment
-    answer.toString
-  }
-  
-  /**
-   * Extract the list of tuples from a Select task.
-   */
-  def extractSelectAnswers(assignments: List[Assignment]): List[String] = {
-    var results = List[String]()
-    assignments.foreach(ass => { // TODO modify it in a flatMap
-        println("Assignment result :")
-        val answersMap = ass.getAnswers().asScala.toMap
-        
-        println(answersMap)
-        answersMap.foreach{case(key, value) => { // TODO modify if in a flatMap
-            results = results ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
-         }}
-       
-      })
-     results
-  }
-  def extractOrderByAnswers(assignments: List[Assignment]): List[String] = {
-    var results = List[String]()
-    assignments.foreach(ass => {
-        println("Assignment result :")
-        val answersMap = ass.getAnswers().asScala.toMap
-        
-        println(answersMap)
-        answersMap.foreach{case(key, value) => { 
-            results = results ::: value.toString.stripMargin.split("[\n\r]").toList //Take care of multilines answer
-         }}
-       
-      })
-     results
-  }
-  /**
-   * Extract the list of tuple satisfying the where clause.
-   */
-  def extractWhereAnswers(assignments: List[Assignment]): List[String] = {
-    var results = List[String]()
-    assignments.foreach{ass => {
-        val answersMap = ass.getAnswers().asScala.toMap
-        answersMap.foreach{case(key, value) => { 
-          val res = value.toString.split(",")//// TODO proper way
-          if (res(1) == "yes") {results = results ::: List(res(0))}
-        }}}}
-    results
-  }
-  
-  def extractJoinAnswers(assignments: List[Assignment]): List[String] = {
-    var results = List[String]()
-    assignments.foreach{ass => {
-        val answersMap = ass.getAnswers().asScala.toMap
-        answersMap.foreach{case(key, value) => { 
-          val res = value.toString.split(",")//// TODO proper way
-          if (res(1) == "yes") {results = results ::: List(res(0))}
-        }}}}
-    results
-  }
-  
-  def extractGroupByAnswers(tuples: List[String], assignments: List[Assignment]): List[(String,String)] = {
-    var results = List[(String,String)]()
-    tuples.zip(assignments).map(x =>{
-       val answersMap = x._2.getAnswers().asScala.toMap
-        answersMap.foreach{case(key, value) => {  // TODO proper way
-          results = results ::: List((x._1,value.toString))}
-        }})
-  
-    results
-  }
-  
+
     /**
    * Helper function when nodes have left and right parts
    */
@@ -501,10 +415,9 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
   private def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
     node match {
-    case Select(nl, fields) => extractSelectAnswers(assignments)
-    case Join(left, right, on) => extractJoinAnswers(assignments)
-    case Where(selectTree, where) => extractWhereAnswers(assignments)
-    case _ => ???
+    case Join(_, _, _) | Where(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
+    case Group(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap).map(s => stringToTuple(s._2.toString)).groupBy(_._2).map(x=> x.toString).toList
+    case _ => assignments.flatMap(_.getAnswers().asScala.toMap).flatMap(_._2.toString.stripMargin.split("[\r\n\r\n]").toList)
     }
   }
 }
