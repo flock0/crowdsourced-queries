@@ -32,17 +32,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private var futureResults: List[Future[List[Assignment]]] = Nil
   private var queryTree: Q = null
   
-  /**
-   * Constant definitions for HIT creations
-   */
   val DEFAULT_ELEMENTS_SELECT = 4
   val MAX_ELEMENTS_PER_WORKER = 2
-  val REWARD_PER_HIT = 0.01
-  //val HIT_LIFETIME = 60 * 60 * 24 * 4 // 4 Days
-  val HIT_LIFETIME = 60 * 60 // 1 Hour
-  val MAJORITY_VOTE = 1 //TODO Implement majority votes for WHERE and JOIN tasks.
-  val REWARD_SORT = 0.05 //Sort is longer so we should pay more
-  val ASSIGNMENT_LIFETIME = 600
   
   /**
    * Use parser to return the full tree of the parsed request
@@ -55,7 +46,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private def startingPoint(node: Q): List[Future[List[Assignment]]] = node match {
       // TODO we need to pass a limit to taskSelect. The dataset could be very small or huge...
       // TODO maybe get this from the request using the LIMIT keyword. Or ask a worker for number of elements in the web page
-      case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
+      case Select(nl, fields) => taskSelect(nl, fields)
       case Join(left, right, on) => taskJoin(left, right, on) //recursiveTraversal(left); recursiveTraversal(right);
       case Where(selectTree, where) => taskWhere(selectTree, where)
       case OrderBy(query, List(ascendingOrDescending)) => taskOrderBy(query,ascendingOrDescending) //TODO
@@ -116,13 +107,13 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
     printListTaskStatus
     
-    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)}
+    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields)}
     val fAssignments = assignments.map(x => {
       val p = promise[List[Assignment]]()
       val f = p.future 
       x onSuccess {
       case a => {
-        val tasks = whereTasksGenerator(extractSelectAnswers(a), where)
+        val tasks = TasksGenerator.whereTasksGenerator(extractSelectAnswers(a), where)
         tasks.foreach(_.exec)
         status.addTasks(tasks)
         p success tasks.flatMap(_.waitResults)
@@ -145,11 +136,9 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of SELECT Task
    */
-  def taskSelect(from: Q, fields: List[P], limit: Int): List[Future[List[Assignment]]] = {
+  def taskSelect(from: Q, fields: List[P]): List[Future[List[Assignment]]] = {
     println("Task select started")
-    for (i <- List.range(1, limit, MAX_ELEMENTS_PER_WORKER)) {
-      println(List.range(1, limit, MAX_ELEMENTS_PER_WORKER) + " " + i + " " + Math.min(i + MAX_ELEMENTS_PER_WORKER - 1, limit))
-    }
+
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "SELECT")
     listTaskStatus += status
@@ -157,8 +146,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
 
     val NLAssignments: List[Assignment] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
-    
-    val tasks = selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, limit)
+    val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
     tasks.foreach(_.exec)
     status.addTasks(tasks)
     
@@ -186,7 +174,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val f = p.future 
       x onSuccess { 
       case a => {
-        val tasks = groupByTasksGenerator(extractNodeAnswers(q, a), by)
+        val tasks = TasksGenerator.groupByTasksGenerator(extractNodeAnswers(q, a), by)
         tasks.foreach(_.exec)
         status.addTasks(tasks)
         p success tasks.flatMap(_.waitResults)
@@ -232,7 +220,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       f
       })*/ //Does not work yet !
 //      fAssignments
-    val tasks = joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+    val tasks = TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
     tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
 
     val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
@@ -247,10 +235,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    */
   def taskOrderBy(q: Q3, order: O): List[Future[List[Assignment]]] = {
     println("Task order by")
-    val by = order match {
-      case OrdAsc(string) => string
-      case OrdDesc(string) => string
-    }
+    
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "ORDER BY")
     listTaskStatus += status
@@ -259,168 +244,34 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val toOrder = executeNode(q)
     val finishedToOrder = toOrder.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToOrder)
-    val questionTitle = "Sort a list of " + tuples.size +" elements."
-    val questionDescription = "Question description" 
-    val questionText = "Please sort the following list : [ " + tuples.mkString(", ") + " ]  on [ " + by + " ] attribute by [ " + ascOrDesc(order) + " ] order, please put only one element per line."
-    val keywords = List("URL retrieval", "Fast")
-    val numAssignments = 1
-    val question: Question = new StringQuestion(taskID, questionTitle, questionText, "", 0)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_SORT toFloat, HIT_LIFETIME, keywords.asJava)
-    val task = new AMTTask(hit)
-    task.exec()
-    status.addTask(task)
-    val assignments = Future{task.waitResults()}::List()
+    val tasks = TasksGenerator.orderByTasksGenerator(tuples, order)
+    tasks.foreach(_.exec())
+    status.addTasks(tasks)
+    val assignments = Future{tasks.flatMap(_.waitResults())}::List()
     
 //    println("Final results " + extractOrderByAnswers(assignments))
     assignments
   }
   def taskNaturalLanguage(s: String, fields: List[P]): List[Assignment] = {
     println("Task natural language")
-
     val taskID = generateUniqueID()
-    val questionTitle = "Find URL containing required information"
-    val questionDescription = "Question description" 
-    val questionText = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
-    val keywords = List("URL retrieval", "Fast")
-    val numAssignments = 1
     val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
     printListTaskStatus
-
-    val question: Question = new URLQuestion(taskID, questionTitle, questionText)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
-    val task = new AMTTask(hit)
-    task.exec()
-    status.addTask(task)
-    val assignments = task.waitResults() // waiting for results
+ 
     
-    printListTaskStatus
+    val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
+    tasks.foreach(_.exec)
+    //status.addTask(task)
+    val assignments = tasks.flatMap(_.waitResults) 
+    //printListTaskStatus
 
     assignments
   }
   
-  /********************************** FUNCTIONS TO GENERATE AMTTASKS ********************************/
   
-  /**
-   * AMTTask generator for SELECT statement
-   */
-  def selectTasksGenerator(url: String, nl: String, fields: List[P], limit: Int): List[AMTTask] = {
-
-    // tuples of (start, end) for each worker
-    val tuples = for (i <- List.range(1, limit + 1, MAX_ELEMENTS_PER_WORKER)) yield (i, Math.min(i + MAX_ELEMENTS_PER_WORKER - 1, limit))
-
-    val tasks = tuples.map { tuple =>
-      val (start: Int, end: Int) = tuple
-      val fieldsString = fields.mkString(", ")
-      val questionTitle = "Data extraction from URL"
-      val questionDescription = "Question description" 
-      val questionText = s"""On this website, retrieve the following information ($fieldsString) about $nl
-                              Select only items in the range $start to $end (both included)
-                              URL : $url
-                              Please provide one element per line."""
-      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionText, "", 0)
-      val questionList = List(question)
-      val numWorkers = 1
-      val keywords = List("data extraction", "URL", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
-
-      new AMTTask(hit)
-    }
-
-    tasks
-  }
-
-  /**
-   * AMTTask generator for WHERE statement
-   */
-  def whereTasksGenerator(answers: List[String], where: Condition): List[AMTTask] = {
-    println(answers)
-    val tasks = answers.map(ans => {
-      val questionTitle = "Evaluate if a claim makes sense"
-      val questionDescription = "Question description" 
-      val questionText = "Is [" + ans + "] coherent/true for the following predicate : " + where + " ?"
-      val optionYes = new MultipleChoiceOption(ans + ",yes", "yes")
-      val optionNo = new MultipleChoiceOption(ans + ",no", "no")
-      val listOptions = List(optionYes, optionNo)
-      val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionText, listOptions.asJava)
-      val questionList = List(question)
-      val numWorkers = 1
-      val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
-
-      new AMTTask(hit)
-    })
-    tasks
-  }
-
-  /**
-   * AMTTask generator for JOIN statement
-   */
-  def joinTasksGenerator(R: List[String], S: List[String]): List[AMTTask] = {
-    val tasks = R.map(r => {
-      val questionTitle = "Is the following element part of a list"
-      val questionDescription = "Question description" 
-      val questionText = "Is [" + r + "] present in the following list : " + S.mkString(", ") + " ?"
-      val optionYes = new MultipleChoiceOption(r + ",yes", "yes")
-      val optionNo = new MultipleChoiceOption(r + ",no", "no")
-      val listOptions = List(optionYes, optionNo)
-      val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionText, listOptions.asJava)
-      val questionList = List(question)
-      val numWorkers = 1
-      val keywords = List("Claim evaluation", "Fast", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
-
-      new AMTTask(hit)
-    })
-    tasks
-  }
-  
-  /**
-   * AMTTask generator for GROUPBY statement
-   */
-  def groupByTasksGenerator(tuples: List[String], by: String): List[AMTTask] = {
-    val tasks = tuples.map(tuple=> {
-      val questionTitle = "Simple question"
-      val questionDescription = "Question description" 
-      //TODO For all questions.
-      val questionText = "For the following element [ " + tuple + " ], what is its [ " + by + " ] ? Please put your answer after the coma and before the right parenthesis." 
-      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionText, "("+tuple+",)", 1)
-      val questionList = List(question)
-      val numWorkers = 1
-      val keywords = List("simple question", "question", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, ASSIGNMENT_LIFETIME, keywords.asJava)
-      new AMTTask(hit)
-    })
-    tasks
-  }
   
   /******************************* HELPERS, GETTERS AND PRINTS **********************************/
-  
-  /**
-   * Helper function when nodes have left and right parts
-   */
-  private def executeNode(node: Q): List[Future[List[Assignment]]] = {
-    node match {
-    case Select(nl, fields) => taskSelect(nl, fields, DEFAULT_ELEMENTS_SELECT)
-    case Join(left, right, on) => taskJoin(left, right, on)
-    case Where(selectTree, where) => taskWhere(selectTree, where)
-    case _ => ???
-    }
-  }
-    
-  private def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
-    node match {
-    case Select(nl, fields) => extractSelectAnswers(assignments)
-    case Join(left, right, on) => extractJoinAnswers(assignments)
-    case Where(selectTree, where) => extractWhereAnswers(assignments)
-    case _ => ???
-    }
-  }
-  
-  /**
-   * Creates a unique ID which is the full date followed by random numbers
-   */
-  def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
   
   /**
    * Takes a string in format "(_, _)" and converts it to a tuple
@@ -460,13 +311,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     else NOT_STARTED
   }
   
-  /**
-   * Returns the string corresponding to ASC and DESC in order to formulate the question for the workers in an understandable manner
-   */
-  def ascOrDesc(order: O): String = order match {
-      case OrdAsc(_) => "ascending"
-      case OrdDesc(_) => "descending"
-  }
+  
   
   /**
    * Returns the list of all TaskStatus related to this query
@@ -538,10 +383,13 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       "list_of_tasks" -> JsArray(getListTaskStatus.map(_.getJSON).toSeq),
       "detailed_query_results" -> JsArray(getResults().map(JsString(_)).toSeq)
       ))
-  
       
+  /**
+   * Creates a unique ID which is the full date followed by random numbers
+   */
+  def generateUniqueID(): String = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime()).toString + "--" + new Random().nextInt(100000)
       
-  /******************** EXTRACT FUNCTIONS THAT WE SHOULD DELETE *******************/
+     /******************** EXTRACT FUNCTIONS THAT WE SHOULD DELETE *******************/
   /***** We have to write a more general function to replace the copy/pastes ******/
   /********************* from here until the end of the file **********************/
    
@@ -620,5 +468,26 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
         }})
   
     results
+  }
+  
+    /**
+   * Helper function when nodes have left and right parts
+   */
+  private def executeNode(node: Q): List[Future[List[Assignment]]] = {
+    node match {
+    case Select(nl, fields) => taskSelect(nl, fields)
+    case Join(left, right, on) => taskJoin(left, right, on)
+    case Where(selectTree, where) => taskWhere(selectTree, where)
+    case _ => ???
+    }
+  }
+    
+  private def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
+    node match {
+    case Select(nl, fields) => extractSelectAnswers(assignments)
+    case Join(left, right, on) => extractJoinAnswers(assignments)
+    case Where(selectTree, where) => extractWhereAnswers(assignments)
+    case _ => ???
+    }
   }
 }
