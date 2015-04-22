@@ -96,41 +96,23 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /********************************* TASKS CREATIONS ********************************/
   
   /**
-   * Creation of WHERE task
+   * Creation of FROM task
    */
-  def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
-    println("Task where started")
+  def taskNaturalLanguage(s: String, fields: List[P]): List[Future[List[Assignment]]] = {
+    println("Task natural language")
     val taskID = generateUniqueID()
-    
-    val status = new TaskStatus(taskID, "WHERE")
+    val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
-    
     printListTaskStatus
+ 
     
-    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields)}
-    val fAssignments = assignments.map(x => {
-      val p = promise[List[Assignment]]()
-      val f = p.future 
-      x onSuccess {
-      case a => {
-        val tasks = TasksGenerator.whereTasksGenerator(extractSelectAnswers(a), where)
-        tasks.foreach(_.exec)
-        status.addTasks(tasks)
-        p success tasks.flatMap(_.waitResults)
-      }
-      }
-      f
-      })/*
-    val tasks = whereTasksGenerator(extractSelectAnswers(assignments), where)
-    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
-    val assignements = tasks.flatMap(_.waitResults)
-   
-    println("Final results " + extractWhereAnswers(assignements))
-    assignements*/
-    fAssignments
-    //printListTaskStatus
-    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
-    //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
+    val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
+    tasks.foreach(_.exec)
+    status.addTasks(tasks)
+    val assignments = List(Future{tasks.flatMap(_.waitResults)}) 
+    printListTaskStatus
+
+    assignments
   }
   
   /**
@@ -172,36 +154,43 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   }
   
   /**
-   * Creation of GROUPBY task
+   * Creation of WHERE task
    */
-  def taskGroupBy(q: Q, by: String): List[Future[List[Assignment]]] = {
-    println("Task GROUPBY")
+  def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
+    println("Task where started")
     val taskID = generateUniqueID()
-    val status = new TaskStatus(taskID, "GROUPBY")
+    
+    val status = new TaskStatus(taskID, "WHERE")
     listTaskStatus += status
     
     printListTaskStatus
     
-    val toGroupBy = executeNode(q)
-    val fAssignments = toGroupBy.map(x => {
+    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields)}
+    val fAssignments = assignments.map(x => {
       val p = promise[List[Assignment]]()
       val f = p.future 
-      x onSuccess { 
+      x onSuccess {
       case a => {
-        val tasks = TasksGenerator.groupByTasksGenerator(extractNodeAnswers(q, a), by)
+        val tasks = TasksGenerator.whereTasksGenerator(extractSelectAnswers(a), where)
         tasks.foreach(_.exec)
         status.addTasks(tasks)
         p success tasks.flatMap(_.waitResults)
       }
       }
       f
-      })
-    val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
-    val tuples = extractNodeAnswers(q, finishedToGroupBy)
-    //Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
+      })/*
+    val tasks = whereTasksGenerator(extractSelectAnswers(assignments), where)
+    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
+    val assignements = tasks.flatMap(_.waitResults)
+   
+    println("Final results " + extractWhereAnswers(assignements))
+    assignements*/
     fAssignments
+    //printListTaskStatus
+    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
+    //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
   }
-
+  
   /**
    * Creation of JOIN task
    */
@@ -235,6 +224,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       })*/ //Does not work yet !
 //      fAssignments
     val tasks = TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+    status.addTasks(tasks)
     tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
 
     val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
@@ -242,6 +232,37 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
 //    println("Final results " + extractJoinAnswers(assignments))
 
     assignments
+  }
+  
+  /**
+   * Creation of GROUPBY task
+   */
+  def taskGroupBy(q: Q, by: String): List[Future[List[Assignment]]] = {
+    println("Task GROUPBY")
+    val taskID = generateUniqueID()
+    val status = new TaskStatus(taskID, "GROUPBY")
+    listTaskStatus += status
+    
+    printListTaskStatus
+    
+    val toGroupBy = executeNode(q)
+    val fAssignments = toGroupBy.map(x => {
+      val p = promise[List[Assignment]]()
+      val f = p.future 
+      x onSuccess { 
+      case a => {
+        val tasks = TasksGenerator.groupByTasksGenerator(extractNodeAnswers(q, a), by)
+        tasks.foreach(_.exec)
+        status.addTasks(tasks)
+        p success tasks.flatMap(_.waitResults)
+      }
+      }
+      f
+      })
+    val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
+    val tuples = extractNodeAnswers(q, finishedToGroupBy)
+    //Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
+    fAssignments
   }
   
   /**
@@ -266,24 +287,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
 //    println("Final results " + extractOrderByAnswers(assignments))
     assignments
   }
-  def taskNaturalLanguage(s: String, fields: List[P]): List[Future[List[Assignment]]] = {
-    println("Task natural language")
-    val taskID = generateUniqueID()
-    val status = new TaskStatus(taskID, "FROM")
-    listTaskStatus += status
-    printListTaskStatus
- 
-    
-    val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
-    tasks.foreach(_.exec)
-    //status.addTask(task)
-    val assignments = List(Future{tasks.flatMap(_.waitResults)}) 
-    //printListTaskStatus
-
-    assignments
-  }
-  
-  
   
   /******************************* HELPERS, GETTERS AND PRINTS **********************************/
   
