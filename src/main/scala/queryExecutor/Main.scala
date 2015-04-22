@@ -14,10 +14,11 @@ object Main extends App {
   //val query = "(SELECT (full name) FROM [Presidents of USA]) WHERE [political party is democrat]"
   
   val queryID = 0
-  val queryExec = new QueryExecutor(queryID)
-  val parsedQuery = queryExec.parse(query)
+  val queryExec = new QueryExecutor(queryID, query)
+  //val parsedQuery = queryExec.parse(query)
   //val parsedQuery = GroupBy(Select(NaturalLanguage("Presidents of USA"),List(ElementStr("fullname"))),"political party")
-  val executedQuery = queryExec.execute(parsedQuery)
+  val executedQuery = queryExec.execute()
+  queryExec.waitAndPrintResults()
   /*  
   val questionTitle = "Data extraction from URL"
       val questionDescription = "Description"
