@@ -96,6 +96,51 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /********************************* TASKS CREATIONS ********************************/
   
   /**
+   * Creation of FROM task
+   */
+  def taskNaturalLanguage(s: String, fields: List[P]): List[Assignment] = {
+    println("Task natural language")
+    val taskID = generateUniqueID()
+    val status = new TaskStatus(taskID, "FROM")
+    listTaskStatus += status
+    printListTaskStatus
+ 
+    
+    val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
+    tasks.foreach(_.exec)
+    status.addTasks(tasks)
+    val assignments = tasks.flatMap(_.waitResults) 
+    
+    printListTaskStatus
+
+    assignments
+  }
+  
+  /**
+   * Creation of SELECT Task
+   */
+  def taskSelect(from: Q, fields: List[P]): List[Future[List[Assignment]]] = {
+    println("Task select started")
+
+    val taskID = generateUniqueID()
+    val status = new TaskStatus(taskID, "SELECT")
+    listTaskStatus += status
+    
+    printListTaskStatus
+
+    val NLAssignments: List[Assignment] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
+    val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+    tasks.foreach(_.exec)
+    status.addTasks(tasks)
+    
+    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults}) // we wait for all results from all workers
+
+    printListTaskStatus
+
+    assignments
+  }
+  
+  /**
    * Creation of WHERE task
    */
   def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
@@ -134,25 +179,44 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   }
   
   /**
-   * Creation of SELECT Task
+   * Creation of JOIN task
    */
-  def taskSelect(from: Q, fields: List[P]): List[Future[List[Assignment]]] = {
-    println("Task select started")
-
+  def taskJoin(left: Q, right: Q, on: String): List[Future[List[Assignment]]] = {
+ 
+    println("Task join started")
     val taskID = generateUniqueID()
-    val status = new TaskStatus(taskID, "SELECT")
+    val status = new TaskStatus(taskID, "JOIN")
     listTaskStatus += status
     
     printListTaskStatus
-
-    val NLAssignments: List[Assignment] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
-    val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
-    tasks.foreach(_.exec)
-    status.addTasks(tasks)
     
-    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults}) // we wait for all results from all workers
+    val a = Future { executeNode(left) }
+    val b = Future { executeNode(right) }
+   
+    val resultsLeft = Await.result(a, Duration.Inf) //Future[List[Assignment]]
+    val resultsRight = Await.result(b, Duration.Inf)
+    val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf)) //List[Assignment]
+    val resRight = resultsRight.flatMap(Await.result(_, Duration.Inf))
+    /*val fAssignments = resultsRight.map(x => {
+      val p = promise[List[Assignment]]()
+      val f = p.future //Future[List[Assignment]]
+      x onSuccess { //onSuccess of Future[List[Assignment]]
+      case r => {
+        val tasks = joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, r))
+        tasks.foreach(_.exec)
+        p success tasks.flatMap(_.waitResults)
+      }
+      }
+      f
+      })*/ //Does not work yet !
+//      fAssignments
+    val tasks = TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+    status.addTasks(tasks)
+    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
 
-    printListTaskStatus
+    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
+    
+//    println("Final results " + extractJoinAnswers(assignments))
 
     assignments
   }
@@ -187,48 +251,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     //Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
     fAssignments
   }
-
-  /**
-   * Creation of JOIN task
-   */
-  def taskJoin(left: Q, right: Q, on: String): List[Future[List[Assignment]]] = {
- 
-    println("Task join started")
-    val taskID = generateUniqueID()
-    val status = new TaskStatus(taskID, "JOIN")
-    listTaskStatus += status
-    
-    printListTaskStatus
-    
-    val a = Future { executeNode(left) }
-    val b = Future { executeNode(right) }
-   
-    val resultsLeft = Await.result(a, Duration.Inf) //Future[List[Assignment]]
-    val resultsRight = Await.result(b, Duration.Inf)
-    val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf)) //List[Assignment]
-    val resRight = resultsRight.flatMap(Await.result(_, Duration.Inf))
-    /*val fAssignments = resultsRight.map(x => {
-      val p = promise[List[Assignment]]()
-      val f = p.future //Future[List[Assignment]]
-      x onSuccess { //onSuccess of Future[List[Assignment]]
-      case r => {
-        val tasks = joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, r))
-        tasks.foreach(_.exec)
-        p success tasks.flatMap(_.waitResults)
-      }
-      }
-      f
-      })*/ //Does not work yet !
-//      fAssignments
-    val tasks = TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
-    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
-
-    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
-    
-//    println("Final results " + extractJoinAnswers(assignments))
-
-    assignments
-  }
   
   /**
    * Creation of ORDERBY task
@@ -251,24 +273,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
 //    println("Final results " + extractOrderByAnswers(assignments))
     assignments
-  }
-  def taskNaturalLanguage(s: String, fields: List[P]): List[Assignment] = {
-    println("Task natural language")
-    val taskID = generateUniqueID()
-    val status = new TaskStatus(taskID, "FROM")
-    listTaskStatus += status
-    printListTaskStatus
- 
-    
-    val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
-    tasks.foreach(_.exec)
-    //status.addTask(task)
-    val assignments = tasks.flatMap(_.waitResults) 
-    //printListTaskStatus
-
-    assignments
-  }
-  
+  }  
   
   
   /******************************* HELPERS, GETTERS AND PRINTS **********************************/
