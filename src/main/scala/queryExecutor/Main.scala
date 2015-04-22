@@ -8,84 +8,25 @@ import parser.Parser._
 import tree.Tree._
 
 object Main extends App {
-  //val query = "(SELECT (full_name) FROM [Presidents of USA]) ORDER BY name ASC"
-  val query = "(SELECT (prenom) FROM [president of united state]) GROUP BY political party"
-  //val query = "(SELECT (movies) FROM [Movies with Angelina Jolie]) JOIN (SELECT (movies) FROM [Movies with Brad Pitt]) ON movies"
-  //val query = "(SELECT (full name) FROM [Presidents of USA]) WHERE [political party is democrat]"
   
-  val queryID = 0
-  val queryExec = new QueryExecutor(queryID, query)
-  //val parsedQuery = queryExec.parse(query)
-  //val parsedQuery = GroupBy(Select(NaturalLanguage("Presidents of USA"),List(ElementStr("fullname"))),"political party")
+  // chose the query among the list below
+  val choice = 2
+  
+  val query = choice match {
+    case 1 => "(SELECT (full_name) FROM [Presidents of USA]) ORDER BY name ASC"
+    case 2 => "(SELECT (prenom) FROM [president of united state]) GROUP BY political party"
+    case 3 => "(SELECT (movies) FROM [Movies with Angelina Jolie]) JOIN (SELECT (movies) FROM [Movies with Brad Pitt]) ON movies"
+    case 4 => "(SELECT (full name) FROM [Presidents of USA]) WHERE [political party is democrat]"
+    case _ => ""
+  }
+  
+  // creates the query
+  val queryExec = new QueryExecutor(0, query)
+  
+  // parses and executes the query by crowdsourcing
   val executedQuery = queryExec.execute()
+  
+  // blocks until all results arrive and print results
   queryExec.waitAndPrintResults()
-  /*  
-  val questionTitle = "Data extraction from URL"
-      val questionDescription = "Description"
-      val question: Question = new StringQuestion("dummy_id", questionTitle, questionDescription)
-      val questionList = List(question)
-      val numWorkers = 1
-      val rewardUSD = 0.02 toFloat
-      val expireTime = 60 * 60 // 60 minutes
-      val keywords = List("data extraction", "URL", "easy")
-      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
-  val task =new AMTTask(hit)
-  val assignments  = task.execBlocking()
-  assignments.foreach(ass => {
-        println("Assignment result :")
-        val answersMap = ass.getAnswers().asScala.toMap
-        answersMap.foreach{case(key, value)=>{
-          val s = value.toString.stripMargin.split("[\n\r]").toList
-          println(s.size)
-          s.foreach(chaar => println(chaar+" "+chaar.size))
-          
-        }    }  
-  })*/
-  
-    /*
-    val questionDescription = "Is [ abc ] coherent/true for the following predicate : [ def ] ?"
-            val optionYes = new MultipleChoiceOption("yes","yes")
-            val optionNo = new MultipleChoiceOption("no","no")
-            val listOptions = List(optionYes,optionNo)
-            val question: Question = new MultipleChoiceQuestion("Dummy_id", "Claim evaluation", questionDescription, listOptions.asJava) 
-            val questionList = List(question)
-            val numWorkers = 1
-            val rewardUSD = 0.02 toFloat
-            val expireTime = 60 * 60 // 60 minutes
-            val keywords = List("Claim evaluation", "Fast", "easy")
-            val hit = new HIT("Claim evaluation", questionDescription, questionList.asJava, expireTime, numWorkers, rewardUSD, 3600, keywords.asJava) 
-            val amtTask = new AMTTask(hit)
-            val task = amtTask.exec
-            println("----")
-            println(task.getHIT().getHITId())
-            println("----")*/
-  /*
-  val s = "Presidents of the USA"
-  val fields = List("full name")
-  // manual creation of a HIT
-  val timeID = new SimpleDateFormat("y-M-d-H-m-s").format(Calendar.getInstance().getTime())
-  val questionTitle = "Find URL containing required information"
-  val questionDescription = "What is the most relevant website to find ["+s+"] ?\nNote that we are interested by : "+fields.mkString(", ")
-  val keywords = List("URL retrieval","Fast")
-  val expireTime = 30 * 60 // 30 minutes
-  val numAssignments = 1
-  val rewardUSD = 0.01 toFloat
-  
-  val question: Question = new StringQuestion(timeID, questionTitle, questionDescription)
-  val hit = new HIT(questionTitle, questionDescription, List(question).asJava, expireTime, numAssignments, rewardUSD, 3600, keywords.asJava) 
-  
-  println("     Asking worker : "+questionDescription)
-  
-  val assignments:List[Assignment] = new AMTTask(hit).execBlocking()
-  
-  //AMTCommunicator.checkBalance(74.74 toFloat)
-  
-  assignments.foreach(ass => {
-      println("Assignment result :")
-      val answersMap: Map[String, Answer] = ass.getAnswers().asScala.toMap
-      answersMap.foreach { case (key, value) => println(key+" => "+value) }
-    })
-    
- */
   
 }
