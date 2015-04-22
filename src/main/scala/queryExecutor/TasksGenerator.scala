@@ -12,10 +12,10 @@ import java.text.SimpleDateFormat
 import scala.concurrent.duration.Duration
 
 object TasksGenerator {
- /**
+  
+  /**
    * Constant definitions for HIT creations
    */
- 
   val REWARD_PER_HIT = 0.01
   //val HIT_LIFETIME = 60 * 60 * 24 * 4 // 4 Days
   val HIT_LIFETIME = 60 * 60 // 1 Hour
@@ -24,6 +24,23 @@ object TasksGenerator {
   val ASSIGNMENT_LIFETIME = 600
   
 /********************************** FUNCTIONS TO GENERATE AMTTASKS ********************************/
+   
+  /**
+   * AMTTask generator for FROM statement
+   */
+  def naturalLanguageTasksGenerator(s: String, fields: List[P]): List[AMTTask] =  {
+    
+    val taskID = generateUniqueID()
+    val questionTitle = "Find URL containing required information"
+    val questionDescription = "Question description" 
+    val questionText = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested in : " + fields.mkString(", ")
+    val keywords = List("URL retrieval", "Fast")
+    val numAssignments = 1
+    val question: Question = new URLQuestion(taskID, questionTitle, questionText)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
+    
+    List(new AMTTask(hit))
+  }
   
   /**
    * AMTTask generator for SELECT statement
@@ -124,20 +141,9 @@ object TasksGenerator {
     tasks
   }
   
-  def naturalLanguageTasksGenerator(s: String, fields: List[P]): List[AMTTask] =  {
-    
-  	val taskID = generateUniqueID()
-    val questionTitle = "Find URL containing required information"
-    val questionDescription = "Question description" 
-    val questionText = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
-    val keywords = List("URL retrieval", "Fast")
-    val numAssignments = 1
-    val question: Question = new URLQuestion(taskID, questionTitle, questionText)
-    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
-    
-    List(new AMTTask(hit))
-  }
-  
+  /**
+   * AMTTask generator for ORDERBY statement
+   */
   def orderByTasksGenerator(tuples: List[String], order: O): List[AMTTask] = {
     
     val taskID = generateUniqueID()
@@ -151,6 +157,7 @@ object TasksGenerator {
     
     List(new AMTTask(hit))
   }
+  
   /**
    * Creates a unique ID which is the full date followed by random numbers
    */
@@ -164,6 +171,9 @@ object TasksGenerator {
       case OrdDesc(_) => "descending"
   }
   
+  /**
+   * Returns the string on which we will sort
+   */
   def returnString(order: O): string = order match {
       case OrdAsc(string) => string
       case OrdDesc(string) => string
