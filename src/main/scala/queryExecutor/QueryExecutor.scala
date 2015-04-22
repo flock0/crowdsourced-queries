@@ -145,16 +145,30 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
     printListTaskStatus
 
-    val NLAssignments: List[Assignment] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
-    val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
-    tasks.foreach(_.exec)
-    status.addTasks(tasks)
+    val NLAssignments: List[Future[List[Assignment]]] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
     
-    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults}) // we wait for all results from all workers
+    val fAssignments = NLAssignments.map(x => {
+        val p = promise[List[Assignment]]()
+        val f = p.future
+        x onSuccess {
+          case nl => {
+            val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(nl), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+            tasks.foreach(_.exec)
+            status.addTasks(tasks)
+            p success tasks.flatMap(_.waitResults)
+          }
+        }
+        f
+    })
+//    val tasks = TasksGenerator.selectTasksGenerator(extractNaturalLanguageAnswers(NLAssignments), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+//    tasks.foreach(_.exec)
+//    status.addTasks(tasks)
+//    
+//    val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults}) // we wait for all results from all workers
 
     printListTaskStatus
 
-    assignments
+    fAssignments
   }
   
   /**
@@ -252,7 +266,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
 //    println("Final results " + extractOrderByAnswers(assignments))
     assignments
   }
-  def taskNaturalLanguage(s: String, fields: List[P]): List[Assignment] = {
+  def taskNaturalLanguage(s: String, fields: List[P]): List[Future[List[Assignment]]] = {
     println("Task natural language")
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "FROM")
@@ -263,7 +277,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
     tasks.foreach(_.exec)
     //status.addTask(task)
-    val assignments = tasks.flatMap(_.waitResults) 
+    val assignments = List(Future{tasks.flatMap(_.waitResults)}) 
     //printListTaskStatus
 
     assignments
