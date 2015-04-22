@@ -82,7 +82,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     res.map(x => {
     	x onSuccess{
     	  case assign => {
-          listResult ++= extractNodeAnswers(query, assign)
+          this.synchronized { listResult ++= extractNodeAnswers(query, assign) }
     	  }
     	}
       }
