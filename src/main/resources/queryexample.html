@@ -62,62 +62,57 @@
         });
       });
 
-           function abort(value){
-            // get the json object here and change the display of the table
-             $.getJSON('/query/all', function(jd) {
-              var $tthead=$("#usertable thead");
-              var $tbody = $("#usertable tbody");
-              $tbody.html(" ");
-              var tabledata = " ";
-                      for(i = 0; i < jd.list_of_queries.length; i++){
-                          if(i!=value.name-1){
-                            tabledata = " ";
-                            tabledata += "<tr>";
-                            tabledata += "<td>" + jd.list_of_queries[i].query_id + "</td>";
-                            tabledata += "<td>" + jd.list_of_queries[i].query_status + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].query_results_number + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].detailed_query_results + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].start_time + "</td>";
-                            tabledata += "<td>" +jd.list_of_queries[i].end_time+ "</td>";
-                            tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
-                            "</td>";
-                            tabledata += "</tr>";
-                             $tbody.append(tabledata);
-                          }
+      function abort(value){
+        // get the json object here and change the display of the table
+        $.getJSON('/query/all', function(jd) {
+          var $tthead=$("#usertable thead");
+          var $tbody = $("#usertable tbody");
+          $tbody.html(" ");
+          var tabledata = " ";
+          for(i = 0; i < jd.list_of_queries.length; i++){
+            if(i!=value.name-1){
+              tabledata = " ";
+              tabledata += "<tr>";
+              tabledata += "<td>" + jd.list_of_queries[i].query_id + "</td>";
+              tabledata += "<td>" + jd.list_of_queries[i].query_status + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].query_results_number + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].detailed_query_results + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].start_time + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].end_time+ "</td>";
+              tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
+                "</td>";
+              tabledata += "</tr>";
+              $tbody.append(tabledata);
+            }
 
-                        }
-                     });
-            // need to change and return the json object if abort button is clicked.
+          }
+        });
+        // need to change and return the json object if abort button is clicked.
+      }
 
+      function display(value) {
+        $.getJSON('result.json', function(jd) {
+          var $tdetail = $("#detail tbody");
+          $tdetail.html("");
+          var tabledetail = "";
+          for(i = 0; i < jd.list_of_queries[value.name-1].list_of_tasks.length; i++ ){
+            tabledetail = "";
+            tabledetail += "<tr>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_id + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_status + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_operator + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].number_of_hits + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].finished_hits + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_result_number + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].start_time + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].end_time + "</td>";
 
-                   }
-
-
-
-
-           function display(value) {
-                  $.getJSON('result.json', function(jd) {
-                  var $tdetail = $("#detail tbody");
-                  $tdetail.html("");
-                  var tabledetail = "";
-                   for(i = 0; i < jd.list_of_queries[value.name-1].list_of_tasks.length; i++ ){
-                      tabledetail = "";
-                      tabledetail += "<tr>";
-                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_id + "</td>";
-                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_status + "</td>";
-                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_operator + "</td>";
-                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].number_of_hits + "</td>";
-                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].finished_hits + "</td>";
-                      tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_result_number + "</td>";
-                       tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].start_time + "</td>";
-                        tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].end_time + "</td>";
-
-                      tabledetail +="</tr>";
-                      $tdetail.append(tabledetail);
-                    }
-                  });
-             }
-        </script>
+            tabledetail +="</tr>";
+            $tdetail.append(tabledetail);
+          }
+        });
+      }
+      </script>
       </head>
 
      <section>
