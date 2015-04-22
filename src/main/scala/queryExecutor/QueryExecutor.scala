@@ -260,10 +260,11 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val finishedToOrder = toOrder.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToOrder)
     val questionTitle = "Sort a list of " + tuples.size +" elements."
-    val questionDescription = "Please sort the following list : [ " + tuples.mkString(", ") + " ]  on [ " + by + " ] attribute by [ " + ascOrDesc(order) + " ] order, please put only one element per line."
+    val questionDescription = "Question description" 
+    val questionText = "Please sort the following list : [ " + tuples.mkString(", ") + " ]  on [ " + by + " ] attribute by [ " + ascOrDesc(order) + " ] order, please put only one element per line."
     val keywords = List("URL retrieval", "Fast")
     val numAssignments = 1
-    val question: Question = new StringQuestion(taskID, questionTitle, questionDescription, "", 0)
+    val question: Question = new StringQuestion(taskID, questionTitle, questionText, "", 0)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_SORT toFloat, HIT_LIFETIME, keywords.asJava)
     val task = new AMTTask(hit)
     task.exec()
@@ -278,14 +279,15 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
 
     val taskID = generateUniqueID()
     val questionTitle = "Find URL containing required information"
-    val questionDescription = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
+    val questionDescription = "Question description" 
+    val questionText = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested by : " + fields.mkString(", ")
     val keywords = List("URL retrieval", "Fast")
     val numAssignments = 1
     val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
     printListTaskStatus
 
-    val question: Question = new URLQuestion(taskID, questionTitle, questionDescription)
+    val question: Question = new URLQuestion(taskID, questionTitle, questionText)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
     val task = new AMTTask(hit)
     task.exec()
@@ -311,11 +313,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val (start: Int, end: Int) = tuple
       val fieldsString = fields.mkString(", ")
       val questionTitle = "Data extraction from URL"
-      val questionDescription = s"""On this website, retrieve the following information ($fieldsString) about $nl
+      val questionDescription = "Question description" 
+      val questionText = s"""On this website, retrieve the following information ($fieldsString) about $nl
                               Select only items in the range $start to $end (both included)
                               URL : $url
                               Please provide one element per line."""
-      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionDescription, "", 0)
+      val question: Question = new StringQuestion(generateUniqueID(), questionTitle, questionText, "", 0)
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("data extraction", "URL", "easy")
@@ -334,11 +337,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     println(answers)
     val tasks = answers.map(ans => {
       val questionTitle = "Evaluate if a claim makes sense"
-      val questionDescription = "Is [" + ans + "] coherent/true for the following predicate : " + where + " ?"
+      val questionDescription = "Question description" 
+      val questionText = "Is [" + ans + "] coherent/true for the following predicate : " + where + " ?"
       val optionYes = new MultipleChoiceOption(ans + ",yes", "yes")
       val optionNo = new MultipleChoiceOption(ans + ",no", "no")
       val listOptions = List(optionYes, optionNo)
-      val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava)
+      val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionText, listOptions.asJava)
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("Claim evaluation", "Fast", "easy")
@@ -355,11 +359,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   def joinTasksGenerator(R: List[String], S: List[String]): List[AMTTask] = {
     val tasks = R.map(r => {
       val questionTitle = "Is the following element part of a list"
-      val questionDescription = "Is [" + r + "] present in the following list : " + S.mkString(", ") + " ?"
+      val questionDescription = "Question description" 
+      val questionText = "Is [" + r + "] present in the following list : " + S.mkString(", ") + " ?"
       val optionYes = new MultipleChoiceOption(r + ",yes", "yes")
       val optionNo = new MultipleChoiceOption(r + ",no", "no")
       val listOptions = List(optionYes, optionNo)
-      val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionDescription, listOptions.asJava)
+      val question: Question = new MultipleChoiceQuestion(generateUniqueID(), questionTitle, questionText, listOptions.asJava)
       val questionList = List(question)
       val numWorkers = 1
       val keywords = List("Claim evaluation", "Fast", "easy")
@@ -387,6 +392,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       new AMTTask(hit)
     })
     tasks
+  }
   
   /******************************* HELPERS, GETTERS AND PRINTS **********************************/
   
