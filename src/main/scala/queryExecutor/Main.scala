@@ -10,7 +10,7 @@ import tree.Tree._
 object Main extends App {
   
   // chose the query among the list below
-  val choice = 2
+  val choice = 4
   
   val query = choice match {
     case 1 => "(SELECT (full_name) FROM [Presidents of USA]) ORDER BY name ASC"

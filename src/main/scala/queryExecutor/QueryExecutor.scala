@@ -28,7 +28,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private val NOT_STARTED = "Not started"
   private val PROCESSING = "Processing"
   private val FINISHED = "Finished"
-  
+  private val PARALLELIZED = true
+    
   private var futureResults: List[Future[List[Assignment]]] = Nil
   private var queryTree: Q = null
   
@@ -113,7 +114,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     status.addTasks(tasks)
     val assignments = List(Future{tasks.flatMap(_.waitResults)}) 
     printListTaskStatus
-
+	if(!PARALLELIZED)
+	      assignments.map(x => Await.ready(x, Duration.Inf))
     assignments
   }
   
@@ -130,7 +132,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
 
     val NLAssignments: List[Future[List[Assignment]]] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
-    
+    if(!PARALLELIZED)
+      NLAssignments.map(x => Await.ready(x, Duration.Inf))
     val fAssignments = NLAssignments.map(x => {
         val p = promise[List[Assignment]]()
         val f = p.future
@@ -146,7 +149,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     })
 
     printListTaskStatus
-
+	if(!PARALLELIZED)
+	      fAssignments.map(x => Await.ready(x, Duration.Inf))
     fAssignments
   }
   
@@ -163,6 +167,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
     
     val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields)}
+    if(!PARALLELIZED)
+      assignments.map(x => Await.ready(x, Duration.Inf))
     val fAssignments = assignments.map(x => {
       val p = promise[List[Assignment]]()
       val f = p.future 
@@ -201,8 +207,11 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
     
     val a = Future { executeNode(left) }
+    if(!PARALLELIZED)
+      Await.ready(a, Duration.Inf)
     val b = Future { executeNode(right) }
-   
+    if(!PARALLELIZED)
+      Await.ready(b, Duration.Inf)
     val resultsLeft = Await.result(a, Duration.Inf) //Future[List[Assignment]]
     val resultsRight = Await.result(b, Duration.Inf)
     val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf)) //List[Assignment]
@@ -227,7 +236,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
     
 //    println("Final results " + extractJoinAnswers(assignments))
-
+	if(!PARALLELIZED)
+		assignments.map(x => Await.ready(x, Duration.Inf))
     assignments
   }
   
@@ -243,6 +253,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
     
     val toGroupBy = executeNode(q)
+    if(!PARALLELIZED)
+      toGroupBy.map(x => Await.ready(x, Duration.Inf))
     val fAssignments = toGroupBy.map(x => {
       val p = promise[List[Assignment]]()
       val f = p.future 
@@ -258,7 +270,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       })
     val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToGroupBy)
-    //Future{println(printGroupByRes(tuples, fAssignments).groupBy(x=>x._2))}
     fAssignments
   }
   
