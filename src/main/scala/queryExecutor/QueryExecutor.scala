@@ -173,24 +173,15 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val p = promise[List[Assignment]]()
       val f = p.future 
       x onSuccess {
-      case a => {
-        val tasks = TasksGenerator.whereTasksGenerator(extractNodeAnswers(select, a), where)
-        tasks.foreach(_.exec)
-        status.addTasks(tasks)
-        p success tasks.flatMap(_.waitResults)
+        case a => {
+          val tasks = TasksGenerator.whereTasksGenerator(extractNodeAnswers(select, a), where)
+          tasks.foreach(_.exec)
+          status.addTasks(tasks)
+          p success tasks.flatMap(_.waitResults)
+        }
       }
-      }
-      f
-      })/*
-    val tasks = whereTasksGenerator(extractSelectAnswers(assignments), where)
-    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
-    val assignements = tasks.flatMap(_.waitResults)
-   
-    println("Final results " + extractWhereAnswers(assignements))
-    assignements*/
+      f})
     fAssignments
-    //printListTaskStatus
-    //TODO We need to pass the status object to the AMT task in order to obtain the number of finished hits at any point.
     //TODO We need to retrieve the number of tuples not eliminated by WHERE clause.
   }
   
@@ -212,31 +203,17 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val b = Future { executeNode(right) }
     if(!PARALLELIZED)
       Await.ready(b, Duration.Inf)
-    val resultsLeft = Await.result(a, Duration.Inf) //Future[List[Assignment]]
+    val resultsLeft = Await.result(a, Duration.Inf) 
     val resultsRight = Await.result(b, Duration.Inf)
-    val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf)) //List[Assignment]
+    val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf))
     val resRight = resultsRight.flatMap(Await.result(_, Duration.Inf))
-    /*val fAssignments = resultsRight.map(x => {
-      val p = promise[List[Assignment]]()
-      val f = p.future //Future[List[Assignment]]
-      x onSuccess { //onSuccess of Future[List[Assignment]]
-      case r => {
-        val tasks = joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, r))
-        tasks.foreach(_.exec)
-        p success tasks.flatMap(_.waitResults)
-      }
-      }
-      f
-      })*/ //Does not work yet !
-//      fAssignments
     val tasks = TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
     status.addTasks(tasks)
-    tasks.foreach(_.exec) // submit all tasks (workers can then work in parallel)
+    tasks.foreach(_.exec)
 
     val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
     
-//    println("Final results " + extractJoinAnswers(assignments))
-	if(!PARALLELIZED)
+  if(!PARALLELIZED)
 		assignments.map(x => Await.ready(x, Duration.Inf))
     assignments
   }
@@ -259,15 +236,14 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       val p = promise[List[Assignment]]()
       val f = p.future 
       x onSuccess { 
-      case a => {
-        val tasks = TasksGenerator.groupByTasksGenerator(extractNodeAnswers(q, a), by)
-        tasks.foreach(_.exec)
-        status.addTasks(tasks)
-        p success tasks.flatMap(_.waitResults)
+        case a => {
+          val tasks = TasksGenerator.groupByTasksGenerator(extractNodeAnswers(q, a), by)
+          tasks.foreach(_.exec)
+          status.addTasks(tasks)
+          p success tasks.flatMap(_.waitResults)
+        }
       }
-      }
-      f
-      })
+      f})
     val finishedToGroupBy = toGroupBy.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToGroupBy)
     fAssignments
@@ -292,7 +268,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     status.addTasks(tasks)
     val assignments = Future{tasks.flatMap(_.waitResults())}::List()
     
-//    println("Final results " + extractOrderByAnswers(assignments))
     assignments
   }
   
