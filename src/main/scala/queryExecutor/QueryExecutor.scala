@@ -343,7 +343,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    */
   def getEndTime(): Long = {
     val haveAllFinished: Boolean = getListTaskStatus.foldLeft(true)((b, ts) => if (ts.getEndTime <= 0) false else b)
-    if (haveAllFinished) getListTaskStatus.map(_.getEndTime).max
+    if (haveAllFinished && getListTaskStatus.size > 0) getListTaskStatus.map(_.getEndTime).max
     else -1
   }
   
