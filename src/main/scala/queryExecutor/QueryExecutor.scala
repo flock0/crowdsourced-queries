@@ -132,22 +132,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
 
     val NLAssignments: List[Future[List[Assignment]]] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
-    if(!PARALLELIZED)
-      NLAssignments.map(x => Await.ready(x, Duration.Inf))
-    val fAssignments = NLAssignments.map(x => {
-        val p = promise[List[Assignment]]()
-        val f = p.future
-        x onSuccess {
-          case nl => {
-            val tasks = TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
-            tasks.foreach(_.exec)
-            status.addTasks(tasks)
-            p success tasks.flatMap(_.waitResults)
-          }
-        }
-        f
-    })
 
+    val nl = Await.result(NLAssignments.head, Duration.Inf)
+    val tasks = TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+    tasks.foreach(_.exec)
+    status.addTasks(tasks)
+    val fAssignments = tasks.map(x => Future{x.waitResults()})
     printListTaskStatus
 	if(!PARALLELIZED)
 	      fAssignments.map(x => Await.ready(x, Duration.Inf))
