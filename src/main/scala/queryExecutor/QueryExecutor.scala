@@ -200,7 +200,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val resRight = resultsRight.flatMap(Await.result(_, Duration.Inf))
     val tasks = JOIN_PAIRWISE match {
       case false => TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
-      case true => TasksGenerator.joinTasksGeneratorPairwise(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight), on)
+      case true => TasksGenerator.pairwiseJoinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight), on)
     }
     status.addTasks(tasks)
     tasks.foreach(_.exec)

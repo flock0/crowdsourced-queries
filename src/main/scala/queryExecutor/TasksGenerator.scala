@@ -123,7 +123,7 @@ object TasksGenerator {
   /**
    * AMTTask generator for JOIN statement with pairwise comparaison
    */
-  def joinTasksGeneratorPairwise(R: List[String], S: List[String], predicate: String): List[AMTTask] = {
+  def pairwiseJoinTasksGenerator(R: List[String], S: List[String], predicate: String): List[AMTTask] = {
     val pairwiseTuples = for (r <- R; s <- S) yield (r, s)
     val tasks = pairwiseTuples.map(pair => {
       val taskID = generateUniqueID()
