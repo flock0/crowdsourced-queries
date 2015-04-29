@@ -149,7 +149,7 @@ public class AMTCommunicator {
 		String serial = convertXMLToString(hit.asXMLDocument());
 		//Need securisation
 		serial = serial.substring(serial.indexOf("\n") + 1);
-		System.out.println(serial);
+		//System.out.println(serial);
 		/*No need to XML escape the string when using REST,
 		see [http://docs.aws.amazon.com/AWSMechTurk/latest/AWSMturkAPI/ApiReference_XMLParameterValuesArticle.html]*/
 		try {
@@ -172,13 +172,13 @@ public class AMTCommunicator {
 			params.put("Keywords", keywords);
 
 			String response = sendGet(params);
-			System.out.println(response);
+			//System.out.println(response);
 
 			int start = response.indexOf("<HITId>");
 			int stop = response.indexOf("</HITId>");
 			if (start != -1 && stop != -1) {
 				String hitId = response.substring(start + "<HITId>".length(), stop);
-				System.out.println("HIT ID: " + hitId);
+				//System.out.println("HIT ID: " + hitId);
 				hit.setHITId(hitId);
 			} else {
 				//Unsuccessful

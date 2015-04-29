@@ -20,10 +20,9 @@ class QueryPool() extends QueryInterface {
     println("Query received : "+query)
 
     val queryID = this.executors.length
-    val queryExec = new QueryExecutor(queryID)
+    val queryExec = new QueryExecutor(queryID, query)
     executors += queryExec
-    val parsedQuery = queryExec.parse(query)
-    val executedQuery = queryExec.execute(parsedQuery)
+    val executedQuery = queryExec.execute()
 
     queryID.toString // returning the id as a string
   }
