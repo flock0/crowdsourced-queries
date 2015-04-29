@@ -9,7 +9,7 @@ import scala.util.parsing.combinator.RegexParsers
  * Parser parses the input queries and returns a QueryTree
  * @authors Vincent Zellweger, Xinyi Guo, Kristof Szabo
  */
-object Parser extends RegexParsers with java.io.Serializable{
+object QueryParser extends RegexParsers with java.io.Serializable{
   
   def parseRootNode: Parser[RootNode] = (
     "(" ~ parseRootNode ~ ") JOIN (" ~ parseRootNode ~ ") ON " ~ parseE ^^ {case _ ~ left ~ _ ~ right ~ _ ~ on => Join(left, right, on)}

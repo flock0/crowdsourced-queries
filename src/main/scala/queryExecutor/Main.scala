@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Arrays
 import scala.collection.JavaConverters._
-import parser.Parser._
+import parser.QueryParser._
 import tree.QueryTree._
 
 object Main extends App {

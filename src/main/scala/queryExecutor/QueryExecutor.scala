@@ -1,6 +1,6 @@
 package queryExecutor
 
-import parser.Parser
+import parser.QueryParser
 import tree.QueryTree._
 import crowdsourced.mturk._
 import scala.collection.mutable.ListBuffer
@@ -40,7 +40,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Use parser to return the full tree of the parsed request
    */
-  private def parse(query: String): RootNode = Parser.parseQuery(query).get
+  private def parse(query: String): RootNode = QueryParser.parseQuery(query).get
   
   /**
    * Construct the hierarchy of all requests and the chaining of tasks based on the parsed tree
