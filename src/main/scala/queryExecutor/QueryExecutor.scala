@@ -29,6 +29,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private val PROCESSING = "Processing"
   private val FINISHED = "Finished"
   private val PARALLELIZED = true
+  private val JOIN_PAIRWISE = false
     
   private var futureResults: List[Future[List[Assignment]]] = Nil
   private var queryTree: Q = null
@@ -197,7 +198,10 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val resultsRight = Await.result(b, Duration.Inf)
     val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf))
     val resRight = resultsRight.flatMap(Await.result(_, Duration.Inf))
-    val tasks = TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+    val tasks = JOIN_PAIRWISE match {
+      case false => TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+      case true => TasksGenerator.joinTasksGeneratorPairwise(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight), on)
+    }
     status.addTasks(tasks)
     tasks.foreach(_.exec)
 

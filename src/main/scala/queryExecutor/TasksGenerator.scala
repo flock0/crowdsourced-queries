@@ -121,6 +121,30 @@ object TasksGenerator {
   }
   
   /**
+   * AMTTask generator for JOIN statement with pairwise comparaison
+   */
+  def joinTasksGeneratorPairwise(R: List[String], S: List[String], predicate: String): List[AMTTask] = {
+    val pairwiseTuples = for (r <- R; s <- S) yield (r, s)
+    val tasks = pairwiseTuples.map(pair => {
+      val taskID = generateUniqueID()
+      val questionTitle = "Is the following clain true ?"
+      val questionDescription = "Question description" 
+      val questionText = "Are [" + pair._1 + "] and ["+ pair._2 +"] satisfying the following predicate : [" + predicate +"] ?"
+      val optionYes = new MultipleChoiceOption(pair + ",yes", "yes")
+      val optionNo = new MultipleChoiceOption(pair + ",no", "no")
+      val listOptions = List(optionYes, optionNo)
+      val question: Question = new MultipleChoiceQuestion(taskID, questionTitle, questionText, listOptions.asJava)
+      val questionList = List(question)
+      val numWorkers = 1
+      val keywords = List("Claim evaluation", "Fast", "easy")
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
+      new AMTTask(hit)
+    })
+    
+    tasks
+  }
+  
+  /**
    * AMTTask generator for GROUPBY statement
    */
   def groupByTasksGenerator(tuples: List[String], by: String): List[AMTTask] = {
