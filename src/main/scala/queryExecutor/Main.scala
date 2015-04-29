@@ -5,7 +5,7 @@ import java.util.Calendar
 import java.util.Arrays
 import scala.collection.JavaConverters._
 import parser.Parser._
-import tree.Tree._
+import tree.QueryTree._
 
 object Main extends App {
   

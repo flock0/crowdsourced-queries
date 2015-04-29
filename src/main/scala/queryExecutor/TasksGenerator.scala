@@ -7,7 +7,7 @@ import scala.collection.JavaConverters._
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import crowdsourced.mturk._
-import tree.Tree._
+import tree.QueryTree._
 import java.text.SimpleDateFormat
 import scala.concurrent.duration.Duration
 
@@ -28,7 +28,7 @@ object TasksGenerator {
   /**
    * AMTTask generator for FROM statement
    */
-  def naturalLanguageTasksGenerator(s: String, fields: List[P]): List[AMTTask] =  {
+  def naturalLanguageTasksGenerator(s: String, fields: List[Operation]): List[AMTTask] =  {
     
     val taskID = generateUniqueID()
     val questionTitle = "Find URL containing required information"
@@ -45,7 +45,7 @@ object TasksGenerator {
   /**
    * AMTTask generator for SELECT statement
    */
-  def selectTasksGenerator(url: String, nl: String, fields: List[P], elementPerWorker: Int, limit: Int): List[AMTTask] = {
+  def selectTasksGenerator(url: String, nl: String, fields: List[Operation], elementPerWorker: Int, limit: Int): List[AMTTask] = {
 
     // tuples of (start, end) for each worker
     val tuples = for (i <- List.range(1, limit + 1, elementPerWorker)) yield (i, Math.min(i + elementPerWorker - 1, limit))
@@ -168,7 +168,7 @@ object TasksGenerator {
   /**
    * AMTTask generator for ORDERBY statement
    */
-  def orderByTasksGenerator(tuples: List[String], order: O): List[AMTTask] = {
+  def orderByTasksGenerator(tuples: List[String], order: Ordering): List[AMTTask] = {
     
     val taskID = generateUniqueID()
     val questionTitle = "Sort a list of " + tuples.size +" elements."
@@ -190,7 +190,7 @@ object TasksGenerator {
   /**
    * Returns the string corresponding to ASC and DESC in order to formulate the question for the workers in an understandable manner
    */
-  def ascOrDesc(order: O): String = order match {
+  def ascOrDesc(order: Ordering): String = order match {
       case OrdAsc(_) => "ascending"
       case OrdDesc(_) => "descending"
   }
@@ -198,7 +198,7 @@ object TasksGenerator {
   /**
    * Returns the string on which we will sort
    */
-  def returnString(order: O): String = order match {
+  def returnString(order: Ordering): String = order match {
       case OrdAsc(string) => string
       case OrdDesc(string) => string
   }

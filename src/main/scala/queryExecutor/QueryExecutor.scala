@@ -1,7 +1,7 @@
 package queryExecutor
 
 import parser.Parser
-import tree.Tree._
+import tree.QueryTree._
 import crowdsourced.mturk._
 import scala.collection.mutable.ListBuffer
 import java.text.SimpleDateFormat
@@ -32,7 +32,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private val JOIN_PAIRWISE = false
     
   private var futureResults: List[Future[List[Assignment]]] = Nil
-  private var queryTree: Q = null
+  private var queryTree: RootNode = null
   
   val DEFAULT_ELEMENTS_SELECT = 4
   val MAX_ELEMENTS_PER_WORKER = 2
@@ -40,12 +40,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Use parser to return the full tree of the parsed request
    */
-  private def parse(query: String): Q = Parser.parseQuery(query).get
+  private def parse(query: String): RootNode = Parser.parseQuery(query).get
   
   /**
    * Construct the hierarchy of all requests and the chaining of tasks based on the parsed tree
    */
-  private def startingPoint(node: Q): List[Future[List[Assignment]]] = node match {
+  private def startingPoint(node: RootNode): List[Future[List[Assignment]]] = node match {
       // TODO we need to pass a limit to taskSelect. The dataset could be very small or huge...
       // TODO maybe get this from the request using the LIMIT keyword. Or ask a worker for number of elements in the web page
       case Select(nl, fields) => taskSelect(nl, fields)
@@ -86,7 +86,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Add results to the list of partial results as soon as one is received
    */
-  def queryResultToString(query: Q, res: List[Future[List[Assignment]]]): Unit = {
+  def queryResultToString(query: RootNode, res: List[Future[List[Assignment]]]): Unit = {
     res.map(x => {
     	x onSuccess{
     	  case assign => {
@@ -102,7 +102,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of FROM task
    */
-  def taskNaturalLanguage(s: String, fields: List[P]): List[Future[List[Assignment]]] = {
+  def taskNaturalLanguage(s: String, fields: List[Operation]): List[Future[List[Assignment]]] = {
     println("Task natural language")
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "FROM")
@@ -123,7 +123,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of SELECT Task
    */
-  def taskSelect(from: Q, fields: List[P]): List[Future[List[Assignment]]] = {
+  def taskSelect(from: RootNode, fields: List[Operation]): List[Future[List[Assignment]]] = {
     println("Task select started")
 
     val taskID = generateUniqueID()
@@ -179,7 +179,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of JOIN task
    */
-  def taskJoin(left: Q, right: Q, on: String): List[Future[List[Assignment]]] = {
+  def taskJoin(left: RootNode, right: RootNode, on: String): List[Future[List[Assignment]]] = {
  
     println("Task join started")
     val taskID = generateUniqueID()
@@ -215,7 +215,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of GROUPBY task
    */
-  def taskGroupBy(q: Q, by: String): List[Future[List[Assignment]]] = {
+  def taskGroupBy(q: RootNode, by: String): List[Future[List[Assignment]]] = {
     println("Task GROUPBY")
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "GROUPBY")
@@ -246,7 +246,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of ORDERBY task
    */
-  def taskOrderBy(q: Q3, order: O): List[Future[List[Assignment]]] = {
+  def taskOrderBy(q: Prio3Node, order: Ordering): List[Future[List[Assignment]]] = {
     println("Task order by")
     
     val taskID = generateUniqueID()
@@ -278,7 +278,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Helper function when nodes have left and right parts
    */
-  private def executeNode(node: Q): List[Future[List[Assignment]]] = {
+  private def executeNode(node: RootNode): List[Future[List[Assignment]]] = {
     node match {
     case Select(nl, fields) => taskSelect(nl, fields)
     case Join(left, right, on) => taskJoin(left, right, on)
@@ -290,7 +290,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Converts Assignments received by workers to nice String results depending on node type
    */
-  private def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
+  private def extractNodeAnswers(node: RootNode, assignments: List[Assignment]): List[String] = {
     node match {
     case Join(_, _, _) | Where(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
     case Group(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap).map(s => stringToTuple(s._2.toString)).groupBy(_._2).map(x=> x.toString).toList

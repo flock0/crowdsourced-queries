@@ -1,6 +1,6 @@
 package queryExecutor
 
-import tree.Tree._
+import tree.QueryTree._
 import crowdsourced.mturk.AMTCommunicator
 import crowdsourced.mturk.HIT
 import crowdsourced.mturk.PendingJob
