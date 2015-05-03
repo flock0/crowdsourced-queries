@@ -31,7 +31,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   
   private val PARALLELIZED = true
   private val JOIN_PAIRWISE = false
-  private val RETRIEVE_PRIMARY_KEY_FIRST = true
+  private val RETRIEVE_PRIMARY_KEY_FIRST = false
     
   private var futureResults: List[Future[List[Assignment]]] = Nil
   private var queryTree: RootNode = null
