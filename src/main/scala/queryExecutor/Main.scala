@@ -14,9 +14,9 @@ object Main extends App {
   
   val query = choice match {
     case 1 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) ORDER BY name ASC"
-    case 2 => "(SELECT (prenom) FROM [president of united state]) GROUP BY political party"
+    case 2 => "(SELECT (first_name) FROM [president of United States]) GROUP BY political party"
     case 3 => "(SELECT (movies) FROM [Movies with Angelina Jolie]) JOIN (SELECT (movies) FROM [Movies with Brad Pitt]) ON movies"
-    case 4 => "(SELECT (full_name, birth_date, birth_location, number_childs) FROM [Presidents of USA]) WHERE [political party is democrat]"
+    case 4 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) WHERE [political party is democrat]"
     case _ => ""
   }
   
