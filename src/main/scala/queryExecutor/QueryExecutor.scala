@@ -376,6 +376,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    */
   def getJSON(): JsValue = JsObject(Seq(
       "query_id" -> JsNumber(this.queryID),
+      "query_string" -> JsString(this.queryString),
       "query_status" -> JsString(getStatus()),
       "query_results_number" -> JsNumber(getResults().length),
       "start_time" -> JsNumber(getStartTime()),
