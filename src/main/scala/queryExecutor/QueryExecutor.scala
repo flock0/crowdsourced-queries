@@ -28,14 +28,16 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private val NOT_STARTED = "Not started"
   private val PROCESSING = "Processing"
   private val FINISHED = "Finished"
+  
   private val PARALLELIZED = true
   private val JOIN_PAIRWISE = false
+  private val RETRIEVE_PRIMARY_KEY_FIRST = true
     
   private var futureResults: List[Future[List[Assignment]]] = Nil
   private var queryTree: RootNode = null
   
-  val DEFAULT_ELEMENTS_SELECT = 4
-  val MAX_ELEMENTS_PER_WORKER = 2
+  val DEFAULT_ELEMENTS_SELECT = 9
+  val MAX_ELEMENTS_PER_WORKER = 4
   
   /**
    * Use parser to return the full tree of the parsed request
@@ -109,8 +111,10 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     listTaskStatus += status
     printListTaskStatus
  
-    
-    val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
+     val tasks = RETRIEVE_PRIMARY_KEY_FIRST match {
+      case false => TasksGenerator.naturalLanguageTasksGenerator(s, fields)
+      case true => TasksGenerator.naturalLanguagePrimaryKeyTasksGenerator(s, fields)
+    }
     tasks.foreach(_.exec)
     status.addTasks(tasks)
     val assignments = List(Future{tasks.flatMap(_.waitResults)}) 
@@ -135,7 +139,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val NLAssignments: List[Future[List[Assignment]]] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
 
     val nl = Await.result(NLAssignments.head, Duration.Inf)
-    val tasks = TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+    
+    println(extractNodeAnswers(from, nl).mkString(", "))
+    val tasks = RETRIEVE_PRIMARY_KEY_FIRST match {
+      case false => TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+      case true => TasksGenerator.selectPrimaryKeyTasksGenerator(extractNodeAnswers(from, nl), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+    }
     tasks.foreach(_.exec)
     status.addTasks(tasks)
     val fAssignments = tasks.map(x => Future{x.waitResults()})

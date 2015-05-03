@@ -43,6 +43,23 @@ object TasksGenerator {
   }
   
   /**
+   * AMTTask generator for FROM statement where we retrieve directly the primary key for a more structured approach.
+   */
+  def naturalLanguagePrimaryKeyTasksGenerator(s: String, fields: List[Operation]): List[AMTTask] =  {
+     
+    val taskID = generateUniqueID()
+    val questionTitle = "Creation of a list"
+    val questionDescription = "Question description" 
+    val questionText = "For each element of the following set  [ " + s + " ], please retrieve its [ " + fields.head + " ]. Please provide only one " + fields.head + " per line."
+    val keywords = List("List", "Simple")
+    val numAssignments = 1
+    val question: Question = new StringQuestion(taskID, questionTitle, questionText, "", 0)
+    val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
+    
+    List(new AMTTask(hit))
+  }
+  
+  /**
    * AMTTask generator for SELECT statement
    */
   def selectTasksGenerator(url: String, nl: String, fields: List[Operation], elementPerWorker: Int, limit: Int): List[AMTTask] = {
@@ -68,6 +85,33 @@ object TasksGenerator {
       new AMTTask(hit)
     }
 
+    tasks
+  }
+  
+  /**
+   * AMTTask generator for SELECT statement where we ask the user to inform "non-primary" keys.
+   */
+  def selectPrimaryKeyTasksGenerator(primaryKeys: List[String], nl: String, fields: List[Operation], elementPerWorker: Int, limit: Int): List[AMTTask] = {
+    val string = fields.tail.mkString("_TO_GIVE, ")
+    val tuples = for (i <- List.range(1, limit + 1, elementPerWorker)) yield (i, Math.min(i + elementPerWorker - 1, limit))
+
+    val tasks = tuples.map { tuple =>
+      val (start: Int, end: Int) = tuple
+      val fieldsString = fields.mkString(", ")
+      val taskID = generateUniqueID()
+      val questionTitle = "Information finding"
+      val questionDescription = "Question description" 
+      val questionText = s"""For the following elements (there is exactly one element per line), please retrieve necessary information.
+                              For instance the following element : (Barack Obama, birth_date__TO_GIVE, birth_location_TO_GIVE, current_age_TO_GIVE, wife_name_TO_GIVE)
+                              Should be changed in (Barack Obama, August 4 1961, Honolulu Hawaii, 53 years, Michelle Obama)."""
+      val question: Question = new StringQuestion(taskID, questionTitle, questionText, "("+primaryKeys.slice(start-1,end).mkString(", "+string+") \n(")+", "+string+")", 0)
+      val questionList = List(question)
+      val numWorkers = 1
+      val keywords = List("information finding", "fast", "easy")
+      val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
+      new AMTTask(hit)
+    }
+    
     tasks
   }
 
