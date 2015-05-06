@@ -1,6 +1,7 @@
+/.cache
 /.checkstyle
 /.classpath
 /.project
+/.settings
 /target/
-/creds
 /credentials.txt
