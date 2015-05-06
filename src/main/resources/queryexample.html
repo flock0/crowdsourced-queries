@@ -34,43 +34,96 @@
       var i=0;
 
       $(document).ready(function() {
-        $("#question_form").on('submit', function(event){
-          alert("foo");
-          $.post( "/query/new", { question: $("#question_input").val()} );
-          $.getJSON('/query/all', function(jd) {
+         $.getJSON('/query/all', function(jd) {
             var $tbody = $("#usertable tbody");
             $tbody.html("");
             var tabledata = "";
             for(i = 0; i < jd.list_of_queries.length; i++ ){
+               var timestamp = jd.list_of_queries[i].start_time;
+               var theDate = new Date(timestamp);
+               datevalues = theDate.toGMTString();
+               var timestamp2=jd.list_of_queries[i].end_time;
+               var theDate2=new Date(timestamp2);
+               dataends=theDate2.toGMTString();
               tabledata = "";
               tabledata += "<tr>";
-              tabledata += "<td>" + jd.list_of_queries[i].query_id + "</td>";
-              tabledata += "<td>" + jd.list_of_queries[i].query_status + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].query_id + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].query_status + "</td>";
               tabledata += "<td>" +jd.list_of_queries[i].query_results_number + "</td>";
               tabledata += "<td>" +jd.list_of_queries[i].detaied_query_results + "</td>";
-              tabledata += "<td>" +jd.list_of_queries[i].start_time + "</td>";
+              tabledata += "<td>" +datevalues+ "</td>";
+              tabledata += "<td>" +dataends+ "</td>";
+              tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
+                "</td>";
+              tabledata += "</tr>";
+              tabledata += "<tr>";
+              tabledata += "<td colspan=7>" +jd.list_of_queries[i].query_string + "</td>";
+              tabledata += "</tr>"; 
+              $tbody.append(tabledata);
+            }
+          });
+        $("#question_form").on('submit', function(event){
+          $.post( "/query/new", { question: $("#question_input").val()} );
+           $.getJSON('/query/all', function(jd) {
+            var $tbody = $("#usertable tbody");
+            $tbody.html("");
+            var tabledata = "";
+            for(i = 0; i < jd.list_of_queries.length; i++ ){
+              var timestamp = jd.list_of_queries[i].start_time;
+              var theDate = new Date(timestamp);
+              dateString = theDate.toGMTString();
+              tabledata = "";
+              tabledata += "<tr>";
+              tabledata += "<td>" +jd.list_of_queries[i].query_id + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].query_status + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].query_results_number + "</td>";
+              tabledata += "<td>" +jd.list_of_queries[i].detaied_query_results + "</td>";
+             
+              tabledata += "<td>" +datevalues+ "</td>";
               tabledata += "<td>" +jd.list_of_queries[i].end_time + "</td>";
               tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
                 "</td>";
 
               tabledata += "</tr>";
+              tabledata += "<tr>";
+              tabledata += "<td colspan=7>" + jd.list_of_queries[i].query_string  +"</td>";
+              tabledata += "</tr>"; 
               $tbody.append(tabledata);
 
             }
-          });
-          return false;
+         });
         });
       });
+   
+      function display(value) {
+        $.getJSON('/query/all', function(jd) {
+          var $tdetail = $("#detail tbody");
+          $tdetail.html("");
+          var tabledetail = "";
+          for(i = 0; i < jd.list_of_queries[value.name-0].list_of_tasks.length; i++ ){
+            tabledetail = "";
+            tabledetail += "<tr>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-0].list_of_tasks[i].task_id + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-0].list_of_tasks[i].task_status + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-0].list_of_tasks[i].task_operator + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-0].list_of_tasks[i].number_of_hits + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-0].list_of_tasks[i].finished_hits + "</td>";
+            tabledetail += "<td>" + jd.list_of_queries[value.name-0].list_of_tasks[i].task_results_number + "</td>";
+           
+            tabledetail +="</tr>";
+            $tdetail.append(tabledetail);
+          }
+        });
+      }
 
-      function abort(value){
-        // get the json object here and change the display of the table
+        function abort(value){
         $.getJSON('/query/all', function(jd) {
           var $tthead=$("#usertable thead");
           var $tbody = $("#usertable tbody");
           $tbody.html(" ");
           var tabledata = " ";
           for(i = 0; i < jd.list_of_queries.length; i++){
-            if(i!=value.name-1){
+            if(i!=value.name){
               tabledata = " ";
               tabledata += "<tr>";
               tabledata += "<td>" + jd.list_of_queries[i].query_id + "</td>";
@@ -82,36 +135,16 @@
               tabledata += "<td>" + '<input type="button" value="details" onclick= "display(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+ '<input type="button" value="abort" onclick= "abort(this)" name=" '+jd.list_of_queries[i].query_id+' " />'+
                 "</td>";
               tabledata += "</tr>";
+               tabledata += "<tr>";
+              tabledata += "<td colspan=7>" +jd.list_of_queries[i].query_string + "</td>";
+              tabledata += "</tr>"; 
               $tbody.append(tabledata);
             }
 
           }
         });
-        // need to change and return the json object if abort button is clicked.
       }
 
-      function display(value) {
-        $.getJSON('result.json', function(jd) {
-          var $tdetail = $("#detail tbody");
-          $tdetail.html("");
-          var tabledetail = "";
-          for(i = 0; i < jd.list_of_queries[value.name-1].list_of_tasks.length; i++ ){
-            tabledetail = "";
-            tabledetail += "<tr>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_id + "</td>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_status + "</td>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_operator + "</td>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].number_of_hits + "</td>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].finished_hits + "</td>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].task_result_number + "</td>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].start_time + "</td>";
-            tabledetail += "<td>" + jd.list_of_queries[value.name-1].list_of_tasks[i].end_time + "</td>";
-
-            tabledetail +="</tr>";
-            $tdetail.append(tabledetail);
-          }
-        });
-      }
       </script>
       </head>
 
@@ -150,6 +183,17 @@
 
       <nav>
          <table id="detail" border="1" cellpadding="5" cellspacing=0>
+          <thead>
+             <tr>
+               <th>task id</th>
+               <th>task status</th>
+               <th>task operator</th>
+               <th>number of hits</th>
+               <th>finished hits </th>
+               <th>task result number</th>
+             </tr>
+            </thead>
+
            <tbody> </tbody>
          </table>
          <br />
