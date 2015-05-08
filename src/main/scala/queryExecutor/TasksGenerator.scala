@@ -124,7 +124,7 @@ object TasksGenerator {
       val taskID = generateUniqueID()
       val questionTitle = "Answer a simple Yes/No question"
       val questionDescription = "Answer a Yes/No question using common sense or an internet search" 
-      val questionText = "\"" + ans + "\": " + where ". Is this true?"
+      val questionText = "\"" + ans + "\": " + where + ". Is this true?"
       val optionYes = new MultipleChoiceOption(ans + ",yes", "yes")
       val optionNo = new MultipleChoiceOption(ans + ",no", "no")
       val listOptions = List(optionYes, optionNo)
