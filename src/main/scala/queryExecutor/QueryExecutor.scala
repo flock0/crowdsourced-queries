@@ -2,7 +2,7 @@ package queryExecutor
 
 import parser.QueryParser
 import tree.QueryTree._
-import crowdsourced.mturk._
+import crowdsourced.mturk.task._
 import scala.collection.mutable.ListBuffer
 import java.text.SimpleDateFormat
 import java.util.Calendar

@@ -1,7 +1,10 @@
 /**
  *
  */
-package crowdsourced.mturk;
+package crowdsourced.mturk.answer;
+
+import crowdsourced.mturk.question.MultipleChoiceOption;
+import crowdsourced.mturk.question.Question;
 
 /**
  * An answer for a multiple-choice question containing the chosen option.

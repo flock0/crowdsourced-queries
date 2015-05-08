@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.task;
 
 import java.io.IOException;
 import java.security.SignatureException;
@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
+
+import crowdsourced.mturk.answer.AnswerCallback;
 
 /**
  * Holds information over a pending job/HIT, its status and received assignments so far.

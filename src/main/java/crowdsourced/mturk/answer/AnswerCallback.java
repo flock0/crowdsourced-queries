@@ -1,6 +1,8 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.answer;
 
 import java.util.List;
+
+import crowdsourced.mturk.task.Assignment;
 
 /**
  * Contains methods to notify about status update concerning a HIT.

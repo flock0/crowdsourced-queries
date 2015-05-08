@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.task;
 
 import java.util.Set;
 

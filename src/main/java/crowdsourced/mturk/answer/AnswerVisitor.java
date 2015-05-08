@@ -1,6 +1,8 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.answer;
 
 import java.net.URL;
+
+import crowdsourced.mturk.question.MultipleChoiceOption;
 
 /**
  * A visitor for the answer objects.

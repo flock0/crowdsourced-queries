@@ -2,10 +2,10 @@ package crowdsourced.test.mturk;
 
 import java.util.List;
 
-import crowdsourced.mturk.Answer;
-import crowdsourced.mturk.AnswerCallback;
-import crowdsourced.mturk.AnswerVisitor;
-import crowdsourced.mturk.Assignment;
+import crowdsourced.mturk.answer.Answer;
+import crowdsourced.mturk.answer.AnswerCallback;
+import crowdsourced.mturk.answer.AnswerVisitor;
+import crowdsourced.mturk.task.Assignment;
 
 public class ManualTestCallback implements AnswerCallback {
 

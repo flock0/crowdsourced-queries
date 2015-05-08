@@ -3,16 +3,16 @@ package crowdsourced.test.mturk;
 import java.util.ArrayList;
 import java.util.List;
 
-import crowdsourced.mturk.AMTCommunicator;
-import crowdsourced.mturk.BooleanChoiceQuestion;
-import crowdsourced.mturk.HIT;
-import crowdsourced.mturk.MultipleChoiceOption;
-import crowdsourced.mturk.MultipleChoiceQuestion;
-import crowdsourced.mturk.NumericQuestion;
-import crowdsourced.mturk.PendingJob;
-import crowdsourced.mturk.Question;
-import crowdsourced.mturk.StringQuestion;
-import crowdsourced.mturk.URLQuestion;
+import crowdsourced.mturk.question.BooleanChoiceQuestion;
+import crowdsourced.mturk.question.MultipleChoiceOption;
+import crowdsourced.mturk.question.MultipleChoiceQuestion;
+import crowdsourced.mturk.question.NumericQuestion;
+import crowdsourced.mturk.question.Question;
+import crowdsourced.mturk.question.StringQuestion;
+import crowdsourced.mturk.question.URLQuestion;
+import crowdsourced.mturk.task.AMTCommunicator;
+import crowdsourced.mturk.task.HIT;
+import crowdsourced.mturk.task.PendingJob;
 
 /**
  * An extensive manual test.

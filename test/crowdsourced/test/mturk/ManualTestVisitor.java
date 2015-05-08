@@ -2,8 +2,8 @@ package crowdsourced.test.mturk;
 
 import java.net.URL;
 
-import crowdsourced.mturk.AnswerVisitor;
-import crowdsourced.mturk.MultipleChoiceOption;
+import crowdsourced.mturk.answer.AnswerVisitor;
+import crowdsourced.mturk.question.MultipleChoiceOption;
 
 public class ManualTestVisitor implements AnswerVisitor {
 

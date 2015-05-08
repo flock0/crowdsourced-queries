@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.task;
 
 import java.io.IOException;
 import java.io.StringReader;

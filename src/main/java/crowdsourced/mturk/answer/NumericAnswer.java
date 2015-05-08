@@ -1,4 +1,6 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.answer;
+
+import crowdsourced.mturk.question.Question;
 
 /**
  * An answer containing a numerical (integer) value.

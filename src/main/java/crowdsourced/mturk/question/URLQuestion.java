@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.question;
 
 import java.io.IOException;
 import java.net.URL;
@@ -10,6 +10,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import crowdsourced.mturk.answer.Answer;
+import crowdsourced.mturk.answer.URLAnswer;
 
 /**
  * A question that accepts a single URL.

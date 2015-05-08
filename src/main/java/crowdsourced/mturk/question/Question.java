@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.question;
 
 import java.io.IOException;
 
@@ -7,6 +7,8 @@ import javax.xml.xpath.XPath;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import crowdsourced.mturk.answer.Answer;
 
 /**
  * A question that is asked to the workers in a HIT.

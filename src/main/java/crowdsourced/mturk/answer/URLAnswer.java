@@ -1,6 +1,8 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.answer;
 
 import java.net.URL;
+
+import crowdsourced.mturk.question.Question;
 
 /**
  * An answer containing an URL.

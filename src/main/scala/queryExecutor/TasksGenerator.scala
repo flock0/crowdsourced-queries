@@ -1,12 +1,12 @@
 package queryExecutor
 
-import crowdsourced.mturk.HIT
 import java.util.Calendar
 import scala.util.Random
 import scala.collection.JavaConverters._
 import scala.concurrent._
 import ExecutionContext.Implicits.global
-import crowdsourced.mturk._
+import crowdsourced.mturk.question._
+import crowdsourced.mturk.task._
 import tree.QueryTree._
 import java.text.SimpleDateFormat
 import scala.concurrent.duration.Duration

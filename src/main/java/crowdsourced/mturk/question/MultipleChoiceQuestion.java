@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.question;
 
 import java.io.IOException;
 import java.util.List;
@@ -9,6 +9,9 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import crowdsourced.mturk.answer.Answer;
+import crowdsourced.mturk.answer.MultipleChoiceAnswer;
 
 /**
  * A question that is presented as multiple-choice to the worker.

@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.task;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +10,8 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import crowdsourced.mturk.question.Question;
 
 
 /**

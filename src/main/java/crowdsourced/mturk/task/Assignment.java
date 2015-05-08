@@ -1,7 +1,9 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.task;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import crowdsourced.mturk.answer.Answer;
 
 /**
  * Contains a complete assignment. This is an answer to all the questions of the

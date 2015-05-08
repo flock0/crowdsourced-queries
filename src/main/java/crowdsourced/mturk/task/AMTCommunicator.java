@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.task;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,6 +28,8 @@ import net.iharder.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.DOMImplementationLS;
 import org.w3c.dom.ls.LSSerializer;
+
+import crowdsourced.mturk.answer.AnswerCallback;
 
 /**
  * The class dedicated to direct communications with AMT

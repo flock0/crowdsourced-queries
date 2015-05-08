@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.question;
 
 import java.io.IOException;
 
@@ -8,6 +8,9 @@ import javax.xml.xpath.XPathExpressionException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+
+import crowdsourced.mturk.answer.Answer;
+import crowdsourced.mturk.answer.NumericAnswer;
 
 /**
  * A question that accepts a numerical value for the answer.

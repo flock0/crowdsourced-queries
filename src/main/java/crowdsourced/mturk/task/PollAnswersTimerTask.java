@@ -1,4 +1,4 @@
-package crowdsourced.mturk;
+package crowdsourced.mturk.task;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -22,6 +22,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import crowdsourced.mturk.answer.Answer;
+import crowdsourced.mturk.question.Question;
 
 /**
  * Handles the polling for and extraction of new answers.
