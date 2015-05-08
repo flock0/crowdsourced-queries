@@ -31,10 +31,10 @@ object TasksGenerator {
   def naturalLanguageTasksGenerator(s: String, fields: List[Operation]): List[AMTTask] =  {
     
     val taskID = generateUniqueID()
-    val questionTitle = "Find URL containing required information"
-    val questionDescription = "Question description" 
+    val questionTitle = "Find website on the internet"
+    val questionDescription = "Search for website with desired information" 
     val questionText = "What is the most relevant website to find [" + s + "] ?\nNote that we are interested in : " + fields.mkString(", ")
-    val keywords = List("URL retrieval", "Fast")
+    val keywords = List("search", "find", "URL", "website", "list", "easy", "google", "single")
     val numAssignments = 1
     val question: Question = new URLQuestion(taskID, questionTitle, questionText)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
@@ -48,10 +48,10 @@ object TasksGenerator {
   def naturalLanguagePrimaryKeyTasksGenerator(s: String, fields: List[Operation]): List[AMTTask] =  {
      
     val taskID = generateUniqueID()
-    val questionTitle = "Creation of a list"
-    val questionDescription = "Question description" 
-    val questionText = "For each element of the following set  [ " + s + " ], please retrieve its [ " + fields.head + " ]. Please provide only one " + fields.head + " per line."
-    val keywords = List("List", "Simple")
+    val questionTitle = "Create a list"
+    val questionDescription = "Create a list from data already provided." 
+    val questionText = "For each element of the following set  [ " + s + " ], please retrieve its [ " + fields.head + " ].\nPlease provide only one " + fields.head + " per line."
+    val keywords = List("copy", "list", "simple", "retrieve", "easy")
     val numAssignments = 1
     val question: Question = new StringQuestion(taskID, questionTitle, questionText, "", 0)
     val hit = new HIT(questionTitle, questionDescription, List(question).asJava, HIT_LIFETIME, numAssignments, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
@@ -71,8 +71,8 @@ object TasksGenerator {
       val (start: Int, end: Int) = tuple
       val fieldsString = fields.mkString(", ")
       val taskID = generateUniqueID()
-      val questionTitle = "Data extraction from URL"
-      val questionDescription = "Question description" 
+      val questionTitle = "Find information on a website"
+      val questionDescription = "Find information that we want from a website" 
       val questionText = s"""On this website, retrieve the following information ($fieldsString) about $nl
                               Select only items in the range $start to $end (both included)
                               URL : $url
@@ -80,7 +80,7 @@ object TasksGenerator {
       val question: Question = new StringQuestion(taskID, questionTitle, questionText, "", 0)
       val questionList = List(question)
       val numWorkers = 1
-      val keywords = List("data extraction", "URL", "easy")
+      val keywords = List("extract", "website", "url", "data", "easy", "fast", "find", "retrieve", "information")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, numWorkers, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
       new AMTTask(hit)
     }
@@ -122,16 +122,16 @@ object TasksGenerator {
    
     val tasks = answers.map(ans => {
       val taskID = generateUniqueID()
-      val questionTitle = "Evaluate if a claim makes sense"
-      val questionDescription = "Question description" 
-      val questionText = "Is [" + ans + "] coherent/true for the following predicate : " + where + " ?"
+      val questionTitle = "Answer a simple Yes/No question"
+      val questionDescription = "Answer a Yes/No question using common sense or an internet search" 
+      val questionText = "\"" + ans + "\": " + where ". Is this true?"
       val optionYes = new MultipleChoiceOption(ans + ",yes", "yes")
       val optionNo = new MultipleChoiceOption(ans + ",no", "no")
       val listOptions = List(optionYes, optionNo)
       val question: Question = new MultipleChoiceQuestion(taskID, questionTitle, questionText, listOptions.asJava)
       val questionList = List(question)
       val numWorkers = 1
-      val keywords = List("Claim evaluation", "Fast", "easy")
+      val keywords = List("claim evaluation", "fast", "easy", "question", "yes", "no", "true", "false", "quick", "answer", "simple")
       val hit = new HIT(questionTitle, questionDescription, questionList.asJava, HIT_LIFETIME, MAJORITY_VOTE, REWARD_PER_HIT toFloat, HIT_LIFETIME, keywords.asJava)
 
       new AMTTask(hit)
@@ -171,7 +171,7 @@ object TasksGenerator {
     val pairwiseTuples = for (r <- R; s <- S) yield (r, s)
     val tasks = pairwiseTuples.map(pair => {
       val taskID = generateUniqueID()
-      val questionTitle = "Is the following clain true ?"
+      val questionTitle = "Is the following claim true?"
       val questionDescription = "Question description" 
       val questionText = "Are [" + pair._1 + "] and ["+ pair._2 +"] satisfying the following predicate : [" + predicate +"] ?"
       val optionYes = new MultipleChoiceOption(pair + ",yes", "yes")
