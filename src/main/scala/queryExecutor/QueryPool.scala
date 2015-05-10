@@ -26,7 +26,7 @@ class QueryPool() extends QueryInterface {
     if (success) {
       queryID.toString // returning the id as a string
     } else {
-      -1 // return -1 to the interface if parsing failed
+      "-1" // return -1 to the interface if parsing failed
     }
   }
 
