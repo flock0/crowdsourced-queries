@@ -9,13 +9,14 @@ import tree.QueryTree._
 object Main extends App {
   
   // chose the query among the list below
-  val choice = 4
+  val choice = 5
   
   val query = choice match {
     case 1 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) ORDER BY name ASC"
     case 2 => "(SELECT (first_name) FROM [president of United States]) GROUP BY political party"
     case 3 => "(SELECT (movies) FROM [Movies with Angelina Jolie]) JOIN (SELECT (movies) FROM [Movies with Brad Pitt]) ON movies"
     case 4 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) WHERE [political party is democrat]"
+    case 5 => "(SELECT (sofa_offer_url, sofa_price, approximate_driving_distance_in_miles_from_628_Waverley_street) FROM [Offers for second-hand sofas in the Bay area]) WHERE [the sofa is red]"
     case _ => ""
   }
   
