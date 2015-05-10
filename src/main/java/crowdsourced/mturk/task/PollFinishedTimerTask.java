@@ -37,7 +37,7 @@ public class PollFinishedTimerTask extends TimerTask {
     /**
      * At what rate should we poll whether the HITs are finished?
      */
-    public static final long POLLING_FINISHED_RATE_MILLISECONDS = 10 * 1000;
+    public static final long POLLING_FINISHED_RATE_MILLISECONDS = 10 * 60 * 1000;
     /**
      * The task set to work on.
      */
