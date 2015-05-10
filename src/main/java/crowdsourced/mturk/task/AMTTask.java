@@ -63,16 +63,21 @@ public class AMTTask {
      * Disposes this task from AMT.
      */
     void disposeTask() {
-        Map<String, String> param = new HashMap<String, String>();
-        param.put("Operation", "DisposeHIT");
-        param.put("HITId", hit.getHITId());
+        /* 
+         * The disposal of finished tasks is currently 
+         * skipped to be able to better comprehend what was 
+         * going on with the HITs afterwards on the Mturk website. 
+         */
+        // Map<String, String> param = new HashMap<String, String>();
+        // param.put("Operation", "DisposeHIT");
+        // param.put("HITId", hit.getHITId());
 
-        try {
-            AMTCommunicator.sendGet(param);
-        } catch (SignatureException | IOException e) {
-            /* Nothing we can do about it here. Just ignore */
-        }
-        System.out.println(String.format("HIT %s disposed", hit.getHITId()));
+        // try {
+        //     AMTCommunicator.sendGet(param);
+        // } catch (SignatureException | IOException e) {
+        //     /* Nothing we can do about it here. Just ignore */
+        // }
+        // System.out.println(String.format("HIT %s disposed", hit.getHITId()));
     }
 
     PendingJob getJob() {
