@@ -9,7 +9,7 @@ import tree.QueryTree._
 object Main extends App {
   
   // chose the query among the list below
-  val choice = 6
+  val choice = 7
   
   val query = choice match {
     case 1 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) ORDER BY name ASC"
@@ -18,6 +18,7 @@ object Main extends App {
     case 4 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) WHERE [political party is democrat]"
     case 5 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) LIMIT 2"
     case 6 => "((SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) WHERE [political party is democrat]) LIMIT 3"
+    case 7 => "(SELECT (sofa_offer_url, sofa_price, approximate_driving_distance_in_miles_from_628_Waverley_street) FROM [Offers for second-hand sofas in the Bay area]) WHERE [the sofa is red]"
     case _ => ""
   }
   
