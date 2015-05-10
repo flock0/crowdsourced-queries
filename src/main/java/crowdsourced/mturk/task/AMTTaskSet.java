@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Timer;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages all active tasks.
@@ -17,7 +18,7 @@ public class AMTTaskSet {
     /**
      * A set of all tasks currently active.
      */
-    private Set<AMTTask> activeTasks = Collections.newSetFromMap(new HashMap<AMTTask, Boolean>());
+    private Set<AMTTask> activeTasks = Collections.newSetFromMap(new ConcurrentHashMap<AMTTask, Boolean>());
     /**
      * Used for polling for finished tasks.
      */
