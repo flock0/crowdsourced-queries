@@ -42,7 +42,11 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Use parser to return the full tree of the parsed request
    */
-  private def parse(query: String): RootNode = QueryParser.parseQuery(query).get
+  private def parse(query: String): RootNode = try {
+    QueryParser.parseQuery(query).get
+  } catch {
+    case e: Exception => null
+  }
   
   /**
    * Construct the hierarchy of all requests and the chaining of tasks based on the parsed tree
@@ -62,10 +66,16 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    * Start in background the exection of the request
    * Call waitAndPrintResults() if you want to block until this is done
    */
-  def execute(): Unit = {
-    this.queryTree = parse(queryString) // TODO handle parsing errors in order to avoid a crash
-    println("Starting execution of the query : \"" + this.queryTree + "\"")
-    this.futureResults = startingPoint(queryTree)
+  def execute(): Boolean = {
+    this.queryTree = parse(queryString)
+    if (this.queryTree == null) { // if the parsing failed we return false
+      println("[Error] Parsing of the query failed.")
+      false
+    } else {
+      println("Starting execution of the query : \"" + this.queryTree + "\"")
+      this.futureResults = startingPoint(queryTree)
+      true
+    }
   }
   
   /**
@@ -73,7 +83,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    */
   def waitAndPrintResults(): Unit = {
     if (this.queryTree == null) {
-      println("[Error] Query hasn't been executed yet. Call execute() first.")
+      println("[Error] There is no query running.")
     } else {
       queryResultToString(this.queryTree, this.futureResults)
       this.futureResults.map(Await.result(_, Duration.Inf))

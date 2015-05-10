@@ -22,9 +22,12 @@ class QueryPool() extends QueryInterface {
     val queryID = this.executors.length
     val queryExec = new QueryExecutor(queryID, query)
     executors += queryExec
-    val executedQuery = queryExec.execute()
-
-    queryID.toString // returning the id as a string
+    val success = queryExec.execute()
+    if (success) {
+      queryID.toString // returning the id as a string
+    } else {
+      -1 // return -1 to the interface if parsing failed
+    }
   }
 
   def getQueryExecutors: List[QueryExecutor] = executors.toList
