@@ -16,7 +16,9 @@ object Main extends App {
     case 2 => "(SELECT (first_name) FROM [president of United States]) GROUP BY political party"
     case 3 => "(SELECT (movies) FROM [Movies with Angelina Jolie]) JOIN (SELECT (movies) FROM [Movies with Brad Pitt]) ON movies"
     case 4 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) WHERE [political party is democrat]"
-    case 5 => "(SELECT (sofa_offer_url, sofa_price, approximate_driving_distance_in_miles_from_628_Waverley_street) FROM [Offers for second-hand sofas in the Bay area]) WHERE [the sofa is red]"
+    case 5 => "(SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) LIMIT 2"
+    case 6 => "((SELECT (full_name, birth_date, birth_location, number_children) FROM [Presidents of USA]) WHERE [political party is democrat]) LIMIT 3"
+    case 7 => "(SELECT (sofa_offer_url, sofa_price, approximate_driving_distance_in_miles_from_628_Waverley_street) FROM [Offers for second-hand sofas in the Bay area]) WHERE [the sofa is red]"
     case _ => ""
   }
   

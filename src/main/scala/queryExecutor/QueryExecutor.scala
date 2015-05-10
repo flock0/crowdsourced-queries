@@ -51,14 +51,18 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Construct the hierarchy of all requests and the chaining of tasks based on the parsed tree
    */
-  private def startingPoint(node: RootNode): List[Future[List[Assignment]]] = node match {
+  private def startingPoint(node: RootNode, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = node match {
       // TODO we need to pass a limit to taskSelect. The dataset could be very small or huge...
       // TODO maybe get this from the request using the LIMIT keyword. Or ask a worker for number of elements in the web page
-      case Select(nl, fields) => taskSelect(nl, fields)
+      case Select(nl, fields) => taskSelect(nl, fields, limit)
       case Join(left, right, on) => taskJoin(left, right, on) //recursiveTraversal(left); recursiveTraversal(right);
-      case Where(selectTree, where) => taskWhere(selectTree, where)
-      case OrderBy(query, List(ascendingOrDescending)) => taskOrderBy(query,ascendingOrDescending) //TODO
+      case Where(selectTree, where) => taskWhere(selectTree, where, limit)
+      case OrderBy(query, List(ascendingOrDescending)) => taskOrderBy(query,ascendingOrDescending, limit) //TODO
       case Group(query,by)=>taskGroupBy(query,by)
+      case Limit(query, limit) => limit match {
+        case IntL(i) => startingPoint(query, i)
+        case _ => startingPoint(query)
+      }
       case _ => List[Future[List[Assignment]]]() //TODO
     }
 
@@ -137,7 +141,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of SELECT Task
    */
-  def taskSelect(from: RootNode, fields: List[Operation]): List[Future[List[Assignment]]] = {
+  def taskSelect(from: RootNode, fields: List[Operation], limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task select started")
 
     val taskID = generateUniqueID()
@@ -152,8 +156,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
     println(extractNodeAnswers(from, nl).mkString(", "))
     val tasks = RETRIEVE_PRIMARY_KEY_FIRST match {
-      case false => TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
-      case true => TasksGenerator.selectPrimaryKeyTasksGenerator(extractNodeAnswers(from, nl), from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
+      case false => TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, limit)
+      case true => TasksGenerator.selectPrimaryKeyTasksGenerator(extractNodeAnswers(from, nl), from.toString, fields, MAX_ELEMENTS_PER_WORKER, limit)
     }
     tasks.foreach(_.exec)
     status.addTasks(tasks)
@@ -167,7 +171,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of WHERE task
    */
-  def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
+  def taskWhere(select: SelectTree, where: Condition, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task where started")
     val taskID = generateUniqueID()
     
@@ -176,7 +180,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
     printListTaskStatus
     
-    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields)}
+    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, limit)}
     if(!PARALLELIZED)
       assignments.map(x => Await.ready(x, Duration.Inf))
     val fAssignments = assignments.map(x => {
@@ -234,7 +238,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of GROUPBY task
    */
-  def taskGroupBy(q: RootNode, by: String): List[Future[List[Assignment]]] = {
+  def taskGroupBy(q: RootNode, by: String, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task GROUPBY")
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "GROUPBY")
@@ -242,7 +246,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
     printListTaskStatus
     
-    val toGroupBy = executeNode(q)
+    val toGroupBy = executeNode(q, limit)
     if(!PARALLELIZED)
       toGroupBy.map(x => Await.ready(x, Duration.Inf))
     val fAssignments = toGroupBy.map(x => {
@@ -265,7 +269,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of ORDERBY task
    */
-  def taskOrderBy(q: Prio3Node, order: Ordering): List[Future[List[Assignment]]] = {
+  def taskOrderBy(q: Prio3Node, order: Ordering, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task order by")
     
     val taskID = generateUniqueID()
@@ -273,7 +277,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     listTaskStatus += status
     printListTaskStatus
     
-    val toOrder = executeNode(q)
+    val toOrder = executeNode(q, limit)
     val finishedToOrder = toOrder.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToOrder)
     val tasks = TasksGenerator.orderByTasksGenerator(tuples, order)
@@ -297,11 +301,15 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Helper function when nodes have left and right parts
    */
-  private def executeNode(node: RootNode): List[Future[List[Assignment]]] = {
+  private def executeNode(node: RootNode, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     node match {
-    case Select(nl, fields) => taskSelect(nl, fields)
+    case Select(nl, fields) => taskSelect(nl, fields, limit)
     case Join(left, right, on) => taskJoin(left, right, on)
-    case Where(selectTree, where) => taskWhere(selectTree, where)
+    case Where(selectTree, where) => taskWhere(selectTree, where, limit)
+    case Limit(query, limit) => limit match {
+        case IntL(i) => startingPoint(query, i)
+        case _ => startingPoint(query)
+      }
     case _ => ???
     }
   }
