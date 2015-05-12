@@ -4,6 +4,7 @@ var clearQueryModal = function () {
   clearQueryModalMessages();
   $('#queryModalTable tbody').html("");
   $('#queryModalResults').html("");
+  $('#queryModalQueryString').html("");
 };
 
 var populateQueryModal = function (query) {
@@ -56,6 +57,7 @@ var showQuery = function (queryId) {
     populateQueryModal(query);
     $('#queryModal').modal('show');
     $('#queryModalQueryId').text(query.query_id);
+    $('#queryModalQueryString').text(query.query_string);
   });
   jqxhr.fail(function (jqxhr, textStatus, error) {
     console.log("Couldn't update queries: " + textStatus + ", " + error);
