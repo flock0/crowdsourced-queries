@@ -41,11 +41,12 @@ var populateQueryModal = function (query) {
       }));
     });
   }
+  $('#queryModalLabel').text("Query " + query.query_id);
 };
 
 var showQuery  = function (queryId) {
-  var jqxhr = $.getJSON('/query/all');
-  //var jqxhr = $.getJSON('/result.json');
+  //var jqxhr = $.getJSON('/query/all');
+  var jqxhr = $.getJSON('/result.json');
   jqxhr.done(function (doc) {
     var query = $.grep(doc.list_of_queries, function (q) {
       return q.query_id == queryId;
@@ -93,8 +94,8 @@ var addQueryFromJSONDoc = function (parentElement, doc) {
 };
 
 var update_queries = function () {
-  var jqxhr = $.getJSON('/query/all');
-  //var jqxhr = $.getJSON('/result.json');
+  //var jqxhr = $.getJSON('/query/all');
+  var jqxhr = $.getJSON('/result.json');
   jqxhr.done(function (doc) {
     var tbody = $("#queriesTable tbody");
     tbody.html("");
@@ -133,8 +134,8 @@ var clearQuerySubmissionMessages = function () {
 };
 
 $(document).ready(function() {
-  $('#testButton').on('click', function () {
-    $('#queryModal').modal('show');
+  $('#refreshQuerriesButton').on('click', function () {
+    update_queries();
   });
 
   update_queries();
