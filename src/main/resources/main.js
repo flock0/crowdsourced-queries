@@ -1,6 +1,7 @@
 "use strict";
 
 var clearQueryModal = function () {
+  clearQueryModalMessages();
   $('#queryModalTable tbody').html("");
   $('#queryModalResults').html("");
 };
@@ -44,9 +45,9 @@ var populateQueryModal = function (query) {
   $('#queryModalLabel').text("Query " + query.query_id);
 };
 
-var showQuery  = function (queryId) {
-  //var jqxhr = $.getJSON('/query/all');
-  var jqxhr = $.getJSON('/result.json');
+var showQuery = function (queryId) {
+  var jqxhr = $.getJSON('/query/all');
+  //var jqxhr = $.getJSON('/result.json');
   jqxhr.done(function (doc) {
     var query = $.grep(doc.list_of_queries, function (q) {
       return q.query_id == queryId;
@@ -54,6 +55,39 @@ var showQuery  = function (queryId) {
     clearQueryModal();
     populateQueryModal(query);
     $('#queryModal').modal('show');
+    $('#queryModalQueryId').text(query.query_id);
+  });
+  jqxhr.fail(function (jqxhr, textStatus, error) {
+    console.log("Couldn't update queries: " + textStatus + ", " + error);
+  });
+};
+
+var abortQueryAjax = function (queryId) {
+  window.console.log("Aborting query " + queryId);
+  var jqxhr = $.ajax({
+    type: "POST",
+    url: "/query/abort",
+    data: {'query': queryId},
+    dataType: "json"
+  });
+  return jqxhr;
+};
+
+var abortShownQuery = function () {
+  clearQueryModalMessages();
+  var queryId = $('#queryModalQueryId').text();
+  var jqxhr = abortQueryAjax(queryId);
+  jqxhr.done(function (doc) {
+    window.console.log(doc);
+    if (doc.success) {
+      update_queries();
+      $('#queryModal').modal('hide');
+    } else {
+      clearQueryModalMessages();
+      addQueryModalMessage(
+        createWarningMessage("Couldn't abort query: " + doc.message)
+      );
+    }
   });
   jqxhr.fail(function (jqxhr, textStatus, error) {
     console.log("Couldn't update queries: " + textStatus + ", " + error);
@@ -94,8 +128,8 @@ var addQueryFromJSONDoc = function (parentElement, doc) {
 };
 
 var update_queries = function () {
-  //var jqxhr = $.getJSON('/query/all');
-  var jqxhr = $.getJSON('/result.json');
+  var jqxhr = $.getJSON('/query/all');
+  //var jqxhr = $.getJSON('/result.json');
   jqxhr.done(function (doc) {
     var tbody = $("#queriesTable tbody");
     tbody.html("");
@@ -108,29 +142,60 @@ var update_queries = function () {
   });
 };
 
-var addQuerySubmissionAlertMessage = function (msg) {
-  var element = $('<div/>', {
-    'class': 'alert alert-warning alert-dismissable fade in',
-    'role': 'alert',
-    'text': msg
-  });
-  $("#querySubmissionMessages").append(element);
-};
-
-var addQuerySubmissionSuccessMessage = function (msg) {
-  var element = $('<div/>', {
+var addMessage = function (element, message) {
+  var div = $('<div/>', {
     'class': 'alert alert-success alert-dismissable fade in',
     'role': 'alert',
-    'text': msg
+    'text': message
   });
+  element.append(div);
+};
+
+var createSuccessMessage = function (message) {
+  var div = $('<div/>', {
+    'class': 'alert alert-success alert-dismissable fade in',
+    'role': 'alert',
+    'text': message
+  });
+  return div;
+};
+
+var createWarningMessage = function (message) {
+  var div = $('<div/>', {
+    'class': 'alert alert-warning alert-dismissable fade in',
+    'role': 'alert',
+    'text': message
+  });
+  return div;
+};
+
+var addQueryModalMessage = function (element) {
+  $("#queryModalMessages").append(element);
+};
+
+var addQuerySubmissionSuccessMessage = function (message) {
+  var element = createSuccessMessage(message);
   $("#querySubmissionMessages").append(element);
 };
 
-var clearQuerySubmissionMessages = function () {
-  $("#querySubmissionMessages").children().each(function (idx, elem) {
+var addQuerySubmissionAlertMessage = function (message) {
+  var element = createWarningMessage(message);
+  $("#querySubmissionMessages").append(element);
+};
+
+var clearMessages = function (element) {
+  element.children().each(function (idx, elem) {
     //elem.alert('close');
     $(elem).detach();
   });
+};
+
+var clearQuerySubmissionMessages = function () {
+  clearMessages($('#querySubmissionMessages'));
+};
+
+var clearQueryModalMessages = function () {
+  clearMessages($('#queryModalMessages'));
 };
 
 $(document).ready(function() {
@@ -140,6 +205,11 @@ $(document).ready(function() {
 
   $('#assistedQueryButton').on('click', function () {
     $('#assistedQueryModal').modal('show');
+  });
+
+  $('#queryModalAbortButton').on('click', function () {
+    clearQueryModalMessages();
+    abortShownQuery();
   });
 
   update_queries();
@@ -154,6 +224,7 @@ $(document).ready(function() {
         dataType: "json"
       });
       jqxhr.done(function (doc) {
+        window.console.log(doc);
         if (doc.success == true) {
           window.console.log("Query successfully created: " + doc.queryId);
           addQuerySubmissionSuccessMessage(

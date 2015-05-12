@@ -39,7 +39,9 @@ class QueryPool() extends QueryInterface {
   //TODO Not urgent, for this query, we should abort all running HITs.
   def abortQuery(queryId: String): String = {
     println("ABORT QUERY NOT IMPLEMENTED YET.")
-    "{ status = \"error\", message: \"Not implemented\"}"
+    JsObject(Seq(
+      "success" -> JsBoolean(false),
+      "message" -> JsString("Abort operation not implemented"))).toString
   }
 
   def getJSON: JsValue = JsObject(Seq(
