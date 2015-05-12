@@ -24,9 +24,13 @@ class QueryPool() extends QueryInterface {
     executors += queryExec
     val success = queryExec.execute()
     if (success) {
-      queryID.toString // returning the id as a string
+      JsObject(Seq(
+        "success" -> JsBoolean(true),
+        "queryId" -> JsString(queryID.toString))).toString
     } else {
-      "-1" // return -1 to the interface if parsing failed
+      JsObject(Seq(
+        "success" -> JsBoolean(false),
+        "message" -> JsString("Parsing of query failed."))).toString
     }
   }
 

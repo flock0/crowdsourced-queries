@@ -69,7 +69,7 @@ public class HTTPServer implements Runnable {
     /** HttpHandler for / */
     public class RootHandler extends HttpHandler {
         public void service(Request request, Response response) throws Exception {
-            response.sendRedirect("/queryexample.html");
+            response.sendRedirect("/index.html");
         }
     }
 
