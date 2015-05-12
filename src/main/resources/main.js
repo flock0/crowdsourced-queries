@@ -138,6 +138,10 @@ $(document).ready(function() {
     update_queries();
   });
 
+  $('#assistedQueryButton').on('click', function () {
+    $('#assistedQueryModal').modal('show');
+  });
+
   update_queries();
 
   $("#queryForm").on('submit', function(event){
@@ -166,5 +170,12 @@ $(document).ready(function() {
         window.console.log(doc);
       });
       event.preventDefault();
+  });
+
+  $('#assistedQueryForm').on('submit', function(event) {
+    window.console.log("Generating query string from assisted form");
+    $('#question_input').val('Query generation not implemented yet.');
+    $('#assistedQueryModal').modal('hide');
+    event.preventDefault();
   });
 });
