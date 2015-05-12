@@ -46,7 +46,36 @@ var populateQueryModal = function (query) {
   $('#queryModalLabel').text("Query " + query.query_id);
 };
 
-var showQuery = function (queryId) {
+var createQueryFromAssistedForm = function(){
+  var select=$('input[name="Select"]').val();
+  var from=$('input[name="From"]').val();
+  var where=$('input[name="Where"]').val();
+  var joinon=$('input[name="JoinOn"]').val();
+  var select2=$('input[name="Select2"]').val();
+  var from2=$('input[name="From2"]').val();
+  var where2=$('input[name="Where2"]').val();
+  var generatestring;
+  if(joinon.length!=0) {
+    generatestring =
+      " (SELECT (" + select +
+      ") FROM [" + from +
+      "]) WHERE [" + where +
+      "] JOIN (" + joinon +
+      ") (SELECT (" + select2 +
+      ") FROM [" + from2 +
+      "]) WHERE ["+ where2+
+      "]";
+  } else {
+   generatestring=
+   " (SELECT (" + select +
+   ") FROM [" + from +
+   "]) WHERE [" + where+
+   "]";
+  }
+  $('#question_input').val(generatestring);
+};
+
+var showQuery  = function (queryId) {
   var jqxhr = $.getJSON('/query/all');
   //var jqxhr = $.getJSON('/result.json');
   jqxhr.done(function (doc) {
@@ -247,7 +276,7 @@ $(document).ready(function() {
 
   $('#assistedQueryForm').on('submit', function(event) {
     window.console.log("Generating query string from assisted form");
-    $('#question_input').val('Query generation not implemented yet.');
+    createQueryFromAssistedForm();
     $('#assistedQueryModal').modal('hide');
     event.preventDefault();
   });
