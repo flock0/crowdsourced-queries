@@ -1,12 +1,12 @@
 package queryExecutor
 
-import tree.Tree._
-import crowdsourced.mturk.AMTCommunicator
-import crowdsourced.mturk.HIT
-import crowdsourced.mturk.PendingJob
-import crowdsourced.mturk.Answer
-import crowdsourced.mturk.AnswerCallback
-import crowdsourced.mturk.Assignment
+import tree.QueryTree._
+import crowdsourced.mturk.task.AMTCommunicator
+import crowdsourced.mturk.task.HIT
+import crowdsourced.mturk.task.PendingJob
+import crowdsourced.mturk.answer.Answer
+import crowdsourced.mturk.answer.AnswerCallback
+import crowdsourced.mturk.task.Assignment
 import scala.collection.JavaConverters._
 import scala.collection.mutable.ListBuffer
 

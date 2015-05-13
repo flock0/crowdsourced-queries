@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <title>Crowdsourced query</title>
+  <link rel="stylesheet" href="style.css" type="text/css">
+  <link rel="stylesheet" href="bootstrap.min.css" type="text/css">
+  <script type="text/javascript" src="jquery.min.js"></script>
+  <script type="text/javascript" src="bootstrap.min.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</head>
+<body>
+  <h1>Crowdsourced query</h1>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div id="querySubmissionMessages"></div>
+      <form id="queryForm" action="" class="form-horizontal">
+        <div class="form-group">
+          <label for="question_input" class="col-xs-2">Enter query:</label>
+          <input id="question_input" class="col-xs-8" type="text" name="question"/>
+        </div>
+        <button type="button" class="btn" id="assistedQueryButton">Assisted query creation</button>
+        <button type="submit" class="btn btn-primary">Submit query</button>
+      </form>
+    </div>
+
+    <div class="row">
+      <h2>Current queries</h2>
+      <table class="table table-hover" id="queriesTable">
+        <thead>
+          <tr>
+            <th>Query ID</th>
+            <th>Status</th>
+            <th>Number of results</th>
+            <th>Start time</th>
+            <th>Finished at</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <button class="btn" id="refreshQuerriesButton">Refresh list</button>
+
+  <div id="assistedQueryModal" class="modal fade">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4>Assisted creation of query</h4>
+        </div>
+        <div class="modal-body">
+         <form id="assistedQueryForm" class="form-horizontal">
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">Select</div>
+                <input name="Select" type="text" class="form-control" placeholder="movie, rating"/>
+                <div class="input-group-addon">From</div>
+                <input name="From" type="text" class="form-control" placeholder="Movie with Angelina Jolie"/>
+                <div class="input-group-addon">Where</div>
+                <input name="Where" type="text" class="form-control" placeholder="Released before 2002"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">Join on</div>
+                <input name="JoinOn" type="text" class="form-control" placeholder="movie"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="input-group">
+                <div class="input-group-addon">Select</div>
+                <input name="Select2" type="text" class="form-control" placeholder="movie"/>
+                <div class="input-group-addon">From</div>
+                <input name="From2" type="text" class="form-control" placeholder="Movies with Brad Pitt"/>
+                <div class="input-group-addon">Where</div>
+                <input name="Where2" type="text" class="form-control" placeholder=""/>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate query string</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="queryModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title" id="queryModalLabel"></h4>
+        </div>
+        <div class="modal-body">
+          <div id="queryModalMessages"></div>
+          <div id="queryModalQueryId" class="hidden"></div>
+          <h4>Query string</h4>
+          <div id="queryModalQueryString"></div>
+          <table class="table" id="queryModalTable">
+            <thead>
+              <tr>
+                <th>Task ID</th>
+                <th>Status</th>
+                <th>Operator</th>
+                <th>Generated HITs</th>
+                <th>Completed HITs </th>
+                <th>Task results</th>
+              </tr>
+            </thead>
+
+            <tbody></tbody>
+          </table>
+          <h4>Results</h4>
+          <p>
+            <div id="queryModalResults" class="container-fluid"></div>
+          </p>
+          <button type="button" class="btn" id="queryModalAbortButton">
+            Abort query
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

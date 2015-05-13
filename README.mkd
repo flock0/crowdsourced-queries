@@ -16,3 +16,24 @@ List address: bd15-crowdsourced@groupes.epfl.ch
 ## TA
 
 * Immanuel Trummer
+
+## How to compile and create JAR-file
+
+Run `mvn package`, this will download the dependencies, compile the code and
+create the JAR-file `target/crowdsourced-1-jar-with-dependencies.jar`. This
+JAR-file contains all the dependencies thus you can execute it on any computer.
+
+## How to run
+
+Run `java -jar target/crowdsourced-1-jar-with-dependencies.jar`
+
+You need to create a credentials.txt containing your AMT account informations. To do so:
+
+    cp credentials.example.txt credentials.txt
+    editor credentials.txt
+
+And replace each line with the relevant information. For instance, the content could be:
+
+    ABCDEFGHIJKLM1234567
+    Long/s3rE7-2334
+    0

@@ -22,9 +22,16 @@ class QueryPool() extends QueryInterface {
     val queryID = this.executors.length
     val queryExec = new QueryExecutor(queryID, query)
     executors += queryExec
-    val executedQuery = queryExec.execute()
-
-    queryID.toString // returning the id as a string
+    val success = queryExec.execute()
+    if (success) {
+      JsObject(Seq(
+        "success" -> JsBoolean(true),
+        "queryId" -> JsString(queryID.toString))).toString
+    } else {
+      JsObject(Seq(
+        "success" -> JsBoolean(false),
+        "message" -> JsString("Parsing of query failed."))).toString
+    }
   }
 
   def getQueryExecutors: List[QueryExecutor] = executors.toList
@@ -32,7 +39,9 @@ class QueryPool() extends QueryInterface {
   //TODO Not urgent, for this query, we should abort all running HITs.
   def abortQuery(queryId: String): String = {
     println("ABORT QUERY NOT IMPLEMENTED YET.")
-    "{ status = \"error\", message: \"Not implemented\"}"
+    JsObject(Seq(
+      "success" -> JsBoolean(false),
+      "message" -> JsString("Abort operation not implemented"))).toString
   }
 
   def getJSON: JsValue = JsObject(Seq(

@@ -4,5 +4,4 @@
 /.project
 /.settings
 /target/
-/creds
-credentials.txt
+/credentials.txt

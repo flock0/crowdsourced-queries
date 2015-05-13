@@ -1,8 +1,8 @@
 package queryExecutor
 
-import parser.Parser
-import tree.Tree._
-import crowdsourced.mturk._
+import parser.QueryParser
+import tree.QueryTree._
+import crowdsourced.mturk.task._
 import scala.collection.mutable.ListBuffer
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -28,30 +28,41 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private val NOT_STARTED = "Not started"
   private val PROCESSING = "Processing"
   private val FINISHED = "Finished"
+  
   private val PARALLELIZED = true
+  private val JOIN_PAIRWISE = false
+  private val RETRIEVE_PRIMARY_KEY_FIRST = false
     
   private var futureResults: List[Future[List[Assignment]]] = Nil
-  private var queryTree: Q = null
+  private var queryTree: RootNode = null
   
-  val DEFAULT_ELEMENTS_SELECT = 4
-  val MAX_ELEMENTS_PER_WORKER = 2
+  val DEFAULT_ELEMENTS_SELECT = 9
+  val MAX_ELEMENTS_PER_WORKER = 4
   
   /**
    * Use parser to return the full tree of the parsed request
    */
-  private def parse(query: String): Q = Parser.parseQuery(query).get
+  private def parse(query: String): RootNode = try {
+    QueryParser.parseQuery(query).get
+  } catch {
+    case e: Exception => null
+  }
   
   /**
    * Construct the hierarchy of all requests and the chaining of tasks based on the parsed tree
    */
-  private def startingPoint(node: Q): List[Future[List[Assignment]]] = node match {
+  private def startingPoint(node: RootNode, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = node match {
       // TODO we need to pass a limit to taskSelect. The dataset could be very small or huge...
       // TODO maybe get this from the request using the LIMIT keyword. Or ask a worker for number of elements in the web page
-      case Select(nl, fields) => taskSelect(nl, fields)
+      case Select(nl, fields) => taskSelect(nl, fields, limit)
       case Join(left, right, on) => taskJoin(left, right, on) //recursiveTraversal(left); recursiveTraversal(right);
-      case Where(selectTree, where) => taskWhere(selectTree, where)
-      case OrderBy(query, List(ascendingOrDescending)) => taskOrderBy(query,ascendingOrDescending) //TODO
+      case Where(selectTree, where) => taskWhere(selectTree, where, limit)
+      case OrderBy(query, List(ascendingOrDescending)) => taskOrderBy(query,ascendingOrDescending, limit) //TODO
       case Group(query,by)=>taskGroupBy(query,by)
+      case Limit(query, limit) => limit match {
+        case IntL(i) => startingPoint(query, i)
+        case _ => startingPoint(query)
+      }
       case _ => List[Future[List[Assignment]]]() //TODO
     }
 
@@ -59,10 +70,16 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    * Start in background the exection of the request
    * Call waitAndPrintResults() if you want to block until this is done
    */
-  def execute(): Unit = {
-    this.queryTree = parse(queryString) // TODO handle parsing errors in order to avoid a crash
-    println("Starting execution of the query : \"" + this.queryTree + "\"")
-    this.futureResults = startingPoint(queryTree)
+  def execute(): Boolean = {
+    this.queryTree = parse(queryString)
+    if (this.queryTree == null) { // if the parsing failed we return false
+      println("[Error] Parsing of the query failed.")
+      false
+    } else {
+      println("Starting execution of the query : \"" + this.queryTree + "\"")
+      this.futureResults = startingPoint(queryTree)
+      true
+    }
   }
   
   /**
@@ -70,7 +87,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    */
   def waitAndPrintResults(): Unit = {
     if (this.queryTree == null) {
-      println("[Error] Query hasn't been executed yet. Call execute() first.")
+      println("[Error] There is no query running.")
     } else {
       queryResultToString(this.queryTree, this.futureResults)
       this.futureResults.map(Await.result(_, Duration.Inf))
@@ -85,7 +102,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Add results to the list of partial results as soon as one is received
    */
-  def queryResultToString(query: Q, res: List[Future[List[Assignment]]]): Unit = {
+  def queryResultToString(query: RootNode, res: List[Future[List[Assignment]]]): Unit = {
     res.map(x => {
     	x onSuccess{
     	  case assign => {
@@ -101,15 +118,17 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of FROM task
    */
-  def taskNaturalLanguage(s: String, fields: List[P]): List[Future[List[Assignment]]] = {
+  def taskNaturalLanguage(s: String, fields: List[Operation]): List[Future[List[Assignment]]] = {
     println("Task natural language")
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
     printListTaskStatus
  
-    
-    val tasks: List[AMTTask] = TasksGenerator.naturalLanguageTasksGenerator(s, fields)
+     val tasks = RETRIEVE_PRIMARY_KEY_FIRST match {
+      case false => TasksGenerator.naturalLanguageTasksGenerator(s, fields)
+      case true => TasksGenerator.naturalLanguagePrimaryKeyTasksGenerator(s, fields)
+    }
     tasks.foreach(_.exec)
     status.addTasks(tasks)
     val assignments = List(Future{tasks.flatMap(_.waitResults)}) 
@@ -122,7 +141,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of SELECT Task
    */
-  def taskSelect(from: Q, fields: List[P]): List[Future[List[Assignment]]] = {
+  def taskSelect(from: RootNode, fields: List[Operation], limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task select started")
 
     val taskID = generateUniqueID()
@@ -132,22 +151,17 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     printListTaskStatus
 
     val NLAssignments: List[Future[List[Assignment]]] = from match { case NaturalLanguage(nl) => taskNaturalLanguage(nl, fields) }
-    if(!PARALLELIZED)
-      NLAssignments.map(x => Await.ready(x, Duration.Inf))
-    val fAssignments = NLAssignments.map(x => {
-        val p = promise[List[Assignment]]()
-        val f = p.future
-        x onSuccess {
-          case nl => {
-            val tasks = TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, DEFAULT_ELEMENTS_SELECT)
-            tasks.foreach(_.exec)
-            status.addTasks(tasks)
-            p success tasks.flatMap(_.waitResults)
-          }
-        }
-        f
-    })
 
+    val nl = Await.result(NLAssignments.head, Duration.Inf)
+    
+    println(extractNodeAnswers(from, nl).mkString(", "))
+    val tasks = RETRIEVE_PRIMARY_KEY_FIRST match {
+      case false => TasksGenerator.selectTasksGenerator(extractNodeAnswers(from, nl).head, from.toString, fields, MAX_ELEMENTS_PER_WORKER, limit)
+      case true => TasksGenerator.selectPrimaryKeyTasksGenerator(extractNodeAnswers(from, nl), from.toString, fields, MAX_ELEMENTS_PER_WORKER, limit)
+    }
+    tasks.foreach(_.exec)
+    status.addTasks(tasks)
+    val fAssignments = tasks.map(x => Future{x.waitResults()})
     printListTaskStatus
 	if(!PARALLELIZED)
 	      fAssignments.map(x => Await.ready(x, Duration.Inf))
@@ -157,7 +171,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of WHERE task
    */
-  def taskWhere(select: SelectTree, where: Condition): List[Future[List[Assignment]]] = {
+  def taskWhere(select: SelectTree, where: Condition, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task where started")
     val taskID = generateUniqueID()
     
@@ -166,7 +180,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
     printListTaskStatus
     
-    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields)}
+    val assignments = select match {case Select(nl, fields) => taskSelect(nl, fields, limit)}
     if(!PARALLELIZED)
       assignments.map(x => Await.ready(x, Duration.Inf))
     val fAssignments = assignments.map(x => {
@@ -188,7 +202,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of JOIN task
    */
-  def taskJoin(left: Q, right: Q, on: String): List[Future[List[Assignment]]] = {
+  def taskJoin(left: RootNode, right: RootNode, on: String): List[Future[List[Assignment]]] = {
  
     println("Task join started")
     val taskID = generateUniqueID()
@@ -207,7 +221,10 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     val resultsRight = Await.result(b, Duration.Inf)
     val resLeft = resultsLeft.flatMap(Await.result(_, Duration.Inf))
     val resRight = resultsRight.flatMap(Await.result(_, Duration.Inf))
-    val tasks = TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+    val tasks = JOIN_PAIRWISE match {
+      case false => TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
+      case true => TasksGenerator.pairwiseJoinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight), on)
+    }
     status.addTasks(tasks)
     tasks.foreach(_.exec)
 
@@ -221,7 +238,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of GROUPBY task
    */
-  def taskGroupBy(q: Q, by: String): List[Future[List[Assignment]]] = {
+  def taskGroupBy(q: RootNode, by: String, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task GROUPBY")
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "GROUPBY")
@@ -229,7 +246,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
     printListTaskStatus
     
-    val toGroupBy = executeNode(q)
+    val toGroupBy = executeNode(q, limit)
     if(!PARALLELIZED)
       toGroupBy.map(x => Await.ready(x, Duration.Inf))
     val fAssignments = toGroupBy.map(x => {
@@ -252,7 +269,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Creation of ORDERBY task
    */
-  def taskOrderBy(q: Q3, order: O): List[Future[List[Assignment]]] = {
+  def taskOrderBy(q: Prio3Node, order: Ordering, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     println("Task order by")
     
     val taskID = generateUniqueID()
@@ -260,7 +277,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     listTaskStatus += status
     printListTaskStatus
     
-    val toOrder = executeNode(q)
+    val toOrder = executeNode(q, limit)
     val finishedToOrder = toOrder.flatMap(x => Await.result(x, Duration.Inf))
     val tuples = extractNodeAnswers(q, finishedToOrder)
     val tasks = TasksGenerator.orderByTasksGenerator(tuples, order)
@@ -284,11 +301,15 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Helper function when nodes have left and right parts
    */
-  private def executeNode(node: Q): List[Future[List[Assignment]]] = {
+  private def executeNode(node: RootNode, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = {
     node match {
-    case Select(nl, fields) => taskSelect(nl, fields)
+    case Select(nl, fields) => taskSelect(nl, fields, limit)
     case Join(left, right, on) => taskJoin(left, right, on)
-    case Where(selectTree, where) => taskWhere(selectTree, where)
+    case Where(selectTree, where) => taskWhere(selectTree, where, limit)
+    case Limit(query, limit) => limit match {
+        case IntL(i) => startingPoint(query, i)
+        case _ => startingPoint(query)
+      }
     case _ => ???
     }
   }
@@ -296,7 +317,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   /**
    * Converts Assignments received by workers to nice String results depending on node type
    */
-  private def extractNodeAnswers(node: Q, assignments: List[Assignment]): List[String] = {
+  private def extractNodeAnswers(node: RootNode, assignments: List[Assignment]): List[String] = {
     node match {
     case Join(_, _, _) | Where(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap.filter(_._2.toString.endsWith("yes")).map(ans => ans._2.toString.substring(0, ans._2.toString.length-8)))
     case Group(_,_) => assignments.flatMap(_.getAnswers().asScala.toMap).map(s => stringToTuple(s._2.toString)).groupBy(_._2).map(x=> x.toString).toList
@@ -373,6 +394,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    */
   def getJSON(): JsValue = JsObject(Seq(
       "query_id" -> JsNumber(this.queryID),
+      "query_string" -> JsString(this.queryString),
       "query_status" -> JsString(getStatus()),
       "query_results_number" -> JsNumber(getResults().length),
       "start_time" -> JsNumber(getStartTime()),
