@@ -210,8 +210,9 @@ var addQuerySubmissionSuccessMessage = function (message) {
 };
 
 var addQuerySubmissionAlertMessage = function (message) {
-  var element = createWarningMessage(message);
-  $("#querySubmissionMessages").append(element);
+  var div = createWarningMessage("Creation of query failed:");
+  div.append($('<pre/>').text(message));
+  $("#querySubmissionMessages").append(div);
 };
 
 var clearMessages = function (element) {
