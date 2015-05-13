@@ -36,7 +36,7 @@ class QueryPool() extends QueryInterface {
           println("Parsing failed: " + e)
           JsObject(Seq(
             "success" -> JsBoolean(false),
-            "message" -> JsString("Parsing of query failed: <br>" + e))).toString
+            "message" -> JsString("Parsing of query failed: <br>" + e.replace(" ", "&nbsp;").replace("\n", "<br>")))).toString
     }
   }
 

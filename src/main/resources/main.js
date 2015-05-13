@@ -130,9 +130,9 @@ var addQueryFromJSONDoc = function (parentElement, doc) {
   var start_time = (new Date(doc.start_time)).toLocaleString();
   var end_time;
   if (doc.end_time == -1) {
-    end_time = (new Date(doc.end_time)).toLocaleString();
-  } else {
     end_time = "-";
+  } else {
+    end_time = (new Date(doc.end_time)).toLocaleString();
   }
   var content = [
       $("<td/>", {
@@ -259,7 +259,7 @@ $(document).ready(function() {
         if (doc.success == true) {
           window.console.log("Query successfully created: " + doc.queryId);
           addQuerySubmissionSuccessMessage(
-              "Query " + doc.queryId + "created.");
+              "Query " + doc.queryId + " created.");
           update_queries();
           $('#question_input').val('');
         } else {
@@ -280,4 +280,36 @@ $(document).ready(function() {
     $('#assistedQueryModal').modal('hide');
     event.preventDefault();
   });
+
+  $('#autorefreshQueriesCheckbox').on('change', function () {
+    window.console.log("checkbox changed");
+    queriesAutorefresh.setAutorefreshFromCheckbox();
+  });
+  queriesAutorefresh.setAutorefreshFromCheckbox();
 });
+
+var queriesAutorefresh = new function () {
+  this.autorefresh = false;
+  this.intervalID = undefined;
+  this.refreshInterval = 15000;
+
+  this.autorefreshFunc = function () {
+    update_queries();
+  };
+
+  this.setAutorefresh = function (bool) {
+    if (bool && (!this.autorefresh)) {
+      window.console.log("Autorefresh enabled");
+      update_queries();
+      this.intervalID = window.setInterval(this.autorefreshFunc, this.refreshInterval);
+    } else if ((!bool) && (this.intervalID != undefined)) {
+      window.console.log("Autorefresh disabled");
+      window.clearTimeout(this.intervalID);
+    }
+    this.autorefresh = bool;
+  };
+
+  this.setAutorefreshFromCheckbox = function () {
+    this.setAutorefresh($('#autorefreshQueriesCheckbox').prop('checked'));
+  };
+};

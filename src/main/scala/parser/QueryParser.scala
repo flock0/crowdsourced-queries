@@ -147,14 +147,7 @@ object QueryParser extends RegexParsers with java.io.Serializable{
 	}
     }
 /**
-	try {
-		parse(parseRootNode, query);
-	} catch {
-   	 case e: Exception => {
-		println("My message:" + e.getMessage);
-		throw new RuntimeException(e.toString);
-		}
-	}*/
+		parse(parseRootNode, query);*/
  
 }
     

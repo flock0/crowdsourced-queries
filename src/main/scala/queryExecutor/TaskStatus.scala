@@ -1,6 +1,8 @@
 package queryExecutor
 
+import crowdsourced.mturk.task.Assignment
 import scala.collection.mutable.ListBuffer
+import scala.collection.JavaConverters._
 import play.api.libs.json._
 
 /**
@@ -98,7 +100,8 @@ class TaskStatus(val statusID: String, val operator: String) {
       "task_operator" -> JsString(this.operator),
       "number_of_hits" -> JsNumber(getNumberHits),
       "finished_hits" -> JsNumber(getNumberFinishedHits),
-      "task_results_number" -> JsNumber(getTaskAssignmentNumber)
+      "task_results_number" -> JsNumber(getTaskAssignmentNumber),
+      "detailed_results" -> Json.toJson(getAssignments.map(ass => ass.getAnswers.asScala.map(el => JsString(el._2.toString))))
       ))
   
   /**
@@ -109,7 +112,7 @@ class TaskStatus(val statusID: String, val operator: String) {
   /**
    * Returns the list of all HITs related to this query task
    */
-  def getTaskList = this.synchronized { this.taskListBuffer.toList }
+  def getTaskList: List[AMTTask] = this.synchronized { this.taskListBuffer.toList }
   
   /**
    * Returns the number of HITs related to this query task
@@ -122,9 +125,14 @@ class TaskStatus(val statusID: String, val operator: String) {
   def getNumberFinishedHits = getTaskList.filter(_.isFinished()).length
   
   /**
-   * Returns the number of assignments already recevied
+   * Returns the number of assignments already received
    */
   def getTaskAssignmentNumber: Int = getTaskList.foldLeft(0)((ctr, t) => t.getAssignments.length + ctr)
+  
+  /**
+   * Returns the list of assignments already received
+   */
+  def getAssignments: List[Assignment] = getTaskList.flatMap(_.getAssignments)
   
   /**
    * Checks if at least one of the AMTTask has started (so that the HIT is visible to workers)

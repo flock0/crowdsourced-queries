@@ -26,7 +26,7 @@ object Main extends App {
   val queryExec = new QueryExecutor(0, query)
   
   // parses and executes the query by crowdsourcing
-  val executedQuery = queryExec.execute(null)
+  val executedQuery = queryExec.execute()
   
   // blocks until all results arrive and print results
   queryExec.waitAndPrintResults()
