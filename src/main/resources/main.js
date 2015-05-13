@@ -280,4 +280,36 @@ $(document).ready(function() {
     $('#assistedQueryModal').modal('hide');
     event.preventDefault();
   });
+
+  $('#autorefreshQueriesCheckbox').on('change', function () {
+    window.console.log("checkbox changed");
+    queriesAutorefresh.setAutorefreshFromCheckbox();
+  });
+  queriesAutorefresh.setAutorefreshFromCheckbox();
 });
+
+var queriesAutorefresh = new function () {
+  this.autorefresh = false;
+  this.intervalID = undefined;
+  this.refreshInterval = 15000;
+
+  this.autorefreshFunc = function () {
+    update_queries();
+  };
+
+  this.setAutorefresh = function (bool) {
+    if (bool && (!this.autorefresh)) {
+      window.console.log("Autorefresh enabled");
+      update_queries();
+      this.intervalID = window.setInterval(this.autorefreshFunc, this.refreshInterval);
+    } else if ((!bool) && (this.intervalID != undefined)) {
+      window.console.log("Autorefresh disabled");
+      window.clearTimeout(this.intervalID);
+    }
+    this.autorefresh = bool;
+  };
+
+  this.setAutorefreshFromCheckbox = function () {
+    this.setAutorefresh($('#autorefreshQueriesCheckbox').prop('checked'));
+  };
+};
