@@ -35,6 +35,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     
   private var futureResults: List[Future[List[Assignment]]] = Nil
   private var queryTree: RootNode = null
+  private var aborted: Boolean = false
   
   val DEFAULT_ELEMENTS_SELECT = 9
   val MAX_ELEMENTS_PER_WORKER = 5
@@ -101,6 +102,19 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       println("Total duration : " + getDurationString)
     }
   }
+  
+  /**
+   * Prevents the creation of new HITs
+   */
+  def abort(): Unit = {
+    println("Aborting query "+this.queryID+".")
+    this.aborted = true
+  }
+  
+  /**
+   * Returns the unique number of this query
+   */
+  def getQueryID: Int = this.queryID
 
   /**
    * Add results to the list of partial results as soon as one is received
@@ -123,6 +137,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    */
   def taskNaturalLanguage(s: String, fields: List[Operation]): List[Future[List[Assignment]]] = {
     println("Task natural language")
+    
     val taskID = generateUniqueID()
     val status = new TaskStatus(taskID, "FROM")
     listTaskStatus += status
@@ -228,8 +243,8 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
       case false => TasksGenerator.joinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight))
       case true => TasksGenerator.pairwiseJoinTasksGenerator(extractNodeAnswers(left, resLeft), extractNodeAnswers(right, resRight), on)
     }
-    status.addTasks(tasks)
     tasks.foreach(_.exec)
+    status.addTasks(tasks)
 
     val assignments: List[Future[List[Assignment]]] = tasks.map(x => Future{x.waitResults})
     
