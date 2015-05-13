@@ -1,10 +1,6 @@
 package crowdsourced.mturk.task;
 
-import java.io.IOException;
-import java.security.SignatureException;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,10 +59,10 @@ public class AMTTask {
      * Disposes this task from AMT.
      */
     void disposeTask() {
-        /* 
-         * The disposal of finished tasks is currently 
-         * skipped to be able to better comprehend what was 
-         * going on with the HITs afterwards on the Mturk website. 
+        /*
+         * The disposal of finished tasks is currently
+         * skipped to be able to better comprehend what was
+         * going on with the HITs afterwards on the Mturk website.
          */
         // Map<String, String> param = new HashMap<String, String>();
         // param.put("Operation", "DisposeHIT");
