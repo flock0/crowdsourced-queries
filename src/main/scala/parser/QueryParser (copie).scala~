@@ -9,7 +9,7 @@ import scala.util.parsing.combinator.RegexParsers
  * Parser parses the input queries and returns a QueryTree
  * @authors Vincent Zellweger, Xinyi Guo, Kristof Szabo
  */
-object QueryParser extends RegexParsers with java.io.Serializable{
+object QueryParser2 extends RegexParsers with java.io.Serializable{
   
   def parseRootNode: Parser[RootNode] = (
     "(" ~ parseRootNode ~ ") JOIN (" ~ parseRootNode ~ ") ON " ~ parseE ^^ {case _ ~ left ~ _ ~ right ~ _ ~ on => Join(left, right, on)}
@@ -133,29 +133,15 @@ object QueryParser extends RegexParsers with java.io.Serializable{
     }
   )
   
-  val elem: Parser[String] = "[A-Za-z0-9_ ]+".r
-  val int: Parser[String] = "[0-9]+".r
-  val nl: Parser[String] = "[a-zA-Z0-9- ]+".r
-  val str: Parser[String] = "[A-Za-z0-9_]+".r
+  //val elem: Parser[String] = "[A-Za-z0-9_ ]+".r
+  def elem: Parser[String]    = """[A-Za-z0-9_ ]+""".r ^^ { _.toString }
+  //val int: Parser[String] = "[0-9]+".r
+  def int: Parser[String]    = """[0-9]+""".r ^^ { _.toString }
+  //val nl: Parser[String] = "[a-zA-Z0-9- ]+".r
+  def nl: Parser[String]    = """[a-zA-Z0-9- ]+""".r ^^ { _.toString }
+  //val str: Parser[String] = "[A-Za-z0-9_]+".r
+  def str: Parser[String]    = """[A-Za-z0-9_]+""".r ^^ { _.toString }
   
-  def parseQuery(query: String): RootNode = {
-		parse(parseRootNode, query) match {
-      case Success(root, _) => root
-      case e => {
-		println(e.toString)
-		throw new RuntimeException(e.toString)
-	}
-    }
-/**
-	try {
-		parse(parseRootNode, query);
-	} catch {
-   	 case e: Exception => {
-		println("My message:" + e.getMessage);
-		throw new RuntimeException(e.toString);
-		}
-	}*/
- 
-}
+  def parseQuery(query: String): ParseResult[RootNode] = parse(parseRootNode, query) 
     
 }

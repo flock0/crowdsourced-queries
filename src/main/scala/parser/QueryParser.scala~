@@ -138,7 +138,7 @@ object QueryParser extends RegexParsers with java.io.Serializable{
   val nl: Parser[String] = "[a-zA-Z0-9- ]+".r
   val str: Parser[String] = "[A-Za-z0-9_]+".r
   
-  def parseQuery(query: String): RootNode = {
+  def parseQuery(query: String): ParseResult[RootNode] = {
 		parse(parseRootNode, query) match {
       case Success(root, _) => root
       case e => {

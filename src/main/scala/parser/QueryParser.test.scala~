@@ -1,6 +1,10 @@
 package parser
 import tree.QueryTree._
-import scala.util.parsing.combinator.RegexParsers
+
+import scala.util.matching.Regex
+
+import scala.util.parsing.combinator.syntactical.StandardTokenParsers
+import scala.util.parsing.input._
 //SELECT (movies) FROM « Movies with Angelina Jolie » JOIN SELECT (movies) FROM « Movies with Brad Pitt » ON movies
 //
 //SELECT (full name, NUMERIC age of death) FROM « Presidents of the USA » WHERE « political party is democrat » ORDER BY age of death
@@ -9,7 +13,11 @@ import scala.util.parsing.combinator.RegexParsers
  * Parser parses the input queries and returns a QueryTree
  * @authors Vincent Zellweger, Xinyi Guo, Kristof Szabo
  */
-object QueryParser extends RegexParsers with java.io.Serializable{
+object QueryParser extends StandardTokenParsers {
+  lexical.delimiters ++= List("(", ")", "\\", ".", "[", "]", ",", "<", ">", "=")
+  lexical.reserved   ++= List("JOIN", "ON", "IN", "NOT", "INTERSECT", "UNION", "LIMIT", "ORDER BY", "DESC", "ASC", "WHERE", "FROM", "SUM", "DISTINCT", "NUMERIC", "AND", "OR", "True", "False")
+
+  import lexical.StringLit
   
   def parseRootNode: Parser[RootNode] = (
     "(" ~ parseRootNode ~ ") JOIN (" ~ parseRootNode ~ ") ON " ~ parseE ^^ {case _ ~ left ~ _ ~ right ~ _ ~ on => Join(left, right, on)}
@@ -53,7 +61,7 @@ object QueryParser extends RegexParsers with java.io.Serializable{
   )
   
   def parseSelectTree: Parser[SelectTree] = (
-    "SELECT (" ~ parseP ~ ") FROM " ~ parseNl ^^ {case _~p~_~e => Select(e, p)}
+    "SELECT" ~ "(" ~ parseP ~ ")"~"FROM" ~ parseNl ^^ {case _~_~p~_~_~e => Select(e, p)}
     | "SELECT (" ~ parseP ~ ") FROM (" ~ parseRootNode~")" ^^ {case _~p~_~e~_ => Select(e, p)}
     | parseNl ^^ {case nl5 => nl5}
   )
@@ -133,29 +141,30 @@ object QueryParser extends RegexParsers with java.io.Serializable{
     }
   )
   
-  val elem: Parser[String] = "[A-Za-z0-9_ ]+".r
-  val int: Parser[String] = "[0-9]+".r
-  val nl: Parser[String] = "[a-zA-Z0-9- ]+".r
-  val str: Parser[String] = "[A-Za-z0-9_]+".r
+ def regexStringLit(r: Regex): Parser[String] = acceptMatch( 
+    "string literal matching regex " + r, 
+    { case StringLit( s ) if r.unapplySeq(s).isDefined => s }
+  )
+
+  val elem: Parser[String] = regexStringLit("[A-Za-z0-9_ ]+".r)
+//  val int: Parser[String] = "[0-9]+".r
+  val int: Parser[String] = regexStringLit("[0-9]+".r)
+//  val nl: Parser[String] = "[a-zA-Z0-9- ]+".r
+  val nl: Parser[String] = regexStringLit("[a-zA-Z0-9- ]+".r)
+//  val str: Parser[String] = "[A-Za-z0-9_]+".r
+  val str: Parser[String] = regexStringLit("[A-Za-z0-9_]+".r)
   
   def parseQuery(query: String): RootNode = {
-		parse(parseRootNode, query) match {
+	
+	val tokens = new lexical.Scanner(query)
+    phrase(parseRootNode)(tokens) match {
       case Success(root, _) => root
       case e => {
 		println(e.toString)
 		throw new RuntimeException(e.toString)
 	}
-    }
-/**
-	try {
-		parse(parseRootNode, query);
-	} catch {
-   	 case e: Exception => {
-		println("My message:" + e.getMessage);
-		throw new RuntimeException(e.toString);
-		}
-	}*/
- 
-}
+    }  
+//	parse(parseRootNode, query) 
+  }
     
 }

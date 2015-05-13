@@ -43,7 +43,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    * Use parser to return the full tree of the parsed request
    */
   private def parse(query: String): RootNode = try {
-    QueryParser.parseQuery(query)
+    QueryParser.parseQuery(query).get
   } catch {
     case e: Exception => null
   }
