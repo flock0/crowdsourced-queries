@@ -3,6 +3,8 @@ package queryExecutor
 import crowdsourced.http.QueryInterface
 import scala.collection.mutable.ListBuffer
 import play.api.libs.json._
+import scala.concurrent._
+import ExecutionContext.Implicits.global
 
 class QueryPool() extends QueryInterface {
   println("QueryPool started...")
@@ -21,13 +23,15 @@ class QueryPool() extends QueryInterface {
 
     val queryID = this.executors.length
     val queryExec = new QueryExecutor(queryID, query)
-    executors += queryExec
-    val success = queryExec.execute()
-    if (success) {
+    val success = queryExec.parse(query)
+    if (success != null) {
+      executors += queryExec
+      Future(queryExec.execute())
       JsObject(Seq(
         "success" -> JsBoolean(true),
         "queryId" -> JsString(queryID.toString))).toString
     } else {
+      println("Parsing failed")
       JsObject(Seq(
         "success" -> JsBoolean(false),
         "message" -> JsString("Parsing of query failed."))).toString
