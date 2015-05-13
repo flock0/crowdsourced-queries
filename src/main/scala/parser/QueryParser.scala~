@@ -12,7 +12,7 @@ import scala.util.parsing.combinator.RegexParsers
 object QueryParser extends RegexParsers with java.io.Serializable{
   
   def baseParser: Parser[RootNode] = (
-    "{" ~ parseRootNode ~ "}" ^^ {case _ ~ root ~ _ => roo}
+    "{" ~ parseRootNode ~ "}" ^^ {case _ ~ root ~ _ => root}
   )
 
   def parseRootNode: Parser[RootNode] = (
