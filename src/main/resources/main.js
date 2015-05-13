@@ -259,7 +259,7 @@ $(document).ready(function() {
         if (doc.success == true) {
           window.console.log("Query successfully created: " + doc.queryId);
           addQuerySubmissionSuccessMessage(
-              "Query " + doc.queryId + "created.");
+              "Query " + doc.queryId + " created.");
           update_queries();
           $('#question_input').val('');
         } else {
