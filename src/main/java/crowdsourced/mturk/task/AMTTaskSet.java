@@ -1,7 +1,6 @@
 package crowdsourced.mturk.task;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Set;
 import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
