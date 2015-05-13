@@ -130,9 +130,9 @@ var addQueryFromJSONDoc = function (parentElement, doc) {
   var start_time = (new Date(doc.start_time)).toLocaleString();
   var end_time;
   if (doc.end_time == -1) {
-    end_time = (new Date(doc.end_time)).toLocaleString();
-  } else {
     end_time = "-";
+  } else {
+    end_time = (new Date(doc.end_time)).toLocaleString();
   }
   var content = [
       $("<td/>", {
