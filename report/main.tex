@@ -19,19 +19,34 @@
 
 \section{Our work} % < temporary title
 \subsection{Global structure}
-\subsection{Choices}
 \subsection{Query language and parsing}
-\subsection{AMT interface}
+\subsection{AMT communication}
+\subsection{Implementation choices}
+\begin{itemize}
+\item For a given query, we decompose it into sub-tasks which are generally really close to the semantic, meaning if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
+\item We \textbf{always} start with the "FROM" clause, where we ask \textbf{one} worker to give either a website either or a list of primary keys. After that we can continue the execution of this query by using the results given in this first step.
+\item For each task we try to use simple and understandable formulation, as well as proper description and keywords for a better visibility on the mturk platform.
+
+\end{itemize}
+
 \subsection{User interface}
 \subsection{Communication between modules} 
-
-\section{Results}
 \subsection{Final product}
 \subsection{Performance Analysis}
 
 \section{Future improvements} % < maybe move it into Results ?
 
 \section{Feedback/Work repartition} % < personal feedback
+\begin{itemize}
+\item Florian Chlan
+\item François Farquet
+\item Xinyi Guo
+\item Joachim Hugonot
+\item Simon Rodriguez
+\item Kristof Szabo
+\item Florian Vessaz
+\item Vincent Zellweger
+\end{itemize}
 \section{Conclusion}
 
 \end{document}
