@@ -37,12 +37,12 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private var queryTree: RootNode = null
   
   val DEFAULT_ELEMENTS_SELECT = 9
-  val MAX_ELEMENTS_PER_WORKER = 4
+  val MAX_ELEMENTS_PER_WORKER = 5
   
   /**
    * Use parser to return the full tree of the parsed request
    */
-  def parse(query: String): RootNode = try {
+  private def parse(query: String): RootNode = try {
     QueryParser.parseQuery(query).get
   } catch {
     case e: Exception => null
@@ -52,8 +52,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
    * Construct the hierarchy of all requests and the chaining of tasks based on the parsed tree
    */
   private def startingPoint(node: RootNode, limit: Int = DEFAULT_ELEMENTS_SELECT): List[Future[List[Assignment]]] = node match {
-      // TODO we need to pass a limit to taskSelect. The dataset could be very small or huge...
-      // TODO maybe get this from the request using the LIMIT keyword. Or ask a worker for number of elements in the web page
       case Select(nl, fields) => taskSelect(nl, fields, limit)
       case Join(left, right, on) => taskJoin(left, right, on) //recursiveTraversal(left); recursiveTraversal(right);
       case Where(selectTree, where) => taskWhere(selectTree, where, limit)
@@ -78,6 +76,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     } else {
       println("Starting execution of the query : \"" + this.queryTree + "\"")
       this.futureResults = startingPoint(queryTree)
+      queryResultToString(this.queryTree, this.futureResults)
       true
     }
   }
@@ -89,7 +88,6 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
     if (this.queryTree == null) {
       println("[Error] There is no query running.")
     } else {
-      queryResultToString(this.queryTree, this.futureResults)
       this.futureResults.map(Await.result(_, Duration.Inf))
       Thread sleep 5000 // in order to be sure that the buffer has been filled
       println("Results :")
