@@ -40,11 +40,11 @@ public class PollAnswersTimerTask extends TimerTask {
     /**
      * How long should we wait after creating the HIT before we start polling?
      */
-    public static final long POLLING_INITIAL_DELAY_MILLISECONDS = 5 * 1000;
+    public static final long POLLING_INITIAL_DELAY_MILLISECONDS = 30 * 1000;
     /**
      * At what rate should we poll for new answers?
      */
-    public static final long POLLING_RATE_MILLISECONDS = 5 * 1000;
+    public static final long POLLING_RATE_MILLISECONDS = 30 * 1000;
     /**
      * Indicates whether polling should be stopped after retrieving assignments a last time.
      */
