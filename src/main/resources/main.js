@@ -10,29 +10,30 @@ var clearQueryModal = function () {
 var populateQueryModal = function (query) {
   var tbody = $("#queryModalTable tbody");
   query.list_of_tasks.forEach(function (t) {
-    tbody.append($("<tr/>").append(
-      $("<td/>", {
-        text: t.task_id
-      }),
-      $("<td/>", {
-        text: t.task_status
-      }),
-      $("<td/>", {
-        text: t.task_operator
-      }),
-      $("<td/>", {
-        text: t.number_of_hits
-      }),
-      $("<td/>", {
-        text: t.finished_hits
-      }),
-      $("<td/>", {
-        text: t.task_result_number
-      })
-    ));
-  });
-  if (!query.detailed_query_results || query.detailed_query_results.length == 0) {
-    $('#queryModalResults').append($("<em/>", {
+  
+   tbody.append(
+     $(document.createElement("tr")).append(
+            $(document.createElement("td")).text(t.task_id),
+            $(document.createElement("td")).text(t.task_status),
+            $(document.createElement("td")).text(t.task_operator),
+            $(document.createElement("td")).text(t.number_of_hits),
+            $(document.createElement("td")).text(t.finished_hits),
+            $(document.createElement("td")).append(
+               $(document.createElement("button"))
+                    .addClass("btn btn-primary")
+                    .attr("type", "button")
+                    .attr("data-toggle", "collapse")
+                    .attr("data-target", "#collapseExample")
+                    .attr("aria-expanded", "false")
+                    .attr("aria-controls", "collapseExample")
+                    .text("show task results")
+                  )
+               )
+          );
+   $('#collapseExmaplewell').text("Results number is" + t.task_results_number + "Task results are as following:" + t.detailed_results);
+ });
+    if (!query.detailed_query_results || query.detailed_query_results.length == 0) {
+   $('#queryModalResults').append($("<em/>", {
       text: "No results yet, be patient."
         }));
   } else {
@@ -77,7 +78,7 @@ var createQueryFromAssistedForm = function(){
 
 var showQuery  = function (queryId) {
   var jqxhr = $.getJSON('/query/all');
-  //var jqxhr = $.getJSON('/result.json');
+ 
   jqxhr.done(function (doc) {
     var query = $.grep(doc.list_of_queries, function (q) {
       return q.query_id == queryId;
@@ -160,7 +161,6 @@ var addQueryFromJSONDoc = function (parentElement, doc) {
 
 var update_queries = function () {
   var jqxhr = $.getJSON('/query/all');
-  //var jqxhr = $.getJSON('/result.json');
   jqxhr.done(function (doc) {
     var tbody = $("#queriesTable tbody");
     tbody.html("");
