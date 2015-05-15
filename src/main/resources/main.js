@@ -10,8 +10,7 @@ var clearQueryModal = function () {
 var populateQueryModal = function (query) {
   var tbody = $("#queryModalTable tbody");
   query.list_of_tasks.forEach(function (t) {
-  
-   tbody.append(
+  tbody.append(
      $(document.createElement("tr")).append(
             $(document.createElement("td")).text(t.task_id),
             $(document.createElement("td")).text(t.task_status),
@@ -22,15 +21,19 @@ var populateQueryModal = function (query) {
                $(document.createElement("button"))
                     .addClass("btn btn-primary")
                     .attr("type", "button")
+                  
                     .attr("data-toggle", "collapse")
                     .attr("data-target", "#collapseExample")
                     .attr("aria-expanded", "false")
                     .attr("aria-controls", "collapseExample")
                     .text("show task results")
-                  )
+                    .click(function(){
+                      showTaskResult(t);
+                    })
                )
+            )
           );
-   $('#collapseExmaplewell').text("Results number is" + t.task_results_number + "Task results are as following:" + t.detailed_results);
+   
  });
     if (!query.detailed_query_results || query.detailed_query_results.length == 0) {
    $('#queryModalResults').append($("<em/>", {
@@ -75,7 +78,11 @@ var createQueryFromAssistedForm = function(){
   }
   $('#question_input').val(generatestring);
 };
-
+var showTaskResult=function(t){
+  $('#collapseExmaplewell').html("<b>Results number is:</b> " + t.finished_hits + "<br /> <b>Task results are as following:</b>" + t.detailed_results);
+  //var string = t.detailed_results.replace(/\r?\n/g, "<br>");
+  //$('#collapseExmaplewell').html("<b>Results number is:<b>" + t.finished_hits + "<br /> <b>Task results are as following:<.b>" + string);
+}
 var showQuery  = function (queryId) {
   var jqxhr = $.getJSON('/query/all');
  
@@ -217,7 +224,6 @@ var addQuerySubmissionAlertMessage = function (message) {
 
 var clearMessages = function (element) {
   element.children().each(function (idx, elem) {
-    //elem.alert('close');
     $(elem).detach();
   });
 };
