@@ -11,21 +11,22 @@
 \tableofcontents
 \newpage
 
-\section{Abstract}
 
-\section{Crowdsourcing generalities}
+\section{Introduction}
 
 
 
 \section{Our work} % < temporary title
 \subsection{Global structure}
+We have 3 parts in the project, the part were we parse the query and create the associated tree, the part were we use this tree to create HIT and finally the part which communicate with the mturk platform and send those HIT and retrieve answers.\\
+To visualise the status of our queries, we have a user-friendly interface on which we can find relevant information for each query.\\ The majority of the code is written in Java and Scala but we also have HTML and CSS for the interface
 \subsection{Query language and parsing}
 \subsection{AMT communication}
 \subsection{Implementation choices}
 \begin{itemize}
 \item For a given query, we decompose it into sub-tasks which are generally really close to the semantic, meaning if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
-\item We \textbf{always} start with the "FROM" clause, where we ask \textbf{one} worker to give either a website either or a list of primary keys. After that we can continue the execution of this query by using the results given in this first step.
-\item For each task we try to use simple and understandable formulation, as well as proper description and keywords for a better visibility on the mturk platform.
+\item We \textbf{always} start with the "FROM" clause, where we ask \textbf{one} worker to give either a website or a list of primary keys. After that we can continue the execution of this query by using the results given in this first step.
+\item For each task we try to use simple and understandable formulation, as well as proper description and keywords for a better visibility on the mturk platform. 
 
 \end{itemize}
 
@@ -33,7 +34,15 @@
 \subsection{Performance Analysis}
 
 \section{Future improvements} % < maybe move it into Results ?
+Possibilities of improvement for this project are countless but the following point are the most relevant for the moment by order of importance:
+\begin{itemize}
+\item For the very first task, the "FROM" task, add a verification phase afterwards because this step is critical, if the website returned is not good, we won't be able to have any satisfying results.
+\item Implement a majority vote for yes/no questions, the results will be more precise but also more expensive
+\item Implement more operators.
 
+
+\end{itemize}
+Another great feature to add, but not so simple to implement, is the caching of previous results, indeed if you retrieve results from a cache, rather than asking again on mturk, the result will be instantaneous, free and accurate.
 \section{Feedback/Work repartition} % < personal feedback
 \begin{itemize}
 \item Florian Chlan
