@@ -22,7 +22,8 @@ We have 3 parts in the project, the part were we parse the query and create the 
 To visualise the status of our queries, we have a user-friendly interface on which we can find relevant information for each query.\\ The majority of the code is written in Java and Scala but we also have HTML and CSS for the interface
 \subsection{Query language and parsing}
 \subsection{Usage of Amazon Mechanical Turk}
-We use mturks huge, scalable workforce to help with retrieving data for and processing the query. In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers is treated equally.
+We use mturks huge, scalable workforce to help with retrieving data for and processing the query. In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers is treated equally.\\
+To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request.
 \subsection{Implementation choices}
 \begin{itemize}
 \item For a given query, we decompose it into sub-tasks which are generally really close to the semantic, meaning if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
