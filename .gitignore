@@ -5,3 +5,5 @@
 /.settings
 /target/
 /credentials.txt
+
+report/.texpadtmp/main.synctex.gz
