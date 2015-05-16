@@ -1,0 +1,69 @@
+{
+"queries_status": "under process",
+
+"list_of_queries":[
+  { 
+  	"query_id": 1,
+  	"query_status": "under finished",
+  	"query_results number": "2",
+  	"detailed query results": [
+    {"result 1":"string 1"},
+    {"result 2":"string 2"}
+  	],
+    "tasks_number" : 3,
+    "list of tasks":
+    [
+      {
+       "task id" :1,
+       "task status": "finished",
+       "task operation": "JOIN",
+       "number of hits": 4,
+       "finished hits":4,
+       "task result number": "5"
+      },
+      {
+       "task id" :2,
+       "task status": "finished",
+       "task operation": "SELECT",
+       "number of hits": 5,
+       "finished hits":5,
+       "task result number": "3"
+      },
+      {"task id" :3,
+       "task status": "finished",
+       "task operation": "GROUPBY",
+       "number of hits": 5,
+       "finished hits":5,
+       "task result number": 2
+      }
+    ] 
+  },
+  { 
+  	"query id": 2,
+  	"query status": "under process",
+  	"query results number": null,
+  	"detailed query results": [
+      null
+  	],
+    "tasks number" : 2,
+    "list of tasks":
+    [
+      {
+       "task id" :1,
+       "task status": "finished",
+       "task operation": "JOIN",
+       "number of hits": 4,
+       "finished hits":3,
+       "task result number": "5"
+      },   
+      {"task id" :2,
+       "task status": "under process",
+       "task operation": "GROUPBY",
+       "number of hits": 5,
+       "finished hits":0,
+       "task result number": "null"
+      }
+    ] 
+  }
+]
+}

@@ -1,5 +1,11 @@
+/.cache
 /.checkstyle
 /.classpath
 /.project
+/.settings
 /target/
+<<<<<<< HEAD
 /bin/
+=======
+/credentials.txt
+>>>>>>> 5979d3b910b1befb97882cf573c8dc4c55fccfa5
