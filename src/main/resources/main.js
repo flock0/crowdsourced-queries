@@ -106,7 +106,8 @@ var createQueryFromAssistedForm = function(){
   $('#question_input').val(generatestring);
 };
 
-var showQuery = function (queryId) {
+var refreshQueryModal = function () {
+  var queryId = $('#queryModalQueryId').text();
   var jqxhr = $.getJSON('/query/all');
   jqxhr.done(function (doc) {
     var query = $.grep(doc.list_of_queries, function (q) {
@@ -114,13 +115,18 @@ var showQuery = function (queryId) {
     })[0];
     clearQueryModal();
     populateQueryModal(query);
-    $('#queryModal').modal('show');
     $('#queryModalQueryId').text(query.query_id);
     $('#queryModalQueryString').text(query.query_string);
   });
   jqxhr.fail(function (jqxhr, textStatus, error) {
-    console.log("Couldn't update queries: " + textStatus + ", " + error);
+    console.log("Couldn't show query: " + textStatus + ", " + error);
   });
+};
+
+var showQuery = function (queryId) {
+  $('#queryModalQueryId').text(queryId);
+  refreshQueryModal();
+  $('#queryModal').modal('show');
 };
 
 var abortQueryAjax = function (queryId) {
@@ -269,6 +275,10 @@ $(document).ready(function() {
   $('#queryModalAbortButton').on('click', function () {
     clearQueryModalMessages();
     abortShownQuery();
+  });
+
+  $('#queryModalRefreshButton').on('click', function () {
+    refreshQueryModal();
   });
 
   update_queries();
