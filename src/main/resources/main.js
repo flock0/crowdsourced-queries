@@ -160,15 +160,18 @@ var abortShownQuery = function () {
   });
 };
 
+var timeToText = function (t) {
+  var s;
+  if (t == -1) {
+    s = "-";
+  } else {
+    s = (new Date(t)).toLocaleString();
+  }
+  return s;
+};
+
 var addQueryFromJSONDoc = function (parentElement, doc) {
   var row = $("<tr/>")
-  var start_time = (new Date(doc.start_time)).toLocaleString();
-  var end_time;
-  if (doc.end_time == -1) {
-    end_time = "-";
-  } else {
-    end_time = (new Date(doc.end_time)).toLocaleString();
-  }
   var content = [
       $("<td/>", {
         text: doc.query_id
@@ -180,10 +183,10 @@ var addQueryFromJSONDoc = function (parentElement, doc) {
         text: doc.query_results_number
       })[0],
       $("<td/>", {
-        text: start_time
+        text: timeToText(doc.start_time)
       })[0],
       $("<td/>", {
-        text: end_time
+        text: timeToText(doc.end_time)
       })[0]
   ];
   $(content).on('click', function () {
