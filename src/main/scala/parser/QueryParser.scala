@@ -11,6 +11,10 @@ import scala.util.parsing.combinator.RegexParsers
  */
 object QueryParser extends RegexParsers with java.io.Serializable{
   
+  def baseParser: Parser[RootNode] = (
+    parseRootNode ^^ {case root => root}
+  )
+
   def parseRootNode: Parser[RootNode] = (
     "(" ~ parseRootNode ~ ") JOIN (" ~ parseRootNode ~ ") ON " ~ parseE ^^ {case _ ~ left ~ _ ~ right ~ _ ~ on => Join(left, right, on)}
     | "(" ~ parseRootNode ~ ") IN (" ~ parseRootNode ~ ")" ^^ {case _ ~ left ~ _ ~ right ~ _ => In(left, right)}
@@ -135,9 +139,20 @@ object QueryParser extends RegexParsers with java.io.Serializable{
   
   val elem: Parser[String] = "[A-Za-z0-9_ ]+".r
   val int: Parser[String] = "[0-9]+".r
-  val nl: Parser[String] = "[a-zA-Z0-9 ]+".r
+  val nl: Parser[String] = "[a-zA-Z0-9- ]+".r
   val str: Parser[String] = "[A-Za-z0-9_]+".r
   
-  def parseQuery(query: String): ParseResult[RootNode] = parse(parseRootNode, query) 
+  def parseQuery(query: String): RootNode = {
+		parse(baseParser, ""+query+"") match {
+      case Success(root, _) => root
+      case e => {
+		println(e.toString)
+		throw new RuntimeException(e.toString)
+	}
+    }
+/**
+		parse(parseRootNode, query);*/
+ 
+}
     
 }
