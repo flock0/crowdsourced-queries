@@ -218,7 +218,8 @@ To interact with Amazon Mechanical Turk service, we use the available GET interf
 \item For a given query, we decompose it into sub-tasks which are generally really close to the semantic, meaning if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
 \item We \textbf{always} start with the "FROM" clause, where we ask \textbf{one} worker to give either a website or a list of primary keys. After that we can continue the execution of this query by using the results given in this first step.
 \item For each task we try to use simple and understandable formulation, as well as proper description and keywords for a better visibility on the mturk platform. 
-
+\item The parallelization has been implemented with Scala Futures. The result of each HIT is contained in a Future. As soon as the result arrives, the onSuccess method of the Future is called sending a new HIT if possible. For example, if we send a query containing SELECT and WHERE tasks, some WHERE tasks can be submited even if not all the select tasks are finished.
+\item Parallelization of JOIN tasks work a bit differently. The two branches of the JOIN are executed in parallel but the JOIN task is waiting for the results of both parts before beginning. Changing this is a possible improvement for the future.
 \end{itemize}
 
 \subsection{User interface}
