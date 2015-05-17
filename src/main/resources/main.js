@@ -10,35 +10,33 @@ var clearQueryModal = function () {
 var populateQueryModal = function (query) {
   var tbody = $("#queryModalTable tbody");
   query.list_of_tasks.forEach(function (t) {
-  tbody.append(
-     $(document.createElement("tr")).append(
-            $(document.createElement("td")).text(t.task_id),
-            $(document.createElement("td")).text(t.task_status),
-            $(document.createElement("td")).text(t.task_operator),
-            $(document.createElement("td")).text(t.number_of_hits),
-            $(document.createElement("td")).text(t.finished_hits),
-            $(document.createElement("td")).append(
-               $(document.createElement("button"))
-                    .addClass("btn btn-primary")
-                    .attr("type", "button")
-                  
-                    .attr("data-toggle", "collapse")
-                    .attr("data-target", "#collapseExample")
-                    .attr("aria-expanded", "false")
-                    .attr("aria-controls", "collapseExample")
-                    .text("show task results")
-                    .click(function(){
-                      showTaskResult(t);
-                    })
-               )
+    tbody.append(
+        $(document.createElement("tr")).append(
+          $(document.createElement("td")).text(t.task_id),
+          $(document.createElement("td")).text(t.task_status),
+          $(document.createElement("td")).text(t.task_operator),
+          $(document.createElement("td")).text(t.number_of_hits),
+          $(document.createElement("td")).text(t.finished_hits),
+          $(document.createElement("td")).append(
+            $(document.createElement("button"))
+            .addClass("btn btn-primary")
+            .attr("type", "button")
+            .attr("data-toggle", "collapse")
+            .attr("data-target", "#collapseExample")
+            .attr("aria-expanded", "false")
+            .attr("aria-controls", "collapseExample")
+            .text("show results")
+            .click(function(){
+              showTaskResult(t);
+            })
             )
-          );
-   
- });
-    if (!query.detailed_query_results || query.detailed_query_results.length == 0) {
-   $('#queryModalResults').append($("<em/>", {
+          )
+        );
+  });
+  if (!query.detailed_query_results || query.detailed_query_results.length == 0) {
+    $('#queryModalResults').append($("<em/>", {
       text: "No results yet, be patient."
-        }));
+    }));
   } else {
     var ul = $('#queryModalResults').append($('<ul/>'));
     query.detailed_query_results.forEach(function (r) {
@@ -78,14 +76,15 @@ var createQueryFromAssistedForm = function(){
   }
   $('#question_input').val(generatestring);
 };
+
 var showTaskResult=function(t){
   $('#collapseExmaplewell').html("<b>Results number is:</b> " + t.finished_hits + "<br /> <b>Task results are as following:</b>" + t.detailed_results);
   //var string = t.detailed_results.replace(/\r?\n/g, "<br>");
   //$('#collapseExmaplewell').html("<b>Results number is:<b>" + t.finished_hits + "<br /> <b>Task results are as following:<.b>" + string);
 }
+
 var showQuery  = function (queryId) {
   var jqxhr = $.getJSON('/query/all');
- 
   jqxhr.done(function (doc) {
     var query = $.grep(doc.list_of_queries, function (q) {
       return q.query_id == queryId;
