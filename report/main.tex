@@ -213,7 +213,7 @@ parsed well the SELECT and the FROM but seems to ignore the ORDER BY
 Another problem is that when we try to parse too long query, the parser seems to stop working correctly. For example, a query using GROUP BY, ORDER and LIMIT seems to work well, but if we insert it in a JOIN, it crash because it need the WHERE, which is not needed.
 \subsection{Usage of Amazon Mechanical Turk}
 We use mturks huge, scalable workforce to help with retrieving data for and processing the query. In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers is treated equally.\\
-To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request.
+To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request. We provide a Question abstract class and a number of subclasses to represent a wide range of question types : text answer, URL answer, boolean answer,...
 \subsection{Implementation choices}
 \begin{itemize}
 \item For a given query, we decompose it into sub-tasks which are generally really close to the semantic, meaning if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
@@ -224,7 +224,9 @@ To interact with Amazon Mechanical Turk service, we use the available GET interf
 
 \subsection{User interface}
 \subsection{Performance Analysis}
-
+%Increasing price is good, but we still have huge delay. Some implementation choices might be expanded in the future (WHERE applied after the SELECT when there is a LIMIT leads to a lower number of results, for instance).
+%Phrasing of questions can alter the results from the workers.
+%Accuracy : depends on the first steps (FROM fi)
 \section{Future improvements} % < maybe move it into Results ?
 Possibilities of improvement for this project are countless but the following point are the most relevant for the moment by order of importance:
 \begin{itemize}
