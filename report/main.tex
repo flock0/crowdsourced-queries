@@ -2,6 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
 
 
 \begin{document}
@@ -223,11 +224,30 @@ To interact with Amazon Mechanical Turk service, we use the available GET interf
 \end{itemize}
 
 \subsection{User interface}
-To visualize the status of the queries, we design this user  interface. The interface always transmit queries to the server then get JSON object of the query results from the server, and show the results rationally to the user. The implementation is in Javascript and HTML. We use the Bootstrap v3.3.4 
- \emph{(http://getbootstrap.com)} as reference to make the interface well-formed.\\
- Users could enter their query by enter the textbox but should be in agreement with the query grammatical rules, otherwise, after submitting the query, you get a parsing failed remind. We also have an easy version of generating queries for non-specialists. Clicking on the Assisted query creation button, a form with basic operation like SELECT, JOIN, WHERE popped out, the user just needs to fill in the blanks in the form.\\
- After you successfully generating a query, you can see the Querying ID,  Querying ID,  status, Number of results, Start time, Number of results, Start time, Finish time. If you generate many queries, there is a list of queries show in the screen. You can refresh the list by clicking on the button. The list result also automatically refreshed every 15000 sec. \\
-By clicking on the area of the query, the corresponding query detail results will popped out. In the detail window, you could see the query string, the final query result. You can also see the subtasks' information, like subtask Task ID, Status, Operator, Generated Hits, Completed hits and every subtask results. If you are not interested in the query any more, you can easily abort the query by clicking the Abort button at the end of the window.
+
+The UI is served over HTTP to the user and can be used in any recent web
+browser. Our application acts as an HTTP server\footnote{Our application embeds
+the Grizzly HTTP server \url{https://grizzly.java.net/}} which delivers to the
+user a web page and allow to create, abort and get details on the pending
+queries via simple RPC. The server answer the various procedure calls with
+JSON\footnote{\url{http://json.org/}} documents. It is thus possible to use our
+application as is with a different frontend.
+
+The UI, in the form of a web page is implemented in  Javascript and HTML 5.
+Bootstrap\footnote{Bootstrap is a widely used front-end framework:
+\url{http://getbootstrap.com/}} was used to achieve a modern look.
+Users can submit their queries with the textbox. Queries must be conform to the
+grammatical rules, otherwise the error message from the parser will be printed.
+
+To facilitate the usage of the application without knowing the grammar, a form
+available by clicking on the "Assisted query creation" button allows the user
+to perform a simple query composed of SELECT, JOIN, and WHERE easily. The user
+can simply fill out the blanks.
+
+After successfully generating a query, you can see the Querying ID,  status, Number of results, Start time, Number of results, Start time, Finish time. If you generate many queries, there is a list of queries show in the screen. You can refresh the list by clicking on the button. The list result also automatically refreshed every 15000 sec.
+
+By clicking on the area of the query, the corresponding query detail results will pop out. In the detail window, you could see the query string, the final query result. You can also see the subtasks' information, like subtask Task ID, Status, Operator, Generated Hits, Completed hits and every subtask results. If you are not interested in the query any more, you can easily abort the query by clicking the Abort button at the end of the window.
+
 \subsection{Performance Analysis}
 %Increasing price is good, but we still have huge delay. Some implementation choices might be expanded in the future (WHERE applied after the SELECT when there is a LIMIT leads to a lower number of results, for instance).
 %Phrasing of questions can alter the results from the workers.
