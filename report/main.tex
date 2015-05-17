@@ -21,6 +21,196 @@
 We have 3 parts in the project, the part were we parse the query and create the associated tree, the part were we use this tree to create HIT and finally the part which communicate with the Amazon Mechanical Turk platform (mturk) and send those HIT and retrieve answers.\\
 To visualise the status of our queries, we have a user-friendly interface on which we can find relevant information for each query.\\ The majority of the code is written in Java and Scala but we also have HTML and CSS for the interface
 \subsection{Query language and parsing}
+The parsing is inspired by the SQL query. We tried to include a lot a feature given by SQL into out language, such as the ORDER BY, the WHERE and the JOIN. To be more flexible we have introduced two main thing. First a hierarchy on the different command and the second ont is that the query is recursively caling. It mean that the query is parsed with query and sub query.
+For most of the different step of the hierarchy, that are optional element and we could avoid them.
+For the explanation of the query, we will use the following definition
+\begin{itemize}
+\item Q1, Q2, ... are different query
+\item E is an element
+\item Int is a number
+\item Str is a string. The string has to be placed between " and is allowed to contain letter (capital or normal), integer and \_
+\item NL is some natural language. The natural language has to be inserter into braket [ ] and is allowed to contain letter (capital or normal), integer and space.
+\item Bool is the boolean type. It could be either True od False
+\end{itemize}
+\subsubsection{Root Node}
+The first hierarchy level is all the different link from a query with another query
+\begin{itemize}
+\item JOIN ON: Is a junction between two query that join the information of the first and the second information given a specific attribute.
+\begin{verbatim}
+(Q1) JOIN (Q2) ON E
+\end{verbatim}
+\item IN: Return all the different row of Q1 that are in Q2 too
+\begin{verbatim}
+(Q1) IN (Q2)
+\end{verbatim}
+\item NOT IN: Return all the different row of Q1 that are not in Q2
+\begin{verbatim}
+(Q1) NOT IN (Q2)
+\end{verbatim}
+\item INTERSECT: Return all the different row that are both in Q1 and in Q2 (give the same result as the IN 
+\begin{verbatim}
+(Q1) INTERSECT (Q2)
+\end{verbatim}
+\item UNION: Return all the different row of Q1 plus the different row of Q2
+\begin{verbatim}
+(Q1) UNION (Q2)
+\end{verbatim}
+\item Nothing: If we don't need to use a link with another query
+\begin{verbatim}
+Q1
+\end{verbatim}
+\end{itemize}
+\subsubsection{Limit Node}
+We could or not ask for a limit on the number of item that we want to return.
+\begin{itemize}
+\item LIMIT: return a specific number of element
+\begin{verbatim}
+(Q1) LIMIT Int
+\end{verbatim}
+\item Nothing:  If we don't need to limit the number of rows
+\begin{verbatim}
+Q1
+\end{verbatim}
+\end{itemize}
+\subsubsection{Order Node}
+This node is used to order the result on a specific order. The hierarchy is created such that to be able to limit the X first row on a specific order. It won't be logic to have an order on an aleatory order
+\begin{itemize}
+\item ORDER BY: Order the row on one or more element on a specific order
+\begin{verbatim}
+(Q1) ORDER BY E [ASC|DESC] [, E (ASC|DESC)]*
+\end{verbatim}
+The order could be on ascending (ASC) or descending (DESC) order, and it is possible to order on more than one element
+\item Nothing:  If we don't need to order the rows
+\begin{verbatim}
+Q1
+\end{verbatim}
+\end{itemize}
+\subsubsection{Group Node}
+Thie node is used to group the different result row given a specific element. It could be usefull for SUM or other element like this one. The hierarchy is ceated such that because the LIMIT and the ORDER has no impact on the GROUP BY but the GROUP BY give another way to order
+\begin{itemize}
+\item OGROUP BY: Ask to group the different row on a specific order
+\begin{verbatim}
+(Q1) GROUP BY E
+\end{verbatim}
+\item Nothing:  If we don't need to group the rows
+\begin{verbatim}
+Q1
+\end{verbatim}
+\end{itemize}
+\subsubsection{Where Node}
+This node is used to remove some row that don't match some specific condition. The condition is also parsed by the system and is explain in a subsection. The hierarchy is here a little bit tricky and don't give us as possibility as SQL, since we couldn't put condition on the sum of element that came after the group by. We choose to implement the WHERE before the GROUP BY because in most of the case, we will group element that match a condition, and not match a condition on grouped element.
+It is one of the place in the parsing part where optimisation could ocure.
+\begin{itemize}
+\item WHERE: The bunch of condition that has to occure
+\begin{verbatim}
+(Q1) WHERE Condition
+\end{verbatim}
+\item Nothing:  If we don't need to ask a specific condition
+\begin{verbatim}
+Q1
+\end{verbatim}
+\end{itemize}
+\paragraph{Condition}
+The bunch of condition could accept different kind of stuff. This different condition could be alone, with another, recursive or with natural language.
+\begin{itemize}
+\item < : Ask an element to be smaller than a condition. The condition has to be a number or a natural language
+\begin{verbatim}
+E < [Int|NL]
+\end{verbatim}
+\item > : Ask an element to be bigger than a condition. The condition has to be a number or a natural language
+\begin{verbatim}
+E < [Int|NL]
+\end{verbatim}
+\item <= : Ask an element to be smaller or equals than a condition. The condition has to be a number or a natural language
+\begin{verbatim}
+E < [Int|NL]
+\end{verbatim}
+\item >= : Ask an element to be bigger or equals than a condition. The condition has to be a number or a natural language
+\begin{verbatim}
+E < [Int|NL]
+\end{verbatim}
+\item = : Ask an element to be equals than a condition. The condition could be a lot of ellement. It could be a number, a string, some natural language or a new sub queries. Attention, the natural language and the query has to return only one element (one item and one rows) to be consistant. It is not possible to match the equality of an element with a bunch of data.
+\begin{verbatim}
+E = [Int|NL|Bool|Q1]
+\end{verbatim}
+\item IN : Ask an element to be inside a list of ellement. It is quite the same as = since the data could be in a set of element. Attention, some restriction may still apply. Since the query or the natural language are allowed to give a set of data, it has to give a set of single data, not couple or something else. For example, it is possible to check a name in a set of name, not in a set of couple (name, first name).
+\begin{verbatim}
+E IN [([Int|NL|Bool|Q1] [, [Int|NL|Bool|Q2]]*|NL|Q3]
+\end{verbatim}
+The list of element could be
+\begin{itemize}
+\item an explicit set
+\begin{verbatim}
+ (cond1, cond2, cond3, ...)
+\end{verbatim}
+\item some natural language
+\item another query
+\end{itemize}
+\item NOT IN : Exactly the same functionality as IN but ask the element to be not in the set.
+\begin{verbatim}
+E NOT IN [([Int|NL|Bool|Q1] [, [Int|NL|Bool|Q2]]*|NL|Q3]
+\end{verbatim}
+\item AND : The parser will parse this part recursively. It ask to have the condition C1 and the condition C2 to be satisfied to accept the condition.
+\begin{verbatim}
+(C1) AND (C2)
+\end{verbatim}
+\item OR : The parser will parse this part recursively. It ask to have the condition C1 or the condition C2 to be satisfied to accept the condition.
+\begin{verbatim}
+(C1) OR (C2)
+\end{verbatim}
+\end{itemize}
+\subsubsection{Select Node}
+This part is the final part of the node, where we will select the different element that we want. It could be either only natural language, a selection of field in a natural language question or a selection of field on a subqueries.
+Since the element could be quite complexe, we will resume it has Elements in the definition and explain them more specificly on another section.
+\begin{itemize}
+\item SELECT FROM NL: Has to extract the specified field from the question asked in natural language.
+\begin{verbatim}
+SELECT Elements FROM NL
+\end{verbatim}
+\item SELECT FROM sub queries: Has to extract the specified field from a subqueries that will be computed from the root node.
+\begin{verbatim}
+SELECT Elements FROM (Q1)
+\end{verbatim}
+\item NL: Ask something only in natural language
+\begin{verbatim}
+NL
+\end{verbatim}
+\end{itemize}
+\subsubsection{Elements Node}
+First of all, the differents elements in the node element has to be a list of ellement. This list is presented like that
+\begin{verbatim}
+(E1, E2, E2, ....)
+\end{verbatim}
+We could ask different informations about this ellement. It means:
+\begin{itemize}
+\item The sum of the different ellements (given a group by)
+\begin{verbatim}
+SUM(E)
+\end{verbatim}
+\item Have only distinct row, to avoid having ten time the same one (for example after an union or a bad worker)
+\begin{verbatim}
+DISTINCT(E)
+\end{verbatim}
+\end{itemize}
+And finaly the tupple could be of two different kind
+\begin{itemize}
+\item numeric tupple
+\begin{verbatim}
+NUMERIC E
+\end{verbatim}
+\item normal tupple
+\begin{verbatim}
+E
+\end{verbatim}
+\end{itemize}
+\subsubsection{Remarque}
+During our test, we found some probleme with this parsing. First of all the using of the parenthesis before and after the different ellement is disgrassius. The main point of it is that the recursive parsing create some infinite loop (was looking for the fist element on the root node, that was recursive for JOIN and look for the first element of root note, ...). So we had to add the parenthesis that remove the first element when askin gthe recursive function.
+Another problem that we tried to solve is that if we ask a query without the parenthesis, it seems to parse it corectly but forget the end of the query. For example
+\begin{verbatim}
+SELECT (name) FROM (king of France) ORDER BY age_of_death
+\end{verbatim}
+parsed well the SELECT and the FROM but seems to ignore the ORDER BY
+Another problem is that when we try to parse too long query, the parser seems to stop working correctly. For example, a query using GROUP BY, ORDER and LIMIT seems to work well, but if we insert it in a JOIN, it crash because it need the WHERE, which is not needed.
 \subsection{Usage of Amazon Mechanical Turk}
 We use mturks huge, scalable workforce to help with retrieving data for and processing the query. In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers is treated equally.\\
 To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request.

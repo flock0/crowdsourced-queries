@@ -102,7 +102,7 @@ object QueryParser extends RegexParsers with java.io.Serializable{
     parseNumber ^^ {case i => i}
    | parseBooleanNode ^^ {case b => b}
    | parseStringLiteral ^^ {case s => s}
-   | "(" ~ parseRootNode ~ ")" ^^ {case _~q~_ => q}
+   | parseRootNode ^^ {case q => q}
   )
   
   def parseBooleanNode: Parser[BooleanNode] = {
