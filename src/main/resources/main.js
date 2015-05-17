@@ -10,28 +10,57 @@ var clearQueryModal = function () {
 var populateQueryModal = function (query) {
   var tbody = $("#queryModalTable tbody");
   query.list_of_tasks.forEach(function (t) {
+    var resultsRow = $("<tr/>", {
+      class: 'hidden resultsRow'
+    });
+    var resultsCell = $("<td/>", {
+      colspan: 7
+    }).appendTo(resultsRow);
+    var resultsList = $("<ul/>").appendTo(resultsCell);
+    t.detailed_results.forEach(function (assignment) {
+      assignment.forEach(function (response) {
+        response.split("\r").forEach(function (line) {
+          if (line != "") {
+            resultsList.append($("<li/>", {
+              text: line
+            }));
+          }
+        });
+      });
+    });
+    var showResultsButton = $("<button/>", {
+      class: 'btn btn-sm',
+      type: 'button',
+      text: 'Show results'
+    }).on('click', function () {
+      resultsRow.toggleClass('hidden');
+    });
+    if (t.task_results_number == "" || t.task_results_number == "0") {
+      showResultsButton.addClass('hidden');
+    }
     tbody.append(
-        $(document.createElement("tr")).append(
-          $(document.createElement("td")).text(t.task_id),
-          $(document.createElement("td")).text(t.task_status),
-          $(document.createElement("td")).text(t.task_operator),
-          $(document.createElement("td")).text(t.number_of_hits),
-          $(document.createElement("td")).text(t.finished_hits),
-          $(document.createElement("td")).append(
-            $(document.createElement("button"))
-            .addClass("btn btn-primary")
-            .attr("type", "button")
-            .attr("data-toggle", "collapse")
-            .attr("data-target", "#collapseExample")
-            .attr("aria-expanded", "false")
-            .attr("aria-controls", "collapseExample")
-            .text("show results")
-            .click(function(){
-              showTaskResult(t);
-            })
-            )
-          )
-        );
+      $("<tr/>").append(
+        $("<td/>", {
+          text: t.task_id
+        }),
+        $("<td/>", {
+          text: t.task_status
+        }),
+        $("<td/>", {
+          text: t.task_operator
+        }),
+        $("<td/>", {
+          text: t.number_of_hits
+        }),
+        $("<td/>", {
+          text: t.finished_hits
+        }),
+        $("<td/>", {
+          text: t.task_results_number
+        }),
+        $("<td/>").append(showResultsButton)),
+      resultsRow
+    );
   });
   if (!query.detailed_query_results || query.detailed_query_results.length == 0) {
     $('#queryModalResults').append($("<em/>", {
@@ -77,13 +106,7 @@ var createQueryFromAssistedForm = function(){
   $('#question_input').val(generatestring);
 };
 
-var showTaskResult=function(t){
-  $('#collapseExmaplewell').html("<b>Results number is:</b> " + t.finished_hits + "<br /> <b>Task results are as following:</b>" + t.detailed_results);
-  //var string = t.detailed_results.replace(/\r?\n/g, "<br>");
-  //$('#collapseExmaplewell').html("<b>Results number is:<b>" + t.finished_hits + "<br /> <b>Task results are as following:<.b>" + string);
-}
-
-var showQuery  = function (queryId) {
+var showQuery = function (queryId) {
   var jqxhr = $.getJSON('/query/all');
   jqxhr.done(function (doc) {
     var query = $.grep(doc.list_of_queries, function (q) {
@@ -116,7 +139,6 @@ var abortShownQuery = function () {
   var queryId = $('#queryModalQueryId').text();
   var jqxhr = abortQueryAjax(queryId);
   jqxhr.done(function (doc) {
-    window.console.log(doc);
     if (doc.success) {
       update_queries();
       $('#queryModal').modal('hide');
