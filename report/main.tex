@@ -22,7 +22,7 @@
 Our projects consists mainly of three layers. The part were we parse the query and create the associated tree, the part were we use this tree to create Human Intelligence Tasks (HITs) and finally the part which communicates with the Amazon Mechanical Turk platform (mturk), sends those HITs and retrieve answers from the workers.\\
 To visualise the status of our queries, we implemented a user-friendly web interface on which the user can find relevant information for each query.\\ The majority of the code is written in Java and Scala but we also use HTML and CSS for the web interface.
 \subsection{Query language and parsing}
-The parsing is inspired by the SQL query language. We tried to include a lot of features given by SQL, such as the ORDER BY, the WHERE and the JOIN, into our language. To be more flexible, we have introduced two main things. First a hierarchy on the different commands and second the ability to parse queries recursively. This means that it's possible to have sub queries within a query.
+The parsing is inspired by the SQL query language. We tried to include a lot of features from SQL, such as the ORDER BY, the WHERE and the JOIN, into our language. To be more flexible, we have introduced two main things. First a hierarchy on the different commands and second the ability to parse queries recursively. This means that it is possible to have subqueries within a query.
 For most of the different steps of the hierarchy, that are optional elements, we can avoid them. % What does this mean?
 For the explanation of the query, we will use the following definition
 \begin{itemize}
