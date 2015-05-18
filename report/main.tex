@@ -19,11 +19,11 @@
 
 \section{Our work} % < temporary title
 \subsection{Global structure}
-We have 3 parts in the project, the part were we parse the query and create the associated tree, the part were we use this tree to create HIT and finally the part which communicate with the Amazon Mechanical Turk platform (mturk) and send those HIT and retrieve answers.\\
-To visualise the status of our queries, we have a user-friendly interface on which we can find relevant information for each query.\\ The majority of the code is written in Java and Scala but we also have HTML and CSS for the interface
+Our projects consists mainly of three layers. The part were we parse the query and create the associated tree, the part were we use this tree to create Human Intelligence Tasks (HITs) and finally the part which communicates with the Amazon Mechanical Turk platform (mturk), sends those HITs and retrieve answers from the workers.\\
+To visualise the status of our queries, we implemented a user-friendly web interface on which the user can find relevant information for each query.\\ The majority of the code is written in Java and Scala but we also use HTML and CSS for the web interface.
 \subsection{Query language and parsing}
-The parsing is inspired by the SQL query. We tried to include a lot a features given by SQL into our language, such as the ORDER BY, the WHERE and the JOIN. To be more flexible we have introduced two main things. First a hierarchy on the different commands and the second one is that the query is recursively calling. It means that the query is parsed with query and sub query.
-For most of the different steps of the hierarchy, that are optional elements, we can avoid them.
+The parsing is inspired by the SQL query language. We tried to include a lot of features given by SQL, such as the ORDER BY, the WHERE and the JOIN, into our language. To be more flexible, we have introduced two main things. First a hierarchy on the different commands and second the ability to parse queries recursively. This means that it's possible to have sub queries within a query.
+For most of the different steps of the hierarchy, that are optional elements, we can avoid them. % What does this mean?
 For the explanation of the query, we will use the following definition
 \begin{itemize}
 \item Q1, Q2, ... are different queries
@@ -213,57 +213,57 @@ parsed well the SELECT and the FROM but seems to ignore the ORDER BY\\
 Another problem is that when we try to parse too long query, the parser seems to stop working correctly. For example, a query using GROUP BY, ORDER and LIMIT seems to work well, but if we insert it in a JOIN, it crashes because it needs the WHERE, which is not needed.
 \subsection{Usage of Amazon Mechanical Turk}
 We use mturks huge, scalable workforce to help with retrieving data for and processing the query. In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers is treated equally.\\
-To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request. We provide a Question abstract class and a number of subclasses to represent a wide range of question types : text answer, URL answer, boolean answer,...
+To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request. We provide a Question abstract class and a number of subclasses to represent a wide range of question types, e.g. FreeText answers, URL answers, True/False answers,...
 \subsection{Implementation choices}
 \begin{itemize}
-\item For a given query, we decompose it into sub-tasks which are generally really close to the semantic, meaning if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
+\item For a given query, we decompose it into sub-tasks which are generally really close to the semantic. This means that if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
 \item We \textbf{always} start with the "FROM" clause, where we ask \textbf{one} worker to give either a website or a list of primary keys. After that we can continue the execution of this query by using the results given in this first step.
 \item For each task we try to use simple and understandable formulation, as well as proper description and keywords for a better visibility on the mturk platform. 
 \item The parallelization has been implemented with Scala Futures. The result of each HIT is contained in a Future. As soon as the result arrives, the onSuccess method of the Future is called sending a new HIT if possible. For example, if we send a query containing SELECT and WHERE tasks, some WHERE tasks can be submited even if not all the select tasks are finished.
-\item Parallelization of JOIN tasks work a bit differently. The two branches of the JOIN are executed in parallel but the JOIN task is waiting for the results of both parts before beginning. Changing this is a possible improvement for the future.
+\item Parallelization of JOIN tasks works a bit differently. The two branches of the JOIN are executed in parallel but the JOIN task is waiting for the results of both parts before beginning. Changing this is a possible improvement for the future.
 \end{itemize}
 
 \subsection{User interface}
 
 The UI is served over HTTP to the user and can be used in any recent web
 browser. Our application acts as an HTTP server\footnote{Our application embeds
-the Grizzly HTTP server \url{https://grizzly.java.net/}} which delivers to the
-user a web page and allow to create, abort and get details on the pending
+the Grizzly HTTP server \url{https://grizzly.java.net/}} which delivers a web page to the
+user and allows to create, abort and get details on the pending
 queries via simple RPC. The server answer the various procedure calls with
 JSON\footnote{\url{http://json.org/}} documents. It is thus possible to use our
 application as is with a different frontend.
 
-The UI, in the form of a web page is implemented in  Javascript and HTML 5.
+The UI, in the form of a web page is implemented in Javascript and HTML 5.
 Bootstrap\footnote{Bootstrap is a widely used front-end framework:
 \url{http://getbootstrap.com/}} was used to achieve a modern look.
-Users can submit their queries with the textbox. Queries must be conform to the
-grammatical rules, otherwise the error message from the parser will be printed.
+Users can submit their queries by entering them into textbox. Queries must be conform to the
+grammatical rules defined in our language, otherwise an error message from the parser will be printed.
 
 To facilitate the usage of the application without knowing the grammar, a form
 available by clicking on the "Assisted query creation" button allows the user
 to perform a simple query composed of SELECT, JOIN, and WHERE easily. The user
 can simply fill out the blanks.
 
-After successfully generating a query, you can see the Querying ID,  status, Number of results, Start time, Number of results, Start time, Finish time. If you generate many queries, there is a list of queries show in the screen. You can refresh the list by clicking on the button. The list result also automatically refreshed every 15000 sec.
+After successfully generating a query, you can see the Querying ID, status, Number of results, Start time, Finish time. If you generate many queries, a list of all the queries is displayed. You can refresh the list by clicking on the corresponding button. The list result also automatically refreshed every 15000 sec. % Every 4 hours?
 
-By clicking on the area of the query, the corresponding query detail results will pop out. In the detail window, you could see the query string, the final query result. You can also see the subtasks' information, like subtask Task ID, Status, Operator, Generated Hits, Completed hits and every subtask results. If you are not interested in the query any more, you can easily abort the query by clicking the Abort button at the end of the window.
+By clicking on a query, the corresponding query detail results will pop out. In the detail window you could see the query string and the final query result. You can also see the subtasks' information, like subtask Task ID, Status, Operator, Generated Hits, Completed hits and every subtask results. If you are not interested in the query any more, you can easily abort the query by clicking the Abort button at the bottom of the window.
 
 \subsection{Performance Analysis}
 %Increasing price is good, but we still have huge delay. Some implementation choices might be expanded in the future (WHERE applied after the SELECT when there is a LIMIT leads to a lower number of results, for instance).
 %Phrasing of questions can alter the results from the workers.
 %Accuracy : depends on the first steps (FROM fi)
 \section{Future improvements} % < maybe move it into Results ?
-Possibilities of improvement for this project are countless but the following point are the most relevant for the moment by order of importance:
+Possibilities of improvement for this project are countless but the following points seem to be the most relevant for the moment by order of importance:
 \begin{itemize}
-\item For the very first task, the "FROM" task, add a verification phase afterwards because this step is critical, if the website returned is not good, we won't be able to have any satisfying results.
+\item Add a verification phase to the very first task, which is usually the "FROM" task. This step is critical for the whole query due to the fact that if the website returned by the very first worker is not of high enough quality, subsequent worker will have a lot of trouble extracting the required information and we won't be able to have any satisfying results.
 \item Implement a majority vote for some of the questions. The results will be more precise but also more expensive, as more workers need to be asked the same questions. Using a majority vote for multiple choice or true/false questions is trivial. For cases where free text answers or numeric answers are expected, implementing a majority vote will be more sophisticated, as the domain of possible answers is sheer endless.
 \item Implement more operators.
-\item Use qualifications to get more reliable results. This would mean that a set of sample questions has to be created, for which the answers are already known. Workers are then at first asked to answer the sample questions to proof their seriousness and then the real questions afterwards. It is then possibly to rank, weight or filter workers based on their performance and this would ultimately lead to better and more precise results.
+\item Use qualifications to get more reliable results. This would mean that a set of sample questions has to be created, for which the answers are already known. Workers are then at first asked to answer the sample questions to proof their abilities and then the real questions afterwards. It is then possibly to rank, weight or filter workers based on their performance and this would ultimately lead to better and more precise results.
 
 
 \end{itemize}
-Another great feature to add, but not so simple to implement, is the caching of previous results, indeed if you retrieve results from a cache, rather than asking again on mturk, the result will be instantaneous, free and accurate.
-\section{Feedback/Work repartition} % < personal feedback
+Another great feature to add, but not so simple to implement, is the caching of previous results. Indeed if you retrieve results from a cache, rather than asking again on mturk, the result will be instantaneous, free and accurate.
+\section{Feedback/Distribution of Work} % < personal feedback
 \begin{itemize}
 \item Florian Chlan : Communication with AMT, Analytics.
 \item François Farquet : Strategies implementation, interface, speaker for final presentation.
