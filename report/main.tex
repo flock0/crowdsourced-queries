@@ -27,8 +27,10 @@ To visualise the status of our queries, we implemented a user-friendly web inter
 An overview of the distribution of work among the team members during the whole project can be found in Appendix \ref{distr}.
 \subsection{Usage of Amazon Mechanical Turk}
 mturk provides an easy way to send work to tens of thousands of anonymous workers and collect the results afterwards. Each worker is paid for their results based on a reward chosen by the requester. We use mturks huge, scalable workforce to help with retrieving data for and processing the query. \\
-To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request. We provide a Question abstract class and a number of subclasses to represent a wide range of question types, e.g. FreeText answers, URL answers, True/False answers. \\
-In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers is treated equally.
+To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request. We provide a Question abstract class and a number of subclasses to represent a wide range of question types, e.g. FreeText answers, URL answers, True/False answers. Each Question subclass is responsible for providing its mturk-complient XML scheme.\\
+Once a HIT is sent, we encapsulate it into an AMT Task and add it to the list of pending jobs. We can then keep track of those tasks and poll their results at a fixed interval of time.
+Answers to our requests are sent back in XML format and parsed by the AMT communicator, that generates Answer objects and uses a callback to alert higher level classes of the updates.\\
+In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers are treated equally.
 \subsection{Query language and parsing}
 The parsing is inspired by the SQL query language. We tried to include a lot of features from SQL, such as the ORDER BY, the WHERE and the JOIN, into our language. To be more flexible, we have introduced two main things. First a hierarchy on the different commands and second the ability to parse queries recursively. This means that it is possible to have subqueries within a query.
 
@@ -80,8 +82,8 @@ On the other hand, we have observed a considerable impact by the formulation of 
 Fine-tuning our question formulation increased performance by about 60 \% and answer quality by about 13 \%. This could be partly explained by the ever increasing amount of foreign workers whose native language isn't English looking for tasks on the mturk platform.\footnote{\url{https://archive.nyu.edu/bitstream/2451/29585/2/CeDER-10-01.pdf}}
 
 To further calibrate and tweak the HIT creation, we propose using some sort of sentiment analysis on mturk to find the optimal formulations.
-%Increasing price is good, but we still have huge delay. Some implementation choices might be expanded in the future (WHERE applied after the SELECT when there is a LIMIT leads to a lower number of results, for instance).
-%Accuracy : depends on the first steps (FROM fi)
+
+We depend as well on other implementation specificities : the FROM step, for instance, can lead to huge accuracy differences and should be finely tuned and verified. This reinforces the necessity for our HITs to adapt to the behaviour or mturk workers. 
 \section{Future improvements and conclusion}
 The possibilities of improvement for this project are countless but the following points seem to be the most relevant for the moment by order of importance:
 \begin{itemize}
@@ -100,7 +102,7 @@ In general there are three metrics one has to consider when crowdsourcing querie
 \item \textbf{Cost} of getting a query answered
 \item \textbf{Time} it takes to obtain the results
 \end{itemize}
-It is very hard to achive all of the three objectives, so one has to choose carefully some tradeoff between them.
+It is very hard to achieve all of the three objectives, so one has to choose carefully some tradeoff between them.
 All in all, we can say that it was a really different experience to work with human workers instead of computers, simply because of the pretty high probability of failure and high indeterminism. Nonetheless, the crowdsourcing idea opens up a whole new world of possibilities and we are really excited about that.
 
 \newpage
