@@ -3,52 +3,54 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <title>Crowdsourced query</title>
-  <link rel="stylesheet" href="style.css" type="text/css">
   <link rel="stylesheet" href="bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="style.css" type="text/css">
   <script type="text/javascript" src="jquery.min.js"></script>
   <script type="text/javascript" src="bootstrap.min.js"></script>
   <script type="text/javascript" src="main.js"></script>
 </head>
 <body>
-  <h1>Crowdsourced query</h1>
+  <div class="content">
+    <h1>Crowdsourced query</h1>
 
-  <div class="container-fluid">
-    <div class="row">
-      <div id="querySubmissionMessages"></div>
-      <form id="queryForm" action="" class="form-horizontal">
-        <div class="form-group">
-          <label for="question_input" class="col-xs-2">Enter query:</label>
-          <input id="question_input" class="col-xs-8" type="text" name="question"/>
-        </div>
-        <button type="button" class="btn" id="assistedQueryButton">Assisted query creation</button>
-        <button type="submit" class="btn btn-primary">Submit query</button>
-      </form>
+    <div class="container-fluid">
+      <div class="row">
+        <div id="querySubmissionMessages"></div>
+        <form id="queryForm" action="" class="form-horizontal">
+          <div class="form-group">
+            <label for="question_input" class="col-xs-2">Enter query:</label>
+            <input id="question_input" class="col-xs-8" type="text" name="question"/>
+          </div>
+          <button type="button" class="btn" id="assistedQueryButton">Assisted query creation</button>
+          <button type="submit" class="btn btn-primary">Submit query</button>
+        </form>
+      </div>
+
+      <div class="row">
+        <h2>Current queries</h2>
+        <table class="table table-hover" id="queriesTable">
+          <thead>
+            <tr>
+              <th>Query ID</th>
+              <th>Status</th>
+              <th>Number of results</th>
+              <th>Start time</th>
+              <th>Finished at</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <div class="row">
-      <h2>Current queries</h2>
-      <table class="table table-hover" id="queriesTable">
-        <thead>
-          <tr>
-            <th>Query ID</th>
-            <th>Status</th>
-            <th>Number of results</th>
-            <th>Start time</th>
-            <th>Finished at</th>
-          </tr>
-        </thead>
-        <tbody>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="input-group form-inline">
-    <button class="btn" id="refreshQuerriesButton">Refresh list</button>
-    <div class="checkbox">
-      <label class="checkbox-inline">
-        <input type="checkbox" id="autorefreshQueriesCheckbox" checked="checked"> Refresh automatically</input>
-      </label>
+    <div class="input-group form-inline">
+      <button class="btn" id="refreshQuerriesButton">Refresh list</button>
+      <div class="checkbox">
+        <label class="checkbox-inline">
+          <input type="checkbox" id="autorefreshQueriesCheckbox" checked="checked"> Refresh automatically</input>
+        </label>
+      </div>
     </div>
   </div>
 
