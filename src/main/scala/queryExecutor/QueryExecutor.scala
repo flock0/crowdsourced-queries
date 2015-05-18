@@ -37,7 +37,7 @@ class QueryExecutor(val queryID: Int, val queryString: String) {
   private var queryTree: RootNode = null
   private var aborted: Boolean = false
   
-  val DEFAULT_ELEMENTS_SELECT = 9
+  val DEFAULT_ELEMENTS_SELECT = 44
   val MAX_ELEMENTS_PER_WORKER = 5
   
   /**
