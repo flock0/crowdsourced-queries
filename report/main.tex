@@ -25,15 +25,17 @@ Our projects consists mainly of three layers. The part were we parse the query a
 To visualise the status of our queries, we implemented a user-friendly web interface on which the user can find relevant information for each query.\\ The majority of the code is written in Java and Scala but we also use HTML/CSS and JavaScript for the web interface.
 
 An overview of the distribution of work among the team members during the whole project can be found in Appendix \ref{distr}.
-\subsection{Query language and parsing}
-The parsing is inspired by the SQL query language. We tried to include a lot of features from SQL, such as the ORDER BY, the WHERE and the JOIN, into our language. To be more flexible, we have introduced two main things. First a hierarchy on the different commands and second the ability to parse queries recursively. This means that it is possible to have subqueries within a query.
-
-A detailed description of the language parser and its features can be found in Appendix \ref{parse}.
 \subsection{Usage of Amazon Mechanical Turk}
 mturk provides an easy way to send work to tens of thousands of anonymous workers and collect the results afterwards. Each worker is paid for their results based on a reward chosen by the requester. We use mturks huge, scalable workforce to help with retrieving data for and processing the query. \\
 To interact with Amazon Mechanical Turk service, we use the available GET interface. We developed our own AMT communicator, in charge of interpreting our internal abstract representation of a task (a HIT) to generate the corresponding URL request. We provide a Question abstract class and a number of subclasses to represent a wide range of question types, e.g. FreeText answers, URL answers, True/False answers. \\
 In our implementation, we currently don't use qualifications. This means that the answers from each and everyone of the workers is treated equally.
+\subsection{Query language and parsing}
+The parsing is inspired by the SQL query language. We tried to include a lot of features from SQL, such as the ORDER BY, the WHERE and the JOIN, into our language. To be more flexible, we have introduced two main things. First a hierarchy on the different commands and second the ability to parse queries recursively. This means that it is possible to have subqueries within a query.
+
+A detailed description of the language parser and its features can be found in Appendix \ref{parse}.
+
 \subsection{Implementation choices}
+Once the query is parsed we use the query tree to generate a plan to answer the query, this plan is critical to obtain decent results, here a description of the main choices and optimizations we did to generate the plan:
 \begin{itemize}
 \item For a given query, we decompose it into sub-tasks which are generally really close to the semantic. This means that if we have a "WHERE" in the query we will have a dedicated task to handle this "WHERE".
 \item We \textbf{always} start with the "FROM" clause, where we ask \textbf{one} worker to give either a website or a list of primary keys. After that we can continue the execution of this query by using the results given in this first step.
@@ -41,7 +43,7 @@ In our implementation, we currently don't use qualifications. This means that th
 \item The parallelization has been implemented with Scala Futures. The result of each HIT is contained in a Future. As soon as the result arrives, the onSuccess method of the Future is called sending a new HIT if possible. For example, if we send a query containing SELECT and WHERE tasks, some WHERE tasks can be submited even if not all the select tasks are finished.
 \item Parallelization of JOIN tasks works a bit differently. The two branches of the JOIN are executed in parallel but the JOIN task is waiting for the results of both parts before beginning. Changing this is a possible improvement for the future.
 \end{itemize}
-
+\newpage
 \subsection{User interface}
 
 The UI is served over HTTP to the user and can be used in any recent web
@@ -101,7 +103,9 @@ In general there are three metrics one has to consider when crowdsourcing querie
 It is very hard to achive all of the three objectives, so one has to choose carefully some tradeoff between them.
 All in all, we can say that it was a really different experience to work with human workers instead of computers, simply because of the pretty high probability of failure and high indeterminism. Nonetheless, the crowdsourcing idea opens up a whole new world of possibilities and we are really excited about that.
 
+\newpage
 \appendix
+\section*{Appendix}
 \section{Distribution of Work}\label{distr}
 \begin{itemize}
 \item Florian Chlan : Communication with AMT, Analytics.
