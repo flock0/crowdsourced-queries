@@ -249,8 +249,17 @@ After successfully generating a query, you can see the Querying ID, status, Numb
 By clicking on a query, the corresponding query detail results will pop out. In the detail window you could see the query string and the final query result. You can also see the subtasks' information, like subtask Task ID, Status, Operator, Generated Hits, Completed hits and every subtask results. If you are not interested in the query any more, you can easily abort the query by clicking the Abort button at the bottom of the window.
 
 \subsection{Performance Analysis}
+In general, the runtime of the queries directly correlates with the complexity of them.
+It turns out that the general base price we have chosen for most of the tasks, \$ 0.01, is not a high enough incentive for a lot of workers to work on our HITs. Increasing this price by 500 \% to \$ 0.05 increased the rate of answers by about 80 - 90 \%. We suspect that a lot of the workers use a filter on the mturk platform to only display tasks paying more than a given threshold. 
+
+One would think that a higher reward would lead to more effort on the workers side when answering the HITs. Interestingly, this is not the case. Our experiments show that on average, there is no substantial, positive impact on the correctness of results when paying more. Actually, for certain tasks like the data extraction, a slight decrease in answer quality can be observed. One has to note that those results could as well be explained by statistical variance.
+
+On the other hand, we have observed a considerable impact by the formulation of the questions sent to the HITs. The workers seem to have an easier time with tasks using short sentences and simple English, much like having a To-do list to work on. Instead of just trying one's luck and and submitting a HIT even if they don't really understand what to do, workers are more inclined to just ignore tasks they don't understand. This could be explained by the incentive to keep their personal "approval rate on assignments" metric consistently high. 
+
+Fine-tuning our question formulation increased performance by about 60 \% and answer quality by about 13 \%. This could be partly explained by the ever increasing amount of foreign workers whose native language isn't English looking for tasks on the mturk platform. \footnote{\url{https://archive.nyu.edu/bitstream/2451/29585/2/CeDER-10-01.pdf}}
+
+To further calibrate and tweak the HIT creation, we propose using some sort of sentiment analysis on mturk to find the optimal formulations.
 %Increasing price is good, but we still have huge delay. Some implementation choices might be expanded in the future (WHERE applied after the SELECT when there is a LIMIT leads to a lower number of results, for instance).
-%Phrasing of questions can alter the results from the workers.
 %Accuracy : depends on the first steps (FROM fi)
 \section{Future improvements} % < maybe move it into Results ?
 Possibilities of improvement for this project are countless but the following points seem to be the most relevant for the moment by order of importance:
@@ -259,7 +268,7 @@ Possibilities of improvement for this project are countless but the following po
 \item Implement a majority vote for some of the questions. The results will be more precise but also more expensive, as more workers need to be asked the same questions. Using a majority vote for multiple choice or true/false questions is trivial. For cases where free text answers or numeric answers are expected, implementing a majority vote will be more sophisticated, as the domain of possible answers is sheer endless.
 \item Implement more operators.
 \item Use qualifications to get more reliable results. This would mean that a set of sample questions has to be created, for which the answers are already known. Workers are then at first asked to answer the sample questions to proof their abilities and then the real questions afterwards. It is then possibly to rank, weight or filter workers based on their performance and this would ultimately lead to better and more precise results.
-
+\item Conduct a sentiment analysis survey to find the best formulations for the HIT questions.
 
 \end{itemize}
 Another great feature to add, but not so simple to implement, is the caching of previous results. Indeed if you retrieve results from a cache, rather than asking again on mturk, the result will be instantaneous, free and accurate.
