@@ -19,9 +19,20 @@ List address: bd15-crowdsourced@groupes.epfl.ch
 
 ## How to compile and create JAR-file
 
-Run `mvn package`, this will download the dependencies, compile the code and
-create the JAR-file `target/crowdsourced-1-jar-with-dependencies.jar`. This
-JAR-file contains all the dependencies thus you can execute it on any computer.
+You'll need:
+  - a Java SDK, preferably OpenJDK 7 or a later version
+  - Apache Maven (https://maven.apache.org/)
+
+Those dependencies are available in the repository of nearly all GNU/Linux
+distribution. (Usually under the names `openjdk*`, `mvn` or `maven`.  For other
+platform, see the installation instructions on the respective project web pages.
+
+Our project has been tested to compile and run on GNU/Linux, OSX and Windows.
+
+Once those two dependencies installed, run `mvn package`, this will download
+the libraries we depend on, compile the code and create the JAR-file
+`target/crowdsourced-1-jar-with-dependencies.jar`. This JAR-file contains all
+the dependencies thus you can execute it on any computer.
 
 ## How to run
 
@@ -37,3 +48,5 @@ And replace each line with the relevant information. For instance, the content c
     ABCDEFGHIJKLM1234567
     Long/s3rE7-2334
     0
+
+Note: the credentials.txt file must be in the current directory when running the JAR-file.
